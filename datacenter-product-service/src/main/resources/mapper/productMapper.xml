@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sensorweb.datacenterproductservice.dao.ProductMapper" >
+  <resultMap id="BaseResultMap" type="Product" >
+    <id column="id" property="id"/>
+    <result column="product_id" property="productId"/>
+    <result column="product_name" property="productName"/>
+    <result column="product_des" property="productDescription"/>
+    <result column="product_keyword" property="productKeyword"/>
+    <result column="manufacture_date" property="manufactureDate"/>
+    <result column="organization_name" property="organizationName"/>
+    <result column="service_name" property="serviceName"/>
+    <result column="download_address" property="downloadAddress"/>
+    <result column="product_type" property="productType"/>
+    <result column="time_resolution" property="timeResolution"/>
+    <result column="spatial_resolution" property="spatialResolution"/>
+    <result column="dimension" property="dimension"/>
+    <result column="service_target" property="serviceTarget"/>
+    <result column="thumbnail_url" property="thumbnailUrl"/>
+    <result column="product_format" property="productFormat"/>
+    <result column="product_security" property="productSecurity"/>
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+
+  <sql id="Base_Column_List" >
+    id, product_id, product_name, product_des, product_keyword, manufacture_date,
+    organization_name, service_name, download_address, product_type, time_resolution,
+    spatial_resolution, dimension, service_target ,thumbnail_url,product_format,product_security
+  </sql>
+
+  <select id="selectByServiceAndTime" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from product
+    where service_name = #{serviceName} AND manufacture_date = #{manufactureDate}
+  </select>
+
+  <select id="selectAllproduct" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from product
+    where 1=1
+  </select>
+
+  <select id="selectByattribute" resultMap="BaseResultMap">
+    <if test="productName != null  or timeResolution != null or spatialResolution != null or dimension != null "  >
+    select * from product where 1=1
+    <if test="productName != null and productName != '' "  >
+      AND product_name = #{productName}
+    </if>
+    <if test="timeResolution != null and timeResolution != ''">
+      AND time_resolution = #{timeResolution}
+    </if>
+    <if test="spatialResolution != null and spatialResolution != ''">
+      AND spatial_resolution = #{spatialResolution}
+    </if>
+    <if test="dimension != '' and dimension != null ">
+      AND dimension = #{dimension}
+    </if>
+    </if>
+
+<!--    <if test="productName != null ">-->
+<!--      select-->
+<!--      <include refid="Base_Column_List" />-->
+<!--      from product-->
+<!--      where product_name = #{productName} AND time_resolution = #{timeResolution} AND spatial_resolution = #{spatialResolution} AND dimension = #{dimension}-->
+<!--    </if>-->
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from product
+    where product_id = #{productId,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert" parameterType="Product" >
+    insert into product (id,product_id, product_name, product_des,
+      product_keyword, manufacture_date, organization_name, 
+      service_name, download_address,product_type,time_resolution,spatial_resolution,dimension,
+      service_target,thumbnail_url,product_format,product_security)
+    values (#{id,jdbcType=INTEGER},#{productId,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR}, #{productDescription,jdbcType=VARCHAR},
+      #{productKeyword,jdbcType=VARCHAR}, #{manufactureDate,jdbcType=VARCHAR}, #{organizationName,jdbcType=VARCHAR}, 
+      #{serviceName,jdbcType=VARCHAR}, #{downloadAddress,jdbcType=VARCHAR}, #{productType,jdbcType=VARCHAR}, #{timeResolution,jdbcType=VARCHAR}, #{spatialResolution,jdbcType=VARCHAR}, #{dimension,jdbcType=VARCHAR},
+      #{serviceTarget,jdbcType=VARCHAR},#{thumbnailUrl,jdbcType=VARCHAR},#{productFormat,jdbcType=VARCHAR},#{productSecurity,jdbcType=VARCHAR})
+  </insert>
+
+  <insert id="insertSelective" parameterType="Product" >
+    insert into product
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="productName != null" >
+        product_name,
+      </if>
+      <if test="productDescription != null" >
+        product_des,
+      </if>
+      <if test="productKeyword != null" >
+        product_keyword,
+      </if>
+      <if test="manufactureDate != null" >
+        manufacture_date,
+      </if>
+      <if test="organizationName != null" >
+        organization_name,
+      </if>
+      <if test="serviceName != null" >
+        service_name,
+      </if>
+      <if test="downloadAddress != null" >
+        download_address,
+      </if>
+      <if test="productType != null" >
+        product_type,
+      </if>
+      <if test="timeResolution != null" >
+        time_resolution,
+      </if>
+      <if test="spatialResolution != null" >
+        spatial_resolution,
+      </if>
+      <if test="dimension != null" >
+        dimension,
+      </if>
+      <if test="serviceTarget != null" >
+        service_target,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="productDescription != null" >
+        #{productDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="productKeyword != null" >
+        #{productKeyword,jdbcType=VARCHAR},
+      </if>
+      <if test="manufactureDate != null" >
+        #{manufactureDate,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationName != null" >
+        #{organizationName,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceName != null" >
+        #{serviceName,jdbcType=VARCHAR},
+      </if>
+      <if test="downloadAddress != null" >
+        #{downloadAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null" >
+        #{productType,jdbcType=VARCHAR},
+      </if>
+      <if test="timeResolution != null" >
+        #{timeResolution,jdbcType=VARCHAR},
+      </if>
+      <if test="spatialResolution != null" >
+        #{spatialResolution,jdbcType=VARCHAR},
+      </if>
+      <if test="dimension != null" >
+        #{dimension,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceTarget != null" >
+        #{serviceTarget,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="Product" >
+    update product
+    <set >
+      <if test="productName != null" >
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="productDescription != null" >
+        product_des = #{productDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="productKeyword != null" >
+        product_keyword = #{productKeyword,jdbcType=VARCHAR},
+      </if>
+      <if test="manufactureDate != null" >
+        manufacture_date = #{manufactureDate,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationName != null" >
+        organization_name = #{organizationName,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceName != null" >
+        service_name = #{serviceName,jdbcType=VARCHAR},
+      </if>
+      <if test="downloadAddress != null" >
+        download_address = #{downloadAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null" >
+        product_type = #{productType,jdbcType=VARCHAR},
+      </if>
+      <if test="timeResolution != null" >
+        #{timeResolution,jdbcType=VARCHAR},
+      </if>
+      <if test="spatialResolution != null" >
+        #{spatialResolution,jdbcType=VARCHAR},
+      </if>
+      <if test="dimension != null" >
+        #{dimension,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceTarget != null" >
+        service_target = #{serviceTarget,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where product_id = #{productId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="Product" >
+    update product
+    set product_name = #{productName,jdbcType=VARCHAR},
+      product_des = #{productDescription,jdbcType=VARCHAR},
+      product_keyword = #{productKeyword,jdbcType=VARCHAR},
+      manufacture_date = #{manufactureDate,jdbcType=VARCHAR},
+      organization_name = #{organizationName,jdbcType=VARCHAR},
+      service_name = #{serviceName,jdbcType=VARCHAR},
+      download_address = #{downloadAddress,jdbcType=VARCHAR},
+      product_type = #{productType,jdbcType=VARCHAR},
+      service_target = #{serviceTarget,jdbcType=VARCHAR}
+    where product_id = #{productId,jdbcType=VARCHAR}
+  </update>
+
+
+
+
+<!-- id,stationname,so2onehour,pm25onehour,pm10onehour,o3onehour,no2onehour,coonehour,aqi,predictedtime-->
+<!--  UniqueCode,StationName,SO2OneHour,PM25OneHour,PM10OneHour,O3OneHour,NO2OneHour,COOneHour,AQI,PredictedTimen-->
+
+<!--  AirPollutionPrediction-->
+  <sql id="insertFields">
+    StationName,SO2OneHour,PM25OneHour,PM10OneHour,O3OneHour,NO2OneHour,COOneHour,AQI,PredictedTime
+  </sql>
+
+  <sql id="selectFields">
+    id,StationName,SO2OneHour,PM25OneHour,PM10OneHour,O3OneHour,NO2OneHour,COOneHour,AQI,PredictedTime
+  </sql>
+
+  <insert id="insertData" parameterType="product" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO air_pollution_prediction (<include refid="insertFields"></include>)
+    VALUES ( #{stationName}, #{so2OneHour} ,#{pm25OneHour},#{pm10OneHour},#{o3OneHour},#{no2OneHour},#{coOneHour},#{aqi},#{predictedTime})
+  </insert>
+
+  <select id="selectAll" resultMap="airPollutionPrediction">
+    SELECT <include refid="selectFields"></include>
+    FROM air_pollution_prediction
+  </select>
+
+  <resultMap id="airPollutionPrediction" type="product">
+    <result column="id" property="id"/>
+    <result column="StationName" property="stationName"/>
+    <result column="SO2OneHour" property="so2OneHour"/>
+    <result column="PM25OneHour" property="pm25OneHour"/>
+    <result column="PM10OneHour" property="pm10OneHour"/>
+    <result column="O3OneHour" property="o3OneHour"/>
+    <result column="NO2OneHour" property="no2OneHour"/>
+    <result column="COOneHour" property="coOneHour"/>
+    <result column="AQI" property="aqi"/>
+    <result column="PredictedTime" property="predictedTime"/>
+  </resultMap>
+
+</mapper>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sensorweb.datacenterlittleSensorservice.dao.LittleSensorMapper">
+
+    <sql id="insertFields">
+        id, receipt_time, sample_time, humidity, temperature, pressure, lat, lon, power, device_id
+    </sql>
+
+    <sql id="selectFields">
+        id, receipt_time, sample_time, humidity, temperature, pressure, lat, lon, power, device_id
+    </sql>
+
+    <insert id="insertData" parameterType="littleSensor" >
+        INSERT INTO sensors_data (<include refid="insertFields"></include>)
+        VALUES (#{id},#{receiptTime}, #{sampleTime}, #{humidity}, #{temperature}, #{pressure}, #{lat}, #{lon}, #{power}, #{deviceId})
+    </insert>
+
+    <insert id="insertDataBatch" parameterType="java.util.List">
+        INSERT INTO sensors_data (<include refid="insertFields"></include>)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.receiptTime}, #{item.sampleTime}, #{item.humidity}, #{item.temperature}, #{item.pressure}, #{item.lat}, #{item.lon}, #{item.power}, #{item.deviceId})
+        </foreach>
+    </insert>
+
+    <select id="selectById" resultMap="littleSensor">
+        SELECT <include refid="selectFields"></include>
+        FROM sensors_data
+        WHERE id = #{id}
+    </select>
+
+    <resultMap id="littleSensor" type="LittleSensor">
+        <result column="id" property="id"/>
+        <result column="receipt_time" property="receiptTime"/>
+        <result column="sample_time" property="sampleTime"/>
+        <result column="humidity" property="humidity"/>
+        <result column="temperature" property="temperature"/>
+        <result column="pressure" property="pressure"/>
+        <result column="lat" property="lat"/>
+        <result column="lon" property="lon"/>
+        <result column="power" property="power"/>
+        <result column="device_id" property="deviceId"/>
+    </resultMap>
+
+    <select id="selectNum" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM sensors_data
+    </select>
+
+    <select id="selectByIds" resultMap="littleSensor" >
+        SELECT <include refid="selectFields"></include>
+        FROM sensors_data ORDER BY receipt_time DESC
+        WHERE device_id in
+        <foreach collection="id" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+        LIMIT #{pageNum},#{pageSize}
+    </select>
+
+    <select id="selectByPage" resultMap="littleSensor">
+        SELECT <include refid="selectFields"></include>
+        FROM sensors_data ORDER BY receipt_time DESC
+        LIMIT  #{pageNum} ,#{pageSize}
+    </select>
+
+</mapper>

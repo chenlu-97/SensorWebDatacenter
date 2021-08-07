@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sensorweb.datacenterweatherservice.dao.WeatherStationMapper">
+    <sql id="insertFields">
+        station_id, station_name, township, region, city, province, lon, lat, stype
+    </sql>
+
+    <sql id="selectFields">
+        id, station_id, station_name, township, region, city, province, lon, lat, stype
+    </sql>
+
+    <insert id="insertData" parameterType="WeatherStationModel" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO station (<include refid="insertFields"></include>)
+        VALUES (#{stationId}, #{stationName}, #{township}, #{region}, #{city}, #{province}, #{lon}, #{lat}, #{stationType})
+    </insert>
+
+    <insert id="insertDataBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO station (<include refid="insertFields"></include>)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.stationId}, #{item.stationName}, #{item.township}, #{item.region}, #{item.city}, #{item.province}, #{item.lon}, #{item.lat}, #{item.stationType})
+        </foreach>
+    </insert>
+
+    <select id="selectById" resultMap="weatherStationModel">
+        SELECT <include refid="selectFields"></include>
+        FROM station
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectByStationId" resultMap="weatherStationModel">
+        SELECT <include refid="selectFields"></include>
+        FROM station
+        WHERE station_id = #{stationId}
+    </select>
+
+    <select id="selectByOffsetAndLimit" resultMap="weatherStationModel">
+        SELECT <include refid="selectFields"></include>
+        FROM station
+        WHERE LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="selectAllCount" resultType="int">
+        SELECT count(*)
+        FROM station
+    </select>
+
+    <select id="selectByStationType" resultMap="weatherStationModel">
+        SELECT <include refid="selectFields"></include>
+        FROM station
+        WHERE stype = #{stype}
+    </select>
+
+    <resultMap id="weatherStationModel" type="WeatherStationModel">
+        <id column="id" property="id"/>
+        <result column="station_id" property="stationId"/>
+        <result column="station_name" property="stationName"/>
+        <result column="township" property="township"/>
+        <result column="region" property="region"/>
+        <result column="city" property="city"/>
+        <result column="province" property="province"/>
+        <result column="lon" property="lon"/>
+        <result column="lat" property="lat"/>
+        <result column="stype" property="stationType"/>
+    </resultMap>
+
+</mapper>

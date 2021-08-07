@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sensorweb.datacenterauth2service.dao.UserMapper">
+    <sql id="insertFields">
+        username, password, phone, address, enable, account_non_expired, account_non_locked, credentials_non_expired
+    </sql>
+
+    <sql id="selectFields">
+        id, username, password, phone, address, enable, account_non_expired, account_non_locked, credentials_non_expired
+    </sql>
+
+    <insert id="insertData" parameterType="User" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO sys_user (<include refid="insertFields"></include>)
+        VALUES (#{username}, #{password}, #{phone}, #{address}, #{enable})
+    </insert>
+
+    <select id="selectByUsername" resultMap="user">
+        SELECT <include refid="selectFields"></include>
+        FROM sys_user
+        WHERE username = #{username}
+    </select>
+
+    <resultMap id="user" type="User">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="telephone" column="telephone"/>
+        <result property="address" column="address"/>
+        <result property="enabled" column="enable"/>
+        <result property="accountNonExpired" column="account_non_expired"/>
+        <result property="accountNonLocked" column="account_non_locked"/>
+        <result property="credentialsNonExpired" column="credentials_non_expired"/>
+    </resultMap>
+
+</mapper>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sensorweb.datacenterlaadsservice.dao.EntryMapper">
+    <sql id="insertFields">
+        entry_id, title, updated, link, file_path, start_time, stop_time, bbox, geom ,satellite,product_type
+    </sql>
+
+    <sql id="selectFields">
+        id, entry_id, title, updated, link, file_path, start_time, stop_time, bbox ,satellite,product_type
+    </sql>
+
+    <insert id="insertData" parameterType="Entry" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO entry (<include refid="insertFields"></include>)
+        VALUES (#{entryId}, #{title}, #{updated}, #{link}, #{filePath}, #{start}, #{stop}, #{bbox}, ST_GeomFromText(#{wkt}, 4326),#{satellite},#{productType})
+    </insert>
+
+    <insert id="insertDataBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO entry (<include refid="insertFields"></include>)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.entryId}, #{item.title}, #{item.updated}, #{item.link}, #{item.filePath}, #{item.start}, #{item.stop}, #{item.bbox}, ST_GeomFromText(#{item.wkt}, 4326), #{item.satellite}, #{item.productType})
+        </foreach>
+    </insert>
+
+    <select id="selectById" resultMap="entry">
+        SELECT <include refid="selectFields"></include>
+        FROM entry
+        WHERE id = #{id}
+    </select>
+
+    <resultMap id="entry" type="Entry">
+        <id column="id" property="id"/>
+        <result column="entry_id" property="entryId"/>
+        <result column="title" property="title"/>
+        <result column="updated" property="updated"/>
+        <result column="link" property="link"/>
+        <result column="filePath" property="file_path"/>
+        <result column="start_time" property="start"/>
+        <result column="stop_time" property="stop"/>
+        <result column="bbox" property="bbox"/>
+        <result column="satellite" property="satellite"/>
+        <result column="product_type" property="productType"/>
+    </resultMap>
+
+    <select id="selectNum" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM entry
+    </select>
+
+    <select id="selectByIds" resultMap="entry" >
+        SELECT <include refid="selectFields"></include>
+        FROM entry ORDER BY start_time DESC
+        WHERE satellite in
+        <foreach collection="satellite" item="satellite" open="(" close=")" separator=",">
+            #{satellite}
+        </foreach>
+        LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+
+    <select id="selectByPage" resultMap="entry">
+        SELECT <include refid="selectFields"></include>
+        FROM entry ORDER BY start_time DESC
+        LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+
+</mapper>

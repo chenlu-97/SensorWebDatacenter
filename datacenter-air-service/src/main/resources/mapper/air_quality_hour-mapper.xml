@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sensorweb.datacenterairservice.dao.AirQualityHourMapper">
+    <sql id="insertFields">
+        station_name, uniquecode, querytime, pm25OneHour, pm10OneHour, so2OneHour, no2OneHour, coOneHour, o3OneHour, aqi, primaryEP, aqDegree, aqType
+    </sql>
+
+    <sql id="selectFields">
+        station_name, uniquecode, querytime, pm25OneHour, pm10OneHour, so2OneHour, no2OneHour, coOneHour, o3OneHour, aqi, primaryEP, aqDegree, aqType
+    </sql>
+
+    <insert id="insertData" parameterType="AirQualityHour">
+        INSERT INTO "wuhanCC_air_hourly" (<include refid="insertFields"></include>)
+        VALUES (#{stationName}, #{uniqueCode}, #{queryTime}, #{pm25OneHour}, #{pm10OneHour}, #{so2OneHour}, #{no2OneHour}, #{coOneHour}, #{o3OneHour}, #{aqi}, #{primaryEP}, #{aqDegree}, #{aqType})
+    </insert>
+
+    <insert id="insertDataBatch" parameterType="java.util.List">
+        INSERT INTO "wuhanCC_air_hourly" (<include refid="insertFields"></include>)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.stationName}, #{item.uniqueCode}, #{item.queryTime}, #{item.pm25OneHour}, #{item.pm10OneHour}, #{item.so2OneHour}, #{item.no2OneHour}, #{item.coOneHour}, #{item.o3OneHour}, #{item.aqi}, #{item.primaryEP}, #{item.aqDegree}, #{item.aqType})
+        </foreach>
+    </insert>
+
+    <select id="selectByIds" resultMap="airQualityHour">
+        SELECT <include refid="selectFields"></include>
+        FROM "wuhanCC_air_hourly"
+        WHERE uniquecode in
+        <foreach collection="uniquecode" item="uniqueCode" open="(" close=")" separator=",">
+            #{uniqueCode}
+        </foreach>
+        LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+
+    <select id="selectByPage" resultMap="airQualityHour">
+        SELECT <include refid="selectFields"></include>
+        FROM "wuhanCC_air_hourly"
+        LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+
+
+    <select id="selectByIdAndTime" resultMap="airQualityHour">
+        SELECT <include refid="selectFields"></include>
+        FROM "wuhanCC_air_hourly"
+        WHERE uniquecode = #{uniquecode} AND querytime = #{time}
+    </select>
+
+
+
+    <select id="selectNumberByIds" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM "wuhanCC_air_hourly"
+        WHERE uniquecode in
+        <foreach collection="uniquecode" item="uniqueCode" open="(" close=")" separator=",">
+            #{uniqueCode}
+        </foreach>
+    </select>
+
+    <select id="selectAll" resultMap="airQualityHour">
+        SELECT <include refid="selectFields"></include>
+        FROM "wuhanCC_air_hourly"
+        WHERE 1=1
+    </select>
+
+
+
+    <select id="selectByTemporal" resultMap="airQualityHour">
+        SELECT <include refid="selectFields"></include>
+        FROM "wuhanCC_air_hourly"
+        WHERE querytime <![CDATA[>=]]> #{begin} AND querytime <![CDATA[<=]]> #{end}
+    </select>
+
+
+    <resultMap id="airQualityHour" type="AirQualityHour">
+        <result column="uniquecode" property="uniqueCode"/>
+        <result column="station_name" property="stationName"/>
+        <result column="querytime" property="queryTime"/>
+        <result column="pm25OneHour" property="pm25OneHour"/>
+        <result column="pm10OneHour" property="pm10OneHour"/>
+        <result column="so2OneHour" property="so2OneHour"/>
+        <result column="no2OneHour" property="no2OneHour"/>
+        <result column="coOneHour" property="coOneHour"/>
+        <result column="o3OneHour" property="o3OneHour"/>
+        <result column="aqi" property="aqi"/>
+        <result column="primaryEP" property="primaryEP"/>
+        <result column="aqDegree" property="aqDegree"/>
+        <result column="aqType" property="aqType"/>
+    </resultMap>
+
+    <select id="selectNum" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM "wuhanCC_air_hourly"
+    </select>
+
+    <select id="selectByTime" resultType="java.lang.Integer">
+        SELECT  count(*)
+        FROM "wuhanCC_air_hourly"
+        WHERE querytime <![CDATA[>=]]> #{begin} AND querytime <![CDATA[<=]]> #{end}
+    </select>
+
+</mapper>

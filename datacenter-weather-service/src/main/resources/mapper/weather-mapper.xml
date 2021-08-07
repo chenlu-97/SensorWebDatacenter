@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sensorweb.datacenterweatherservice.dao.WeatherMapper">
+    <sql id="insertFields">
+        "StationID","StationName", "QueryTime", "Precipitation", "Update_time", "Pressure", "Wind_p", "Wind_d", "Weather_p","Humidity","Temperature","Lng","Lat","WP", "QS"
+    </sql>
+
+    <sql id="selectFields">
+        "StationID","StationName", "QueryTime", "Precipitation", "Update_time", "Pressure", "Wind_p", "Wind_d", "Weather_p","Humidity","Temperature","Lng","Lat","WP", "QS"
+    </sql>
+
+    <insert id="insertData" parameterType="ChinaWeather">
+        INSERT INTO "wuhanCC_weather_hourly" (<include refid="insertFields"></include>)
+        VALUES (#{stationId},#{stationName}, #{queryTime}, #{precipitation}, #{updateTime}, #{pressure}, #{windD}, #{windP}, #{weatherP},#{humidity}, #{temperature}, #{lng},#{lat},#{wp}, #{qs})
+    </insert>
+
+    <insert id="insertDataBatch" parameterType="java.util.List">
+        INSERT INTO "wuhanCC_weather_hourly" (<include refid="insertFields"></include>)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.stationId}, #{item.stationName}, #{item.queryTime}, #{item.precipitation}, #{item.updateTime}, #{item.pressure}, #{item.windD}, #{item.windP}, #{item.weatherP},#{item.humidity}, #{item.temperature}, #{item.lng},#{item.lat},#{item.wp}, #{item.qs})
+        </foreach>
+    </insert>
+
+    <select id="selectById" resultMap="chinaWeather">
+        SELECT <include refid="selectFields"></include>
+        FROM "wuhanCC_weather_hourly"
+        WHERE "StationID" = #{stationId}
+    </select>
+
+    <select id="selectByIdsAndTime" resultMap="chinaWeather">
+        SELECT <include refid="selectFields"></include>
+        FROM "wuhanCC_weather_hourly"
+        WHERE "StationID" = #{id} AND "QueryTime" =#{time}
+        Limit 1
+    </select>
+
+
+    <select id="selectByTemporal" resultMap="chinaWeather">
+        SELECT <include refid="selectFields"></include>
+        FROM "wuhanCC_weather_hourly"
+        WHERE "QueryTime" <![CDATA[>=]]> #{begin} AND "QueryTime" <![CDATA[<=]]> #{end}
+    </select>
+
+    <resultMap id="chinaWeather" type="ChinaWeather">
+        <result column="StationID" property="stationId"/>
+        <result column="StationName" property="stationName"/>
+        <result column="QueryTime" property="queryTime"/>
+        <result column="Precipitation" property="precipitation"/>
+        <result column="Update_time" property="updateTime"/>
+        <result column="Pressure" property="pressure"/>
+        <result column="Wind_p" property="windP"/>
+        <result column="Wind_d" property="windD"/>
+        <result column="Weather_p" property="weatherP"/>
+        <result column="Humidity" property="humidity"/>
+        <result column="Temperature" property="temperature"/>
+        <result column="Lng" property="lng"/>
+        <result column="Lat" property="lat"/>
+        <result column="WP" property="wp"/>
+        <result column="QS" property="qs"/>
+    </resultMap>
+
+
+    <select id="selectByTime" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM "wuhanCC_weather_hourly"
+        WHERE "QueryTime" <![CDATA[>=]]> #{begin} AND "QueryTime" <![CDATA[<=]]> #{end}
+    </select>
+
+
+    <select id="selectNum" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM "wuhanCC_weather_hourly"
+    </select>
+
+
+
+    <select id="selectAll" resultMap="chinaWeather">
+        SELECT *
+        FROM "wuhanCC_weather_hourly"
+    </select>
+
+
+    <select id="selectByIds" resultMap="chinaWeather" >
+        SELECT <include refid="selectFields"></include>
+        FROM "wuhanCC_weather_hourly"
+        WHERE "StationID" in
+        <foreach collection="stationid" item="stationId" open="(" close=")" separator=",">
+            #{stationId}
+        </foreach>
+        LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+
+    <select id="selectByPage" resultMap="chinaWeather">
+        SELECT <include refid="selectFields"></include>
+        FROM "wuhanCC_weather_hourly"
+        LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+
+</mapper>

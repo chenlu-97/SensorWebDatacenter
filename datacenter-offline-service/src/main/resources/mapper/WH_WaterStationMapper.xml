@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sensorweb.datacenterofflineservice.dao.WH_WaterStationMapper" >
+    <sql id="insertFields">
+        river_name,section_name, lon, lat, geom,station_type
+    </sql>
+
+    <sql id="selectFields">
+        id,river_name,section_name, lon, lat, geom,station_type
+    </sql>
+
+    <insert id="insertWH_WaterStation" parameterType="WH_WaterStation" useGeneratedKeys="true" keyProperty="id">
+        insert into wh_water_station (<include refid="insertFields"></include>)
+        values ( #{riverName},#{sectionName}, #{lon}, #{lat}, ST_GeomFromText(#{geom},4326) ,#{stationType})
+    </insert>
+
+    <insert id="insertDataBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO wh_water_station (<include refid="insertFields"></include>)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.riverName}, #{item.sectionName}, #{item.lon}, #{item.lat}, ST_GeomFromText(#{item.geom}, 4326),#{item.stationType})
+        </foreach>
+    </insert>
+
+
+    <insert id="insertDataBatchInStation" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO station (station_id, region , station_name, lon, lat, stype)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            ( #{item.stationId},#{item.riverName}, #{item.sectionName}, #{item.lon}, #{item.lat},#{item.stationTypeOut})
+        </foreach>
+    </insert>
+
+
+    <select id="selectByIds" resultMap="WH_WaterStation">
+        SELECT (<include refid="selectFields"></include>)
+        FROM wh_water_station
+        WHERE id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+
+    <select id="selectHB_WaterStation" resultMap="WH_WaterStation">
+        SELECT (<include refid="selectFields"></include>)
+        FROM wh_water_station
+        WHERE 1=1
+    </select>
+
+    <select id="selectByAttribute" resultMap="WH_WaterStation">
+        SELECT (<include refid="selectFields"></include>)
+        FROM wh_water_station
+        WHERE section_name = #{sectionName}
+    </select>
+
+
+    <resultMap id="WH_WaterStation" type="WH_WaterStation">
+        <id column="id" property="id"/>
+        <result column="river_name" property="riverName"/>
+        <result column="section_name" property="sectionName"/>
+        <result column="lon" property="lon"/>
+        <result column="lat" property="lat"/>
+        <result column="geom" property="geom"/>
+        <result column="station_type" property="stationType"/>
+    </resultMap>
+
+
+</mapper>

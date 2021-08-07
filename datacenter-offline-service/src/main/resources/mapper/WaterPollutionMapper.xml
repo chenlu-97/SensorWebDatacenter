@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sensorweb.datacenterofflineservice.dao.WaterPollutionMapper" >
+
+
+    <sql id="insertFields">
+        company_name, station_name, station_type, station_item, flow , concentration, isoverstandard , overstandard_reason, emission_cap, emission_limit, monitoring_time
+    </sql>
+
+    <sql id="selectFields">
+        id,company_name, station_name, station_type, station_item, flow , concentration, isoverstandard , overstandard_reason, emission_cap, emission_limit, monitoring_time
+    </sql>
+
+    <insert id="insertWaterPollution" parameterType="WaterPollution" useGeneratedKeys="true" keyProperty="id">
+        insert into hb_waterpollution(<include refid="insertFields"></include>)
+        values (#{companyName},#{stationName},#{stationType},#{stationItem},#{flow},#{concentration}, #{isOverStandard}, #{OverStandardReason}, #{emissionCap},#{emissionLimit},#{monitoringTime})
+    </insert>
+
+    <insert id="insertDataBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hb_waterpollution (<include refid="insertFields"></include>)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.companyName}, #{item.stationName}, #{item.stationType},#{item.stationItem},#{item.flow},#{item.concentration},#{item.isOverStandard},#{item.OverStandardReason},
+            #{item.emissionCap},#{item.emissionLimit},#{item.monitoringTime})
+        </foreach>
+    </insert>
+
+<!--    <select id="selectByIds" resultMap="WaterPollution">-->
+<!--        SELECT (<include refid="selectFields"></include>)-->
+<!--        FROM hb_waterpollution-->
+<!--        WHERE id in-->
+<!--        <foreach collection="ids" item="id" open="(" close=")" separator=",">-->
+<!--            #{id}-->
+<!--        </foreach>-->
+<!--    </select>-->
+
+    <select id="selectWaterPollutionStation" resultMap="WaterPollution">
+        SELECT (<include refid="selectFields"></include>)
+        FROM hb_waterpollution
+        WHERE 1=1
+    </select>
+
+
+    <select id="selectByAttribute" resultMap="WaterPollution">
+        SELECT (<include refid="selectFields"></include>)
+        FROM hb_waterpollution
+        WHERE station_name = #{stationName}
+    </select>
+
+    <resultMap id="WaterPollution" type="WaterPollution">
+        <id column="id" property="id"/>
+        <result column="company_name" property="companyName"/>
+        <result column="station_name" property="stationName"/>
+        <result column="station_type" property="stationType"/>
+        <result column="station_item" property="stationItem"/>
+        <result column="flow" property="flow"/>
+        <result column="concentration" property="concentration"/>
+        <result column="isoverstandard" property="isOverStandard"/>
+        <result column="overstandard_reason" property="OverStandardReason"/>
+        <result column="emission_cap" property="emissionCap"/>
+        <result column="emission_limit" property="emissionLimit"/>
+        <result column="monitoring_time" property="monitoringTime"/>
+    </resultMap>
+
+    <select id="selectNum" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM hb_waterpollution
+    </select>
+
+    <select id="selectByIds" resultMap="WaterPollution" >
+        SELECT <include refid="selectFields"></include>
+        FROM hb_waterpollution
+        WHERE station_name in
+        <foreach collection="stationname" item="stationName" open="(" close=")" separator=",">
+            #{stationName}
+        </foreach>
+        ORDER BY monitoring_time DESC
+        LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+
+    <select id="selectByPage" resultMap="WaterPollution">
+        SELECT <include refid="selectFields"></include>
+        FROM hb_waterpollution ORDER BY monitoring_time DESC
+        LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+</mapper>

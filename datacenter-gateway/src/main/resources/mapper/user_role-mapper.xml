@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sensorweb.datacentergateway.dao.UserRoleMapper">
+    <sql id="insertFields">
+        uid, rid
+    </sql>
+
+    <sql id="selectFields">
+        id, uid, rid
+    </sql>
+
+    <insert id="insertData" parameterType="UserRole">
+        INSERT INTO sys_user_role (<include refid="insertFields"></include>)
+        VALUES (#{uid}, #{rid})
+    </insert>
+
+    <select id="selectByUid" resultMap="userRole">
+        SELECT <include refid="selectFields"></include>
+        FROM sys_user_role
+        WHERE uid = #{uid}
+    </select>
+
+    <resultMap id="userRole" type="UserRole">
+        <id property="id" column="id"/>
+        <result property="uid" column="uid"/>
+        <result property="rid" column="rid"/>
+    </resultMap>
+
+</mapper>

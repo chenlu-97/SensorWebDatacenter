@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sensorweb.sossensorservice.dao.KeywordMapper">
+    <sql id="insertFields">
+        k_value, proc_id
+    </sql>
+
+    <sql id="selectFields">
+        id, k_value, proc_id
+    </sql>
+
+    <insert id="insertData" parameterType="Keyword">
+        INSERT INTO keyword (<include refid="insertFields"></include>)
+        VALUES
+        <foreach collection="values" item="item" index="index" separator=",">
+            (#{item}, #{procedureId})
+        </foreach>
+    </insert>
+
+    <delete id="deleteByProcedureId">
+        DELETE FROM keyword
+        WHERE proc_id = #{procedureId}
+    </delete>
+
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM keyword
+        WHERE id = #{id}
+    </delete>
+
+    <select id="selectByProcedureId" resultType="java.lang.String">
+        SELECT k_value
+        FROM keyword
+        WHERE proc_id = #{procedure_id}
+    </select>
+
+    <select id="selectByValue" resultType="java.lang.String">
+        SELECT proc_id
+        FROM keyword
+        WHERE k_value like concat('%',#{value}, '%')
+    </select>
+
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sensorweb.sossensorservice.dao.ValidTimeMapper">
+    <sql id="insertFields">
+        time_begin, time_end, proc_id
+    </sql>
+
+    <sql id="selectFields">
+        id, time_begin, time_end, proc_id
+    </sql>
+
+    <insert id="insertData" parameterType="ValidTime">
+        INSERT INTO valid_time (<include refid="insertFields"></include>)
+        VALUES (#{beginPosition}, #{endPosition}, #{procedureId})
+    </insert>
+
+    <delete id="deleteByProcedureId">
+        DELETE FROM valid_time
+        WHERE proc_id = #{procedureId}
+    </delete>
+
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM valid_time
+        WHERE id = #{id}
+    </delete>
+
+    <select id="selectByProcedureId" resultMap="validTime">
+        SELECT <include refid="selectFields"></include>
+        FROM valid_time
+        WHERE proc_id = #{procedureId}
+    </select>
+
+    <select id="selectByTime" resultMap="validTime">
+        SELECT <include refid="selectFields"></include>
+        FROM valid_time
+        WHERE time_begin <![CDATA[>=]]> #{begin} AND time_end <![CDATA[<=]]> #{end}
+    </select>
+
+    <resultMap id="validTime" type="ValidTime">
+        <id property="id" column="validtime_id"/>
+        <result property="procedureId" column="proc_id"/>
+        <result property="beginPosition" column="time_begin"/>
+        <result property="endPosition" column="time_end"/>
+    </resultMap>
+
+</mapper>

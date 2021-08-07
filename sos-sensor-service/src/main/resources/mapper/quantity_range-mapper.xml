@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sensorweb.sossensorservice.dao.QuantityRangeMapper">
+    <sql id="insertFields">
+        qr_name, min_value, max_value, out_id
+    </sql>
+
+    <sql id="selectFields">
+       id, qr_name, min_value, max_value, out_id
+    </sql>
+
+    <insert id="insertData" parameterType="Quantity">
+        INSERT INTO swe_quantity_range (<include refid="insertFields"></include>)
+        VALUES (#{name}, #{minValue}, #{maxValue}, #{outId})
+    </insert>
+
+    <delete id="deleteByOutId">
+        DELETE FROM swe_quantity_range
+        WHERE out_id = #{outId}
+    </delete>
+
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM swe_quantity_range
+        WHERE id = #{id}
+    </delete>
+
+    <select id="selectByOutId" resultMap="quantityRange">
+        SELECT <include refid="selectFields"></include>
+        FROM swe_quantity_range
+        WHERE out_id = #{outId}
+    </select>
+
+    <select id="selectByNameAndValue" resultType="java.lang.String">
+        SELECT outid
+        FROM swe_quantity_range
+        WHERE qr_name = #{name} AND min_value <![CDATA[<]]> #{minValue} AND max_value <![CDATA[<]]> #{maxValue}
+    </select>
+
+    <resultMap id="quantityRange" type="QuantityRange">
+        <id property="id" column="id"/>
+        <result property="name" column="qr_name"/>
+        <result property="minValue" column="min_value"/>
+        <result property="maxValue" column="max_value"/>
+        <result property="outId" column="out_id"/>
+    </resultMap>
+
+</mapper>

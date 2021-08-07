@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "getgeoinfo-1551096614330",
+  "private_key_id": "d670c0a18233ccf9a4a981a8d0afa464a1107eee",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC2B3ldtVuiOuab\ned+Oh8mLr3XQJ5EyGywh/iWCuEhc56OojaOy2zeLKbsEbGrGTI2jSliy32liGlBr\njfqCGsk2a+yOnz7rFVJP8SBU3bRnc7rKJNFoJprJqQAqkPKGOX9OZ5Xesm8cXmkM\nvMWGbVXYwcoNjAZpYUSulnn8JiERUvJptRCUKR3PzUUGHmkXoC+N3HGyIvkXJThk\naieqpBpbeMs6KnGqxMb06ozZLYBc06DBYVo0y5pOui1FXM9e1DiuOFVekrRpdkMx\ne5ab9vPwWfONaCxESZHJWsnqFHSBE/6QUFpRirqfSSmSX2AaXJ0wARHJXdboTms1\neDmjWXMxAgMBAAECggEADlqoh2s1vqVGahxCNMsgaZN8ht2X5Yue/087RgOiMTFT\nBoek0QXYa3Du/npOMTT4Nlg2hmR3uvS4QsL/biMOmuwHy3djTsZvpz4sfoS9JStL\nH4Wnvb7Nlfltue2UMmF2WIhymQ0ZFfOb9RUtvlwA2QbvGAJivwycjefv1qJrGSJ/\nQzZSgq+gRn/GHdBdlKQydtKS0tblsO+NHCC7WJY0NTDpVYbTWzIAGqY7Esfej8Nr\nHHh4+84AOQ8fR93tjjiut8+8YgJ7yix9Tyldidl8xnNGGLWH/N35diKjpmR9Ooth\n6dmgoUGlbGn4YMScE1tvnO8na5Apu6QpF7gSAeSMAQKBgQDjo7IjrUWiSmM5hMOK\n2bxedb/qEHBEvNuH8040MDYgSytZ6kmu9DWkpcqk1Id3GvrL7jTCe3+ErHOlQaSI\n8MwIR/ks/sr0xzO1F4XWE4rK7FdA3N3p5Yy0nPLb0VkNB7FRS4xnkAZZQapvXvNw\noGGF+1PsZGUitfwoMNKF/SltuQKBgQDMtRc/rOzYva8qiPWluKZv2tWDZpD+d1pu\nFHxGPIhKV2FUdenU15TqM90MB6xPavZpCnn+i8ZWRl6wFuE4WrOJJIo+esimb+sA\ncmWq+Wl0UBhEuK6u1VPuaAq29j+VfbbdWy2iKtDtvyLZXymEFb61ThmDLeiXFE7b\nZUh9QsqtOQKBgGBWC3KLxrda0ckqxXJCmTREkrZkxI5ieml7bzIo4Q8joLIJs6sl\n0Hnga/T7uGSQd2jMY2mWyC2Gqd5a/F2zwjUS+IGxRoT2tIxD6zDgzlD4WiiqEAQH\nUFezQBgE7bHU+paT6VR+oCEv6Af/3/he90azSR32ktJwv8jmeIGZ1OmJAoGAPniF\nP8ll/j7k1fY2APz4zenaft8uIHoL/swBoO2YKhfAfCX/1hR0PYTWUHWHADWEPUoV\nMLk3Ld0LyHEzCh+j6pZcGfUehqxg6yH+JM84f2ZyAYbayEAR/Q+DNZKwlM5on+TT\naEnouKU73VpNMSHxsSLEZmP8Nx7bcdjW5mMbtwECgYBzLMTMGpIikmUkIssTlbsw\na0ynMw+7VfAd+cpExO9WC8KgPss0hR4MO8yIb+pciF+HwVAHRoNXW/fGQlX5Y2gB\nIEiTbwXi3FYLK1giETSrPPBIq42NAoyOqIqwgDUPE3UT2Mtwr+1LH8SZxwA1c4vj\nfeoAqKwfyzlwjcg18thG2g==\n-----END PRIVATE KEY-----\n",
+  "client_email": "sensorweb-datacenter@getgeoinfo-1551096614330.iam.gserviceaccount.com",
+  "client_id": "108469972415882215795",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/sensorweb-datacenter%40getgeoinfo-1551096614330.iam.gserviceaccount.com"
+}

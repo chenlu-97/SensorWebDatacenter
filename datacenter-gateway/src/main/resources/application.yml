@@ -1,0 +1,366 @@
+#server:
+#  port: 9999
+#spring:
+#  autoconfigure:
+#    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+#  profiles:
+#    active: dev
+#  application:
+#    name: datacenter-gateway
+#  datasource:
+#    driver-class-name: org.postgresql.Driver
+#    url: jdbc:postgresql://172.16.100.2:5432/postgres
+#    username: postgres
+#    password: 12345
+#    type: com.zaxxer.hikari.HikariDataSource
+#    hikari:
+#      maximum-pool-size: 15
+#      minimum-idle: 5
+#      idle-timeout: 30000
+#  cloud:
+#    gateway:
+##      filter:
+##        remove-hop-by-hop:
+##          headers:
+##            # 以下是去掉网关默认去掉的请求响应头
+##            - trailer
+##            - te
+##            - keep-alive
+##            - transfer-encoding
+##            - upgrade
+##            - proxy-authenticate
+##            - connection
+##            - proxy-authorization
+##            - x-application-context
+##            # 以下是去掉服务层面定义的跨域
+##            - access-control-allow-credentials
+##            - access-control-allow-headers
+##            - access-control-allow-methods
+##            - access-control-allow-origin
+##            - access-control-max-age
+##            - vary
+#      globalcors:
+#        corsConfigurations:
+#          '[/**]':
+#            allowCredentials: true
+#            allowedOrigins: "*"
+#            allowedHeaders: "*"
+#            allowedMethods: "*"
+#      discovery:
+#        locator:
+#          enabled: true
+#          # 服务名小写
+#          lower-case-service-id: true
+#      routes:
+#        - id: datacenter-auth2-service
+#          uri: lb://datacenter-auth2-service
+#          predicates:
+#            - Path=/auth/**
+#          filters:
+#            - StripPrefix=1
+#        - id: sos-sensor-service
+#          # lb代表从注册中心获取服务,且以负载均衡方式转发
+#          uri: lb://sos-sensor-service
+#          predicates:
+#            - Path=/sensor/**
+#          # 加上StripPrefix=1,否则转发到后端服务时会带上sensor前缀
+#          filters:
+#            - StripPrefix=1
+#        - id: sos-obs-service
+#          # lb代表从注册中心获取服务,且以负载均衡方式转发
+#          uri: lb://sos-obs-service
+#          predicates:
+#            - Path=/observation/**
+#          # 加上StripPrefix=1,否则转发到后端服务时会带上observation前缀
+#          filters:
+#            - StripPrefix=1
+#        - id: datacenter-air-service
+#          # lb代表从注册中心获取服务,且以负载均衡方式转发
+#          uri: lb://datacenter-air-service
+#          predicates:
+#            - Path=/air/**
+#          # 加上StripPrefix=1,否则转发到后端服务时会带上air前缀
+#          filters:
+#            - StripPrefix=1
+#        - id: datacenter-himawari-service
+#          # lb代表从注册中心获取服务,且以负载均衡方式转发
+#          uri: lb://datacenter-himawari-service
+#          predicates:
+#            - Path=/himawari/**
+#          # 加上StripPrefix=1,否则转发到后端服务时会带上himawari前缀
+#          filters:
+#            - StripPrefix=1
+#        - id: datacenter-laads-service
+#          # lb代表从注册中心获取服务,且以负载均衡方式转发
+#          uri: lb://datacenter-laads-service
+#          predicates:
+#            - Path=/laads/**
+#          # 加上StripPrefix=1,否则转发到后端服务时会带上laads前缀
+#          filters:
+#            - StripPrefix=1
+#        - id: datacenter-cwic-service
+#          # lb代表从注册中心获取服务,且以负载均衡方式转发
+#          uri: lb://datacenter-cwic-service
+#          predicates:
+#            - Path=/cwic/**
+#          # 加上StripPrefix=1,否则转发到后端服务时会带上cwic前缀
+#          filters:
+#            - StripPrefix=1
+#        - id: datacenter-indicator-service
+#          # lb代表从注册中心获取服务,且以负载均衡方式转发
+#          uri: lb://datacenter-indicator-service
+#          predicates:
+#            - Path=/indicator/**
+#          # 加上StripPrefix=1,否则转发到后端服务时会带上indicator前缀
+#          filters:
+#            - StripPrefix=1
+#        - id: datacenter-product-service
+#          # lb代表从注册中心获取服务,且以负载均衡方式转发
+#          uri: lb://datacenter-product-service
+#          predicates:
+#            - Path=/product/**
+#          # 加上StripPrefix=1,否则转发到后端服务时会带上product前缀
+#          filters:
+#            - StripPrefix=1
+#        - id: datacenter-gee-service
+#          # lb代表从注册中心获取服务,且以负载均衡方式转发
+#          uri: lb://datacenter-gee-service
+#          predicates:
+#            - Path=/gee/**
+#          # 加上StripPrefix=1,否则转发到后端服务时会带上gee前缀
+#          filters:
+#            - StripPrefix=1
+#        - id: datacenter-offline-service
+#            # lb代表从注册中心获取服务,且以负载均衡方式转发
+#          uri: lb://datacenter-offline-service
+#          predicates:
+#            - Path=/offline/**
+#            # 加上StripPrefix=1,否则转发到后端服务时会带上offline前缀
+#          filters:
+#            - StripPrefix=1
+#        - id: datacenter-weather-service
+#            # lb代表从注册中心获取服务,且以负载均衡方式转发
+#          uri: lb://datacenter-weather-service
+#          predicates:
+#            - Path=/weather/**
+#            # 加上StripPrefix=1,否则转发到后端服务时会带上weather前缀
+#          filters:
+#            - StripPrefix=1
+#        - id: datacenter-littleSensor-service
+#          # lb代表从注册中心获取服务,且以负载均衡方式转发
+#          uri: lb://datacenter-littleSensor-service
+#          predicates:
+#            - Path=/littleSensor/**
+#            # 加上StripPrefix=1,否则转发到后端服务时会带上weather前缀
+#          filters:
+#            - StripPrefix=1
+## eureka注册中心
+#eureka:
+#  instance:
+#    prefer-ip-address: true
+#  client:
+#    service-url:
+#      defaultZone: http://172.16.100.2:7001/eureka/,http://172.16.100.2:7002/eureka/,http://172.16.100.2:7003/eureka/
+#
+#
+#
+## 暴露监控端点
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: '*'
+#  endpoint:
+#    health:
+#      show-details: always
+#mybatis:
+#  mapper-locations: classpath:mapper/*.xml
+#  type-aliases-package: com.sensorweb.datacentergateway.entity
+#  configuration:
+#    use-generated-keys: true
+#    map-underscore-to-camel-case: true
+
+
+
+server:
+  port: 9999
+spring:
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+  profiles:
+    active: dev
+  application:
+    name: datacenter-gateway
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/user_db
+    username: postgres
+    password: 12345
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      maximum-pool-size: 15
+      minimum-idle: 5
+      idle-timeout: 30000
+  cloud:
+    gateway:
+      #      filter:
+      #        remove-hop-by-hop:
+      #          headers:
+      #            # 以下是去掉网关默认去掉的请求响应头
+      #            - trailer
+      #            - te
+      #            - keep-alive
+      #            - transfer-encoding
+      #            - upgrade
+      #            - proxy-authenticate
+      #            - connection
+      #            - proxy-authorization
+      #            - x-application-context
+      #            # 以下是去掉服务层面定义的跨域
+      #            - access-control-allow-credentials
+      #            - access-control-allow-headers
+      #            - access-control-allow-methods
+      #            - access-control-allow-origin
+      #            - access-control-max-age
+      #            - vary
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowCredentials: true
+            allowedOrigins: "*"
+            allowedHeaders: "*"
+            allowedMethods: "*"
+      discovery:
+        locator:
+          enabled: true
+          # 服务名小写
+          lower-case-service-id: true
+      routes:
+        - id: datacenter-auth2-service
+          uri: lb://datacenter-auth2-service
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=1
+        - id: sos-sensor-service
+          # lb代表从注册中心获取服务,且以负载均衡方式转发
+          uri: lb://sos-sensor-service
+          predicates:
+            - Path=/sensor/**
+          # 加上StripPrefix=1,否则转发到后端服务时会带上sensor前缀
+          filters:
+            - StripPrefix=1
+        - id: sos-obs-service
+          # lb代表从注册中心获取服务,且以负载均衡方式转发
+          uri: lb://sos-obs-service
+          predicates:
+            - Path=/observation/**
+          # 加上StripPrefix=1,否则转发到后端服务时会带上observation前缀
+          filters:
+            - StripPrefix=1
+        - id: datacenter-air-service
+          # lb代表从注册中心获取服务,且以负载均衡方式转发
+          uri: lb://datacenter-air-service
+          predicates:
+            - Path=/air/**
+          # 加上StripPrefix=1,否则转发到后端服务时会带上air前缀
+          filters:
+            - StripPrefix=1
+        - id: datacenter-himawari-service
+          # lb代表从注册中心获取服务,且以负载均衡方式转发
+          uri: lb://datacenter-himawari-service
+          predicates:
+            - Path=/himawari/**
+          # 加上StripPrefix=1,否则转发到后端服务时会带上himawari前缀
+          filters:
+            - StripPrefix=1
+        - id: datacenter-laads-service
+          # lb代表从注册中心获取服务,且以负载均衡方式转发
+          uri: lb://datacenter-laads-service
+          predicates:
+            - Path=/laads/**
+          # 加上StripPrefix=1,否则转发到后端服务时会带上laads前缀
+          filters:
+            - StripPrefix=1
+        - id: datacenter-cwic-service
+          # lb代表从注册中心获取服务,且以负载均衡方式转发
+          uri: lb://datacenter-cwic-service
+          predicates:
+            - Path=/cwic/**
+          # 加上StripPrefix=1,否则转发到后端服务时会带上cwic前缀
+          filters:
+            - StripPrefix=1
+        - id: datacenter-indicator-service
+          # lb代表从注册中心获取服务,且以负载均衡方式转发
+          uri: lb://datacenter-indicator-service
+          predicates:
+            - Path=/indicator/**
+          # 加上StripPrefix=1,否则转发到后端服务时会带上indicator前缀
+          filters:
+            - StripPrefix=1
+        - id: datacenter-product-service
+          # lb代表从注册中心获取服务,且以负载均衡方式转发
+          uri: lb://datacenter-product-service
+          predicates:
+            - Path=/product/**
+          # 加上StripPrefix=1,否则转发到后端服务时会带上product前缀
+          filters:
+            - StripPrefix=1
+        - id: datacenter-gee-service
+          # lb代表从注册中心获取服务,且以负载均衡方式转发
+          uri: lb://datacenter-gee-service
+          predicates:
+            - Path=/gee/**
+          # 加上StripPrefix=1,否则转发到后端服务时会带上gee前缀
+          filters:
+            - StripPrefix=1
+        - id: datacenter-offline-service
+          # lb代表从注册中心获取服务,且以负载均衡方式转发
+          uri: lb://datacenter-offline-service
+          predicates:
+            - Path=/offline/**
+            # 加上StripPrefix=1,否则转发到后端服务时会带上offline前缀
+          filters:
+            - StripPrefix=1
+        - id: datacenter-weather-service
+          # lb代表从注册中心获取服务,且以负载均衡方式转发
+          uri: lb://datacenter-weather-service
+          predicates:
+            - Path=/weather/**
+            # 加上StripPrefix=1,否则转发到后端服务时会带上weather前缀
+          filters:
+            - StripPrefix=1
+        - id: datacenter-littleSensor-service
+          # lb代表从注册中心获取服务,且以负载均衡方式转发
+          uri: lb://datacenter-littleSensor-service
+          predicates:
+            - Path=/littleSensor/**
+            # 加上StripPrefix=1,否则转发到后端服务时会带上weather前缀
+          filters:
+            - StripPrefix=1
+# eureka注册中心
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka/
+#    ,http://localhost:7002/eureka/,http://localhost:7003/eureka/
+
+
+
+# 暴露监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.sensorweb.datacentergateway.entity
+  configuration:
+    use-generated-keys: true
+    map-underscore-to-camel-case: true

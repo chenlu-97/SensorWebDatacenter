@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sensorweb.datacentergateway.dao.ResRoleMapper">
+    <sql id="insertFields">
+        rid, res_id
+    </sql>
+
+    <sql id="selectFields">
+        id, rid, res_id
+    </sql>
+
+    <insert id="insertData" parameterType="ResRole">
+        INSERT INTO res_role (<include refid="insertFields"></include>)
+        VALUES (#{rid}, #{resId})
+    </insert>
+
+    <select id="selectByRid" resultMap="resRole">
+        SELECT <include refid="selectFields"></include>
+        FROM res_role
+        WHERE rid = #{rid}
+    </select>
+
+    <select id="selectByResId" resultMap="resRole">
+        SELECT <include refid="selectFields"></include>
+        FROM res_role
+        WHERE res_id = #{resId}
+    </select>
+
+    <resultMap id="resRole" type="ResRole">
+        <id property="id" column="id"/>
+        <result property="rid" column="rid"/>
+        <result property="resId" column="res_id"/>
+    </resultMap>
+
+</mapper>

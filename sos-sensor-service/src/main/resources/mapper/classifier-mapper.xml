@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sensorweb.sossensorservice.dao.ClassifierMapper">
+    <sql id="insertFields">
+        cla_label, cla_def, cla_value, proc_id
+    </sql>
+
+    <sql id="selectFields">
+        id, cla_label, cla_def, cla_value, proc_id
+    </sql>
+
+    <insert id="insertData" parameterType="Classifier">
+        INSERT INTO classifier (<include refid="insertFields"></include>)
+        VALUES (#{label}, #{definition}, #{value}, #{procedureId})
+    </insert>
+
+    <delete id="deleteByProcedureId">
+        DELETE FROM classifier
+        WHERE proc_id = #{procedureId}
+    </delete>
+
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM classifier
+        WHERE id = #{id}
+    </delete>
+
+    <select id="selectByProcedureId" resultMap="classifier">
+        SELECT <include refid="selectFields"></include>
+        FROM classifier
+        WHERE proc_id = #{id}
+    </select>
+
+    <select id="selectByLabelAndProcedureId" resultMap="classifier">
+        SELECT <include refid="selectFields"></include>
+        FROM classifier
+        WHERE cla_label = #{label} AND proc_id = #{procedureId}
+    </select>
+
+    <select id="selectByLabelAndValue" resultMap="classifier">
+        SELECT <include refid="selectFields"></include>
+        FROM classifier
+        WHERE cla_value = #{value} AND cla_label = #{label}
+    </select>
+
+    <resultMap id="classifier" type="Classifier">
+        <id property="id" column="id"/>
+        <result property="label" column="cla_label"/>
+        <result property="definition" column="cla_def"/>
+        <result property="value" column="cla_value"/>
+        <result property="procedureId" column="proc_id"/>
+    </resultMap>
+
+</mapper>

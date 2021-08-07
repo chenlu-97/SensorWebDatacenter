@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sensorweb.datacenterofflineservice.dao.WH_WaterQualityMapper" >
+    <sql id="insertFields">
+        river_name,section_name,query_time, water_temperature,ph,dissolved_oxygen,permanganate_index ,biochemical_oxygen_demand,
+        total_phosphorus , ammonia_nitrogen ,total_nitrogen
+    </sql>
+    <sql id="insertFields123">
+        river_name,section_name,query_time,turbidity,chlorophyll
+    </sql>
+
+    <sql id="selectFields">
+        id,river_name,section_name,query_time, water_temperature, ph,dissolved_oxygen,permanganate_index ,biochemical_oxygen_demand,
+        total_phosphorus , ammonia_nitrogen ,total_nitrogen
+    </sql>
+    <sql id="selectFields123">
+        id,river_name,section_name,query_time,turbidity,chlorophyll
+    </sql>
+
+
+
+    <insert id="insertWH_WaterQuality" parameterType="WH_WaterQuality" useGeneratedKeys="true" keyProperty="id">
+        insert into wh_water_quality (<include refid="insertFields"></include>)
+        values (#{riverName},#{sectionName}, #{queryTime}, #{waterTemperature}, #{pH},#{dissolvedOxygen},#{permanganateIndex},#{biochemicalOxygenDemand},
+                #{totalPhosphorus},#{ammoniaNitrogen},#{totalNitrogen})
+    </insert>
+
+    <insert id="insertDataBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO wh_water_quality (<include refid="insertFields"></include>)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.riverName},#{item.sectionName},#{item.queryTime}, #{item.waterTemperature}, #{item.pH},#{item.dissolvedOxygen},#{item.permanganateIndex},#{item.biochemicalOxygenDemand},
+            #{item.totalPhosphorus},#{item.ammoniaNitrogen},#{item.totalNitrogen})
+        </foreach>
+    </insert>
+
+    <!--自动站的插入-->
+    <insert id="insertWH_WaterQuality_AutoStation" parameterType="WH_WaterQuality" useGeneratedKeys="true" keyProperty="id">
+        insert into wh_water_quality_auto (<include refid="insertFields123"></include>)
+        values ( #{riverName},#{sectionName}, #{queryTime}, #{turbidity},#{chlorophyll})
+    </insert>
+
+    <insert id="insertDataBatch_AutoStation" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO wh_water_quality_auto (<include refid="insertFields123"></include>)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.riverName},#{item.sectionName},#{item.queryTime},#{item.turbidity},#{item.chlorophyll})
+        </foreach>
+    </insert>
+
+
+<!--    <select id="selectByIds" resultMap="WH_WaterQuality">-->
+<!--        SELECT (<include refid="selectFields"></include>)-->
+<!--        FROM wh_water_quality-->
+<!--        WHERE id in-->
+<!--        <foreach collection="ids" item="id" open="(" close=")" separator=",">-->
+<!--            #{id}-->
+<!--        </foreach>-->
+<!--    </select>-->
+
+    <select id="selectWH_WaterQuality" resultMap="WH_WaterQuality">
+        SELECT (<include refid="selectFields"></include>)
+        FROM wh_water_quality
+        WHERE 1=1
+    </select>
+
+    <select id="selectWH_WaterQuality_AutoStation" resultMap="WH_WaterQuality">
+        SELECT (<include refid="selectFields123"></include>)
+        FROM wh_water_quality_auto
+        WHERE 1=1
+    </select>
+
+    <select id="selectByAttribute" resultMap="WH_WaterQuality">
+        SELECT (<include refid="selectFields"></include>)
+        FROM wh_water_quality
+        WHERE section_name = #{sectionName}
+    </select>
+
+    <select id="selectByAttribute_AutoStation" resultMap="WH_WaterQuality">
+        SELECT (<include refid="selectFields123"></include>)
+        FROM wh_water_quality_auto
+        WHERE section_name = #{sectionName}
+    </select>
+
+    <resultMap id="WH_WaterQuality" type="WH_WaterQuality">
+        <id column="id" property="id"/>
+        <result column="river_name" property="riverName"/>
+        <result column="section_name" property="sectionName"/>
+        <result column="query_time" property="queryTime"/>
+        <result column="water_temperature" property="waterTemperature"/>
+        <result column="ph" property="pH"/>
+        <result column="dissolved_oxygen" property="dissolvedOxygen"/>
+        <result column="permanganate_index" property="permanganateIndex"/>
+        <result column="biochemical_oxygen_demand" property="biochemicalOxygenDemand"/>
+        <result column="total_phosphorus" property="totalPhosphorus"/>
+        <result column="ammonia_nitrogen" property="ammoniaNitrogen"/>
+        <result column="total_nitrogen" property="totalNitrogen"/>
+        <result column="turbidity" property="turbidity"/>
+        <result column="chlorophyll" property="chlorophyll"/>
+    </resultMap>
+
+    <select id="selectNum1" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM wh_water_quality
+    </select>
+
+    <select id="selectNum2" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM wh_water_quality_auto
+    </select>
+
+    <select id="selectByIds" resultMap="WH_WaterQuality" >
+        SELECT <include refid="selectFields"></include>
+        FROM wh_water_quality
+        WHERE section_name in
+        <foreach collection="sectionname" item="sectionName" open="(" close=")" separator=",">
+            #{sectionName}
+        </foreach>
+        ORDER BY query_time DESC
+        LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+
+    <select id="selectByPage" resultMap="WH_WaterQuality">
+        SELECT <include refid="selectFields"></include>
+        FROM wh_water_quality ORDER BY query_time DESC
+        LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+
+
+
+    <select id="selectAutoByIds" resultMap="WH_WaterQuality" >
+        SELECT <include refid="selectFields123"></include>
+        FROM wh_water_quality_auto
+        WHERE section_name in
+        <foreach collection="sectionname" item="sectionName" open="(" close=")" separator=",">
+            #{sectionName}
+        </foreach>
+        ORDER BY query_time DESC
+        LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+
+    <select id="selectAutoByPage" resultMap="WH_WaterQuality">
+        SELECT <include refid="selectFields123"></include>
+        FROM wh_water_quality_auto ORDER BY query_time DESC
+        LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+
+</mapper>

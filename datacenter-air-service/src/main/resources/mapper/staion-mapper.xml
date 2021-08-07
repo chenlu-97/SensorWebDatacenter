@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sensorweb.datacenterairservice.dao.AirStationMapper">
+    <sql id="insertFields">
+        station_id, station_name, township, region, city, province, lon, lat, stype, geom
+    </sql>
+
+    <sql id="selectFields">
+        id, station_id, station_name, township, region, city, province, lon, lat, stype,geom
+    </sql>
+
+    <insert id="insertData" parameterType="AirStationModel" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO station (<include refid="insertFields"></include>)
+        VALUES (#{stationId}, #{stationName}, #{township}, #{region}, #{city}, #{province}, #{lon}, #{lat}, #{stationType}, ST_GeomFromText(#{geom}, 4326) )
+    </insert>
+
+    <insert id="insertDataBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO station (<include refid="insertFields"></include>)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.stationId}, #{item.stationName}, #{item.township}, #{item.region}, #{item.city}, #{item.province}, #{item.lon}, #{item.lat}, #{item.stationType}, ST_GeomFromText(#{item.geom}, 4326)  )
+        </foreach>
+    </insert>
+
+    <select id="selectById" resultMap="airStationModel">
+        SELECT <include refid="selectFields"></include>
+        FROM station
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectByStationId" resultMap="airStationModel">
+        SELECT <include refid="selectFields"></include>
+        FROM station
+        WHERE station_id = #{stationId}
+    </select>
+
+    <select id="selectByOffsetAndLimit" resultMap="airStationModel">
+        SELECT <include refid="selectFields"></include>
+        FROM station
+        WHERE LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="selectAllCount" resultType="int">
+        SELECT count(*)
+        FROM station
+    </select>
+
+    <select id="selectByAll" resultMap="airStationModel">
+        SELECT <include refid="selectFields"></include>
+        FROM station
+        WHERE 1=1
+    </select>
+
+    <resultMap id="airStationModel" type="AirStationModel">
+        <id column="id" property="id"/>
+        <result column="station_id" property="stationId"/>
+        <result column="station_name" property="stationName"/>
+        <result column="township" property="township"/>
+        <result column="region" property="region"/>
+        <result column="city" property="city"/>
+        <result column="province" property="province"/>
+        <result column="lon" property="lon"/>
+        <result column="lat" property="lat"/>
+        <result column="stype" property="stationType"/>
+        <result column="geom" property="geom"/>
+    </resultMap>
+
+    <select id="selectStationByTypeAndSpa"  resultType="java.lang.String">
+        SELECT station_id
+        FROM station
+        WHERE stype = #{type} AND
+        <if test="spa == 'wuhanCC'">
+            ST_Intersects(geom, (SELECT geom FROM wuhancitycircle)) = true
+        </if>
+        <if test="spa == 'yangtzeRiverEB'">
+            ST_Intersects(geom, (SELECT geom FROM changjiang)) = true
+        </if>
+        <if test="spa == 'china'">
+            ST_Intersects(geom, (SELECT geom FROM china_1984_mian)) = true
+        </if>
+    </select>
+
+
+    <update id="updateGeom" parameterType="AirStationModel">
+        update station
+        <set>
+            geom = (ST_GeomFromText(#{wkt}, 4326))
+        </set>
+        where lon=#{lon} and lat = #{lat}
+    </update>
+
+
+</mapper>

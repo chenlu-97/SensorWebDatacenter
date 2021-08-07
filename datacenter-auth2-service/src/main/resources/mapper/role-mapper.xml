@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sensorweb.datacenterauth2service.dao.RoleMapper">
+    <sql id="insertFields">
+        name, nameZh
+    </sql>
+
+    <sql id="selectFields">
+        id, name, nameZh
+    </sql>
+
+    <insert id="insertData" parameterType="Role">
+        INSERT INTO sys_role (<include refid="insertFields"></include>)
+        VALUES (#{name}, #{nameZh})
+    </insert>
+
+    <select id="selectById" resultMap="role">
+        SELECT <include refid="selectFields"></include>
+        FROM sys_role
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectByName" resultMap="role">
+        SELECT <include refid="selectFields"></include>
+        FROM sys_role
+        WHERE name = #{name}
+    </select>
+
+    <resultMap id="role" type="role">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="nameZh" column="namezh"/>
+    </resultMap>
+
+</mapper>

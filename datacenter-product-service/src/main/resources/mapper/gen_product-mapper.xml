@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sensorweb.datacenterproductservice.dao.GenProductMapper">
+    <sql id="insertFields">
+        product_type, data_needed, module_needed, region
+    </sql>
+
+    <sql id="selectFields">
+        id, product_type, data_needed, module_needed,region
+    </sql>
+
+    <insert id="insertData" parameterType="GenProduct" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO product_info (<include refid="insertFields"></include>)
+        VALUES (#{productType}, #{dataNeeded}, #{moduleNeeded} ,#{region})
+    </insert>
+
+    <select id="selectAll" resultMap="genProduct">
+        SELECT <include refid="selectFields"></include>
+        FROM product_info
+    </select>
+
+    <select id="selectById" resultMap="genProduct">
+        SELECT <include refid="selectFields"></include>
+        FROM product_info
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectByType" resultMap="genProduct">
+        SELECT <include refid="selectFields"></include>
+        FROM product_info
+        WHERE product_type = #{type}
+    </select>
+
+    <select id="selectByTypeAndRegion" resultMap="genProduct">
+        SELECT <include refid="selectFields"></include>
+        FROM product_info
+        WHERE product_type = #{type} AND region = #{region}
+    </select>
+
+    <resultMap id="genProduct" type="GenProduct">
+        <id column="id" property="id"/>
+        <result column="product_type" property="productType"/>
+        <result column="data_needed" property="dataNeeded"/>
+        <result column="module_needed" property="moduleNeeded"/>
+        <result column="region" property="region"/>
+    </resultMap>
+</mapper>

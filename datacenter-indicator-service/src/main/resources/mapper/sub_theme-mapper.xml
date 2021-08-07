@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sensorweb.datacenterindicatorservice.dao.SubThemeMapper">
+    <sql id="insertFields">
+        sub_name, indicator_name, sub_scale, spa_resolution, obs_frequency, out_id
+    </sql>
+
+    <sql id="selectFields">
+        id, sub_name, indicator_name, sub_scale, spa_resolution, obs_frequency, out_id
+    </sql>
+
+    <insert id="insertData" parameterType="SubTheme" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sub_theme (<include refid="insertFields"></include>)
+        VALUES (#{name}, #{indicatorName}, #{scale}, #{spaResolution}, #{obsFrequency}, #{outId})
+    </insert>
+
+    <insert id="insertDataBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sub_theme (<include refid="insertFields"></include>)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.name}, #{item.indicatorName}, #{item.scale}, #{item.spaResolution}, #{item.obsFrequency}, #{item.outId})
+        </foreach>
+    </insert>
+
+    <resultMap id="subTheme" type="SubTheme">
+        <id property="id" column="id"/>
+        <result property="name" column="sub_name"/>
+        <result property="indicatorName" column="indicator_name"/>
+        <result property="scale" column="sub_scale"/>
+        <result property="spaResolution" column="spa_resolution"/>
+        <result property="obsFrequency" column="obs_frequency"/>
+        <result property="outId" column="out_id"/>
+    </resultMap>
+
+</mapper>

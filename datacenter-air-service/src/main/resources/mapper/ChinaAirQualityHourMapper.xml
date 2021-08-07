@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sensorweb.datacenterairservice.dao.ChinaAirQualityHourMapper" >
+
+  <sql id="insertFields">
+    aqi, area, co, co_24h, no2, no2_24h, o3, o3_24h, o3_8h, o3_8h_24h, pm10, pm10_24h,
+    pm2_5, pm2_5_24h, position_name, primary_pollutant, quality, so2, so2_24h, station_code,
+    time_point,lng,lat,"QT",time
+  </sql>
+
+  <sql id="selectFields">
+    aqi, area, co, co_24h, no2, no2_24h, o3, o3_24h, o3_8h, o3_8h_24h, pm10, pm10_24h,
+    pm2_5, pm2_5_24h, position_name, primary_pollutant, quality, so2, so2_24h, station_code,
+    time_point,lng,lat,"QT",time
+  </sql>
+
+  <insert id="insert" parameterType="ChinaAirQualityHour">
+    INSERT INTO china_air_hourly (<include refid="insertFields"></include>)
+    VALUES (#{aqi}, #{area},
+    #{co}, #{co24h}, #{no2}, #{no224h},
+    #{o3}, #{o324h}, #{o38h}, #{o38h24h},
+    #{pm10}, #{pm1024h}, #{pm25},
+    #{pm2524h}, #{positionName}, #{primaryPollutant},
+    #{quality}, #{so2}, #{so224h},
+    #{stationCode}, #{timePoint},#{lng},#{lat},#{qt},#{time})
+  </insert>
+
+
+  <select id="selectByIdAndTime" resultMap="chinaAirQualityHour">
+    SELECT <include refid="selectFields"></include>
+    FROM china_air_hourly
+    WHERE time = #{time} AND station_code in
+    <foreach collection="stationcode" item="stationCode" open="(" close=")" separator=",">
+    #{stationCode}
+    </foreach>
+  </select>
+
+  <resultMap id="chinaAirQualityHour" type="ChinaAirQualityHour">
+    <result column="aqi" property="aqi"/>
+    <result column="area" property="area"/>
+    <result column="co" property="co"/>
+    <result column="co_24h" property="co24h"/>
+    <result column="no2" property="no2"/>
+    <result column="no2_24h" property="no224h"/>
+    <result column="o3" property="o3"/>
+    <result column="o3_24h" property="o324h"/>
+    <result column="o3_8h" property="o38h"/>
+    <result column="o3_8h_24h" property="o38h24h"/>
+    <result column="pm10" property="pm10"/>
+    <result column="pm10_24h" property="pm1024h"/>
+    <result column="pm2_5" property="pm25"/>
+    <result column="pm2_5_24h" property="pm2524h"/>
+    <result column="position_name" property="positionName"/>
+    <result column="primary_pollutant" property="primaryPollutant"/>
+    <result column="quality" property="quality"/>
+    <result column="so2" property="so2"/>
+    <result column="so2_24h" property="so224h"/>
+    <result column="station_code" property="stationCode"/>
+    <result column="time_point" property="timePoint"/>
+    <result column="lng" property="lng"/>
+    <result column="lat" property="lat"/>
+    <result column="QT" property="qt"/>
+    <result column="time" property="time"/>
+  </resultMap>
+
+  <select id="selectByTime" resultType="java.lang.Integer">
+    SELECT  count(*)
+    FROM china_air_hourly
+    WHERE time_point <![CDATA[>=]]> #{begin} AND time_point <![CDATA[<=]]> #{end}
+  </select>
+
+
+  <select id="selectNum" resultType="java.lang.Integer">
+    SELECT count(*)
+    FROM china_air_hourly
+  </select>
+
+  <select id="selectByIds" resultMap="chinaAirQualityHour" >
+    SELECT <include refid="selectFields"></include>
+    FROM china_air_hourly
+    WHERE station_code in
+    <foreach collection="stationcode" item="stationCode" open="(" close=")" separator=",">
+      #{stationCode}
+    </foreach>
+    LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+  </select>
+
+  <select id="selectByPage" resultMap="chinaAirQualityHour">
+    SELECT <include refid="selectFields"></include>
+    FROM china_air_hourly
+    LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+  </select>
+
+</mapper>

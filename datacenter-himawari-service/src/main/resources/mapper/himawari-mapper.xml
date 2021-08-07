@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sensorweb.datacenterhimawariservice.dao.HimawariMapper">
+    <sql id="insertFields">
+        h_name, h_time, h_area, pixel_num, line_num, file_url, local_path
+    </sql>
+
+    <sql id="selectFields">
+        id, h_name, h_time, h_area, pixel_num, line_num, file_url, local_path
+    </sql>
+
+    <insert id="insertData" parameterType="Himawari" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO himawari (<include refid="insertFields"></include>)
+        VALUES (#{name}, #{time}, #{area}, #{pixelNum}, #{lineNum}, #{url}, #{localPath})
+    </insert>
+
+    <insert id="insertDataBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO himawari (<include refid="insertFields"></include>)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.name}, #{item.time}, #{item.area}, #{item.pixelNum}, #{item.lineNum}, #{item.url}, #{item.localPath})
+        </foreach>
+    </insert>
+
+    <select id="selectById" resultMap="himawari">
+        SELECT <include refid="selectFields"></include>
+        FROM himawari
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectByTime" resultMap="himawari">
+        SELECT <include refid="selectFields"></include>
+        FROM himawari
+        WHERE h_time = #{time}
+    </select>
+
+    <select id="selectByName" resultMap="himawari">
+        SELECT <include refid="selectFields"></include>
+        FROM himawari
+        WHERE h_name = #{name}
+    </select>
+
+<!--    <select id="selectBySpatialAndTemporal" resultMap="observation">-->
+<!--        SELECT <include refid="selectFields"></include>-->
+<!--        FROM himawari-->
+<!--        WHERE 1=1 AND h_time <![CDATA[>=]]> #{begin} AND h_time <![CDATA[<=]]> #{end}-->
+<!--        <if test="region == '武汉城市圈'">-->
+<!--            AND ST_Within(geom, (SELECT geom FROM wuhancitycircle)) = true-->
+<!--        </if>-->
+<!--        <if test="region == '全国'">-->
+<!--            AND ST_Within(geom, (SELECT geom FROM china_1984_mian)) = true-->
+<!--        </if>-->
+<!--        <if test="region == '长江经济带'">-->
+<!--            AND ST_Within(geom, (SELECT geom FROM changjiang)) = true-->
+<!--        </if>-->
+<!--    </select>-->
+
+    <resultMap id="himawari" type="Himawari">
+        <id property="id" column="id"/>
+        <result property="name" column="h_name"/>
+        <result property="time" column="h_time"/>
+        <result property="area" column="h_area"/>
+        <result property="pixelNum" column="pixel_num"/>
+        <result property="lineNum" column="line_num"/>
+        <result property="url" column="file_url"/>
+        <result property="localPath" column="local_path"/>
+    </resultMap>
+
+    <select id="selectNum" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM himawari
+    </select>
+
+
+    <select id="selectByIds" resultMap="himawari" >
+        SELECT <include refid="selectFields"></include>
+        FROM himawari
+        WHERE id in
+        <foreach collection="id" item="=id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+        ORDER BY h_time DESC
+        LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+
+    <select id="selectByPage" resultMap="himawari">
+        SELECT <include refid="selectFields"></include>
+        FROM himawari ORDER BY h_time DESC
+        LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+
+
+    <select id="selectMaxTimeData" resultMap="himawari">
+        select <include refid="selectFields"></include>
+        from himawari where h_time = (select max(h_time) from himawari);
+    </select>
+
+</mapper>

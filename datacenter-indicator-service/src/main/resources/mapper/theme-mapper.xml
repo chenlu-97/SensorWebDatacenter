@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sensorweb.datacenterindicatorservice.dao.ThemeMapper">
+    <sql id="insertFields">
+        model_id, model_name, index_name, description, th_field, th_subject, begin_time, end_time, bbox, geom
+    </sql>
+
+    <sql id="selectFields">
+        t.id, t.model_id, t.model_name, t.index_name, t.description, t.th_field, t.th_subject, t.begin_time, t.end_time, t.bbox,
+        s.id AS sub_id, s.sub_name AS sub_sub_name, s.indicator_name AS sub_indicator_name, s.sub_scale AS sub_sub_scale, s.spa_resolution AS sub_spa_resolution, s.obs_frequency AS sub_obs_frequency, s.out_id AS sub_out_id
+    </sql>
+
+    <insert id="insertData" parameterType="Theme" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO theme (<include refid="insertFields"></include>)
+        VALUES (#{modelId}, #{modelName}, #{indexName}, #{description}, #{field}, #{subject}, #{beginTime}, #{endTime}, #{bbox}, ST_GeomFromText(#{wkt}, 4326))
+    </insert>
+
+    <insert id="insertDataBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO theme (<include refid="insertFields"></include>)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.modelId}, #{item.modelName}, #{item.indexName}, #{item.description}, #{item.field}, #{item.subject}, #{item.beginTime}, #{item.endTime}, #{item.bbox}, ST_GeomFromText(#{item.wkt}, 4326))
+        </foreach>
+    </insert>
+
+    <select id="selectAll" resultMap="theme">
+        SELECT <include refid="selectFields"></include>
+        FROM theme t, sub_theme s
+        WHERE t.model_id = s.out_id
+    </select>
+
+    <select id="selectByModelId" resultMap="theme">
+        SELECT <include refid="selectFields"></include>
+        FROM theme t, sub_theme s
+        WHERE t.model_id = #{modelId} AND t.model_id = s.out_id
+    </select>
+
+    <resultMap id="theme" type="Theme">
+        <id property="id" column="id"/>
+        <result property="modelId" column="model_id"/>
+        <result property="modelName" column="model_name"/>
+        <result property="indexName" column="index_name"/>
+        <result property="description" column="description"/>
+        <result property="field" column="th_field"/>
+        <result property="subject" column="th_subject"/>
+        <result property="beginTime" column="begin_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="bbox" column="bbox"/>
+        <collection property="subThemes" ofType="SubTheme" columnPrefix="sub_">
+            <id property="id" column="id"/>
+            <result property="name" column="sub_name"/>
+            <result property="indicatorName" column="indicator_name"/>
+            <result property="scale" column="sub_scale"/>
+            <result property="spaResolution" column="spa_resolution"/>
+            <result property="obsFrequency" column="obs_frequency"/>
+            <result property="outId" column="out_id"/>
+        </collection>
+    </resultMap>
+
+</mapper>

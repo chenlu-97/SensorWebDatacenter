@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sensorweb.datacenterproductservice.dao.DataPathMapper">
+
+<!--    private int id;-->
+<!--    private String dataId;-->
+<!--    private String dataType;-->
+<!--    private Instant beginTime;-->
+<!--    private Instant endTime;-->
+<!--    private String filePath;-->
+<!--    private int geoType;-->
+
+    <sql id="insertFields">
+         data_id, data_type,begin_time,end_time,file_path,geo_type
+    </sql>
+
+    <sql id="selectFields">
+        id, data_id, data_type, begin_time,end_time,file_path,geo_type
+    </sql>
+
+    <insert id="insertNeededData" parameterType="DataPath" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO needed_data (<include refid="insertFields"></include>)
+        VALUES (#{dataId}, #{dataType}, #{beginTime} ,#{endTime},#{filePath},#{geoType})
+    </insert>
+
+
+    <select id="selectFilePathByTimeAndType" parameterType="DataPath" resultType="java.lang.String">
+        SELECT file_path
+        FROM needed_data
+        WHERE begin_time = #{begin} AND data_type = #{type} AND geo_type = #{spa}
+    </select>
+
+    <resultMap id="dataPath" type="DataPath">
+        <id column="id" property="id"/>
+        <result column="data_id" property="dataId"/>
+        <result column="data_type" property="dataType"/>
+        <result column="begin_time" property="beginTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="file_path" property="filePath"/>
+        <result column="geo_type" property="geoType"/>
+    </resultMap>
+</mapper>

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sensorweb.sosobsservice.dao.ObservationMapper">
+    <sql id="insertFields">
+        proc_id, obs_name, obs_des, obs_time, begin_time, end_time, bbox, geom, obs_property, obs_type, mapping, out_id,geo_type
+    </sql>
+
+    <sql id="selectFields">
+        id, proc_id, obs_name, obs_des, obs_time, begin_time, end_time, bbox, obs_property, obs_type, mapping, out_id,geo_type
+    </sql>
+
+    <insert id="insertData" parameterType="Observation">
+        INSERT INTO observation (<include refid="insertFields"></include>)
+        VALUES (#{procedureId}, #{name}, #{description}, #{obsTime}, #{beginTime}, #{endTime}, #{bbox}, ST_GeomFromText(#{wkt}, 4326), #{obsProperty}, #{type}, #{mapping}, #{outId},#{geoType})
+    </insert>
+
+    <insert id="insertDataBatch" parameterType="java.util.List">
+        INSERT INTO observation (<include refid="insertFields"></include>)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.procedureId}, #{item.name}, #{item.description}, #{item.obsTime}, #{item.beginTime}, #{item.endTime}, #{item.bbox}, ST_GeomFromText(#{item.wkt}, 4326), #{item.obsProperty}, #{item.type}, #{item.mapping}, #{item.outId},#{item.geoType})
+        </foreach>
+    </insert>
+
+    <delete id="deleteByProcedureId">
+        DELETE FROM observation
+        WHERE proc_id = #{procedureId}
+    </delete>
+
+    <select id="selectNum" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM observation
+    </select>
+
+    <select id="selectByPage" resultMap="observation">
+        SELECT <include refid="selectFields"></include>
+        FROM observation
+        LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+
+    <select id="selectByProcedureId" resultMap="observation">
+        SELECT <include refid="selectFields"></include>
+        FROM observation
+        WHERE proc_id = #{procedureId}
+    </select>
+
+    <select id="selectByObsType" resultMap="observation">
+        SELECT <include refid="selectFields"></include>
+        FROM observation
+        WHERE obs_type = #{type}
+    </select>
+
+    <select id="selectByObsProp" resultMap="observation">
+        SELECT <include refid="selectFields"></include>
+        FROM observation
+        WHERE obs_property = #{obsProperty}
+    </select>
+
+    <select id="selectByObsTime" resultMap="observation">
+        SELECT <include refid="selectFields"></include>
+        FROM observation
+        WHERE obs_time <![CDATA[<=]]> #{obsTime}
+    </select>
+
+    <select id="selectByTemporal" resultMap="observation">
+        SELECT <include refid="selectFields"></include>
+        FROM observation
+        WHERE begin_time <![CDATA[>=]]> #{begin} AND end_time <![CDATA[<=]]> #{end}
+    </select>
+
+    <select id="selectByTemAndSpaAndType" parameterType="java.util.List" resultMap="observation">
+        SELECT <include refid="selectFields"></include>
+        FROM observation
+        WHERE begin_time <![CDATA[>=]]> #{begin} AND end_time <![CDATA[<=]]> #{end} AND obs_type = #{type} AND
+        <foreach collection="cityIds" item="item" index="index" separator="OR" open="(" close=")">
+            <if test="spa == '武汉城市圈'">
+                ST_Intersects(geom, (SELECT geom FROM wuhancitycircle WHERE gid = #{item})) = true
+            </if>
+            <if test="spa == '全国'">
+                ST_Intersects(geom, (SELECT geom FROM china_1984_mian WHERE gid = #{item})) = true
+            </if>
+            <if test="spa == '长江经济带'">
+                ST_Intersects(geom, (SELECT geom FROM changjiang WHERE gid = #{item})) = true
+            </if>
+        </foreach>
+    </select>
+
+    <select id="selectByTemAndSpaAndTypeNew" parameterType="java.util.List" resultMap="observation">
+        SELECT <include refid="selectFields"></include>
+        FROM observation
+        WHERE begin_time <![CDATA[>=]]> #{begin} AND end_time <![CDATA[<=]]> #{end} AND obs_type = #{type} AND
+        <if test="spa == '武汉城市圈'">
+            geo_type = 1
+        </if>
+        <if test="spa == '全国'">
+            geo_type = 3 or geo_type = 1 or geo_type = 2
+        </if>
+        <if test="spa == '长江经济带'">
+            geo_type = 2 or geo_type = 1
+        </if>
+    </select>
+
+    <select id="selectByTimeAndSpa" parameterType="java.util.List" resultMap="observationNew">
+        SELECT  begin_time,end_time,obs_type,out_id
+        FROM observation
+        WHERE begin_time <![CDATA[>=]]> #{begin} AND end_time <![CDATA[<=]]> #{end} AND
+        <if test="spa == '武汉城市圈'">
+            geo_type = 1
+        </if>
+        <if test="spa == '全国'">
+            geo_type = 3 or geo_type = 1 or geo_type = 2
+        </if>
+        <if test="spa == '长江经济带'">
+            geo_type = 2 or geo_type = 1
+        </if>
+    </select>
+
+
+    <select id="selectByTemAndType" parameterType="java.util.List" resultMap="observation">
+        SELECT <include refid="selectFields"></include>
+        FROM observation
+        WHERE begin_time <![CDATA[>=]]> #{begin} AND end_time <![CDATA[<=]]> #{end} AND obs_type = #{type}
+    </select>
+
+
+    <select id="selectWHSpa" parameterType="java.util.List" resultType="boolean">
+            SELECT ST_Intersects(ST_GeomFromText(#{wkt}, 4326), (SELECT geom FROM wuhancitycircle))
+    </select>
+
+    <select id="selectCHSpa" parameterType="java.util.List" resultType="boolean">
+            SELECT ST_Intersects(ST_GeomFromText(#{wkt}, 4326), (SELECT geom FROM china_1984_mian))
+    </select>
+
+    <select id="selectCJSpa" parameterType="java.util.List" resultType="boolean">
+            SELECT ST_Intersects(ST_GeomFromText(#{wkt}, 4326), (SELECT geom FROM changjiang))
+    </select>
+
+
+    <select id="selectBySpatial" resultMap="observation">
+        SELECT <include refid="selectFields"></include>
+        FROM observation
+        WHERE ST_Intersects(ST_GeomFromText(#{bbox}, 4326), geom) = true
+    </select>
+
+    <select id="selectCityIdInWuCityCircle" resultType="int">
+        SELECT gid
+        FROM wuhancitycircle
+    </select>
+
+    <select id="selectCityIdInChina" resultType="int">
+        SELECT gid
+        FROM china_1984_mian
+    </select>
+
+    <select id="selectCityIdInChangjiang" resultType="int">
+        SELECT gid
+        FROM changjiang
+    </select>
+
+    <resultMap id="observation" type="Observation">
+        <id property="id" column="id"/>
+        <result property="procedureId" column="proc_id"/>
+        <result property="name" column="obs_name"/>
+        <result property="description" column="obs_des"/>
+        <result property="obsTime" column="obs_time"/>
+        <result property="beginTime" column="begin_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="bbox" column="bbox"/>
+        <result property="obsProperty" column="obs_property"/>
+        <result property="type" column="obs_type"/>
+        <result property="mapping" column="mapping"/>
+        <result property="outId" column="out_id"/>
+    </resultMap>
+
+
+    <resultMap id="observationNew" type="Observation">
+        <result property="beginTime" column="begin_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="type" column="obs_type"/>
+        <result property="outId" column="out_id"/>
+    </resultMap>
+
+</mapper>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sensorweb.datacenterofflineservice.dao.GFMapper" >
+    <sql id="insertFields">
+        satellite_id, season, image_id, image_type, bbox, geom, query_time, scene_path,scene_row, file_path,topleftlatitude,
+topleftlongitude,toprightlatitude,toprightlongitude,bottomrightlatitude,bottomrightlongitude,bottomleftlatitude,bottomleftlongitude
+    </sql>
+
+    <sql id="selectFields">
+        id, satellite_id, season, image_id, image_type, bbox, geom, query_time, scene_path,scene_row, file_path,topleftlatitude,
+topleftlongitude,toprightlatitude,toprightlongitude,bottomrightlatitude,bottomrightlongitude,bottomleftlatitude,bottomleftlongitude
+    </sql>
+
+    <insert id="insertGF" parameterType="GF" useGeneratedKeys="true" keyProperty="id">
+        insert into gf (<include refid="insertFields"></include>)
+        values (#{satelliteId}, #{season},#{imageId}, #{imageType}, #{bbox}, ST_GeomFromText(#{geom}, 4326), #{queryTime}, #{scenePath},#{sceneRow},
+                #{filePath},#{topleftlatitude},#{topleftlongitude},#{toprightlatitude},#{toprightlongitude},#{bottomrightlatitude},#{bottomrightlongitude},#{bottomleftlatitude},#{bottomleftlongitude})
+    </insert>
+
+    <select id="selectByIds" resultMap="GF">
+        SELECT id,file_path
+        FROM gf
+        WHERE id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectGF" resultMap="GF">
+        SELECT *
+        FROM gf
+        WHERE 1=1
+    </select>
+
+    <select id="selectGFByAttribute" resultMap="GF">
+        SELECT *
+        FROM gf
+        WHERE satellite_id = #{satelliteID} AND season = #{season} AND image_type IN ('MSS1','MUX')
+    </select>
+
+    <resultMap id="GF" type="GF">
+        <id column="id" property="id"/>
+        <result column="satellite_id" property="satelliteId"/>
+        <result column="season" property="season"/>
+        <result column="image_id" property="imageId"/>
+        <result column="image_type" property="imageType"/>
+        <result column="bbox" property="bbox"/>
+        <result column="geom" property="geom"/>
+        <result column="query_time" property="queryTime"/>
+        <result column="scene_path" property="scenePath"/>
+        <result column="scene_row" property="scenePath"/>
+        <result column="file_path" property="filePath"/>
+        <result column="topleftlatitude" property="topleftlatitude"/>
+        <result column="topleftlongitude" property="topleftlongitude"/>
+        <result column="toprightlatitude" property="toprightlatitude"/>
+        <result column="toprightlongitude" property="toprightlongitude"/>
+        <result column="bottomrightlatitude" property="bottomrightlatitude"/>
+        <result column="bottomrightlongitude" property="bottomrightlongitude"/>
+        <result column="bottomleftlatitude" property="bottomleftlatitude"/>
+        <result column="bottomleftlongitude" property="bottomleftlongitude"/>
+    </resultMap>
+
+    <select id="selectNum" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM gf
+    </select>
+
+
+
+    <select id="selectByName" resultMap="GF" >
+        SELECT <include refid="selectFields"></include>
+        FROM gf
+        WHERE satellite_id = #{satelliteId}
+        ORDER BY query_time DESC
+        LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+
+    <select id="selectByPage" resultMap="GF">
+        SELECT <include refid="selectFields"></include>
+        FROM gf ORDER BY query_time DESC
+        LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+
+
+</mapper>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sensorweb.datacenterofflineservice.dao.WaterPollutionStationMapper" >
+
+    <sql id="insertFields">
+        company_name, station_name, province, city, township,receiving_water,lon, lat, geom
+    </sql>
+
+    <sql id="selectFields">
+        id,company_name, station_name, province, city, township,receiving_water,lon, lat, geom
+    </sql>
+
+    <insert id="insertWaterPollutionStation" parameterType="WaterPollutionStation" useGeneratedKeys="true" keyProperty="id">
+        insert into hb_waterpollution_station (<include refid="insertFields"></include>)
+        values (#{companyName},#{stationName},#{province},#{city},#{township},#{receivingWater}, #{lon}, #{lat}, ST_GeomFromText(#{geom},4326))
+    </insert>
+
+    <insert id="insertDataBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hb_waterpollution_station (<include refid="insertFields"></include>)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.companyName}, #{item.stationName}, #{item.province},#{item.city},#{item.township},#{item.receivingWater},#{item.lon}, #{item.lat}, ST_GeomFromText(#{item.geom}, 4326))
+        </foreach>
+    </insert>
+
+    <insert id="insertDataBatchInStation" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO station (station_id,station_name,township,region,city,province,lon,lat,stype)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.stationName}, #{item.stationName}, #{item.township},#{item.receivingWater},#{item.city},#{item.province},#{item.lon}, #{item.lat}, #{item.stationType})
+        </foreach>
+    </insert>
+
+    <select id="selectByIds" resultMap="WaterPollutionStation">
+        SELECT (<include refid="selectFields"></include>)
+        FROM hb_waterpollution_station
+        WHERE id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectWaterPollutionStation" resultMap="WaterPollutionStation">
+        SELECT (<include refid="selectFields"></include>)
+        FROM hb_waterpollution_station
+        WHERE 1=1
+    </select>
+
+
+    <select id="selectByAttribute" resultMap="WaterPollutionStation">
+        SELECT (<include refid="selectFields"></include>)
+        FROM hb_waterpollution_station
+        WHERE station_name = #{stationName}
+    </select>
+
+    <resultMap id="WaterPollutionStation" type="WaterPollutionStation">
+        <id column="id" property="id"/>
+        <result column="company_name" property="companyName"/>
+        <result column="station_name" property="stationName"/>
+        <result column="province" property="province"/>
+        <result column="city" property="city"/>
+        <result column="township" property="township"/>
+        <result column="receiving_water" property="receivingWater"/>
+        <result column="lon" property="lon"/>
+        <result column="lat" property="lat"/>
+        <result column="geom" property="geom"/>
+    </resultMap>
+</mapper>

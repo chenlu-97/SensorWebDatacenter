@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--台湾EPA数据-->
+<mapper namespace="com.sensorweb.datacenterairservice.dao.TWEPAMapper">
+    <sql id="insertFields">
+        tw_time, aqi, co, co_8hr, country, import_date, lat, lon, no, no2, nox, o3, o3_8hr, pm10, pm10_avg, pm25, pm25_avg, pollutant,
+publish_time, so2, so2_avg, site_engname, site_id, site_name, site_type, status, wind_d, wind_s, app, tw_date, fmt_opt, ver_format, device_id
+    </sql>
+
+    <sql id="selectFields">
+        id, tw_time, aqi, co, co_8hr, country, import_date, lat, lon, no, no2, nox, o3, o3_8hr, pm10, pm10_avg, pm25, pm25_avg, pollutant,
+publish_time, so2, so2_avg, site_engname, site_id, site_name, site_type, status, wind_d, wind_s, app, tw_date, fmt_opt, ver_format, device_id
+    </sql>
+
+    <insert id="insertData" parameterType="TWEPA" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO taiwan_air_hourly (<include refid="insertFields"></include>)
+        VALUES (#{time}, #{aqi}, #{co}, #{co8hr}, #{country}, #{importDate}, #{lat}, #{lon}, #{no}, #{no2}, #{nox}, #{o3}, #{o38hr},
+                #{pm10}, #{pm10Avg}, #{pm25}, #{pm25Avg}, #{pollutant}, #{publishTime}, #{so2}, #{so2Avg}, #{siteEngName}, #{siteId},
+                #{siteName}, #{siteType}, #{status}, #{windDirec}, #{windSpeed}, #{app}, #{date}, #{fmtOpt}, #{verFormat}, #{deviceId})
+    </insert>
+
+    <insert id="insertDataBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO taiwan_air_hourly (<include refid="insertFields"></include>)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.time}, #{item.aqi}, #{item.co}, #{item.co8hr}, #{item.country}, #{item.importDate}, #{item.lat}, #{item.lon}, #{item.no}, #{item.no2}, #{item.nox}, #{item.o3}, #{item.o38hr},
+            #{item.pm10}, #{item.pm10Avg}, #{item.pm25}, #{item.pm25Avg}, #{item.pollutant}, #{item.publishTime}, #{item.so2}, #{item.so2Avg}, #{item.siteEngName}, #{item.siteId},
+            #{item.siteName}, #{item.siteType}, #{item.status}, #{item.windDirec}, #{item.windSpeed}, #{item.app}, #{item.date}, #{item.fmtOpt}, #{item.verFormat}, #{item.deviceId})
+        </foreach>
+    </insert>
+
+    <select id="selectByIdAndTime" resultMap="twepa">
+        SELECT <include refid="selectFields"></include>
+        FROM taiwan_air_hourly
+        WHERE site_id = #{uniquecode} AND tw_time = #{time}
+    </select>
+
+
+    <select id="selectByTemporal" resultMap="twepa">
+        SELECT <include refid="selectFields"></include>
+        FROM taiwan_air_hourly
+        WHERE publish_time <![CDATA[>=]]> #{begin} AND publish_time <![CDATA[<=]]> #{end}
+    </select>
+
+
+    <resultMap id="twepa" type="TWEPA">
+        <id column="id" property="id"/>
+        <result column="tw_time" property="time"/>
+        <result column="aqi" property="aqi"/>
+        <result column="co" property="co"/>
+        <result column="co_8hr" property="co8hr"/>
+        <result column="country" property="country"/>
+        <result column="import_date" property="importDate"/>
+        <result column="lon" property="lon"/>
+        <result column="lat" property="lat"/>
+        <result column="no" property="no"/>
+        <result column="no2" property="no2"/>
+        <result column="nox" property="nox"/>
+        <result column="o3" property="o3"/>
+        <result column="o3_8hr" property="o38hr"/>
+        <result column="pm10" property="pm10"/>
+        <result column="pm10_avg" property="pm10Avg"/>
+        <result column="pm25" property="pm25"/>
+        <result column="pm25_avg" property="pm25Avg"/>
+        <result column="pollutant" property="pollutant"/>
+        <result column="publish_time" property="publishTime"/>
+        <result column="so2" property="so2"/>
+        <result column="so2_avg" property="so2Avg"/>
+        <result column="site_engname" property="siteEngName"/>
+        <result column="site_id" property="siteId"/>
+        <result column="site_name" property="siteName"/>
+        <result column="site_type" property="siteType"/>
+        <result column="status" property="status"/>
+        <result column="wind_d" property="windDirec"/>
+        <result column="wind_s" property="windSpeed"/>
+        <result column="app" property="app"/>
+        <result column="tw_date" property="date"/>
+        <result column="fmt_opt" property="fmtOpt"/>
+        <result column="ver_format" property="verFormat"/>
+        <result column="device_id" property="deviceId"/>
+    </resultMap>
+
+    <select id="selectByTime" resultType="java.lang.Integer">
+        SELECT  count(*)
+        FROM taiwan_air_hourly
+        WHERE tw_time <![CDATA[>=]]> #{begin} AND tw_time <![CDATA[<=]]> #{end}
+    </select>
+
+    <select id="selectNum" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM taiwan_air_hourly
+    </select>
+
+
+    <select id="selectByIds" resultMap="twepa" >
+        SELECT <include refid="selectFields"></include>
+        FROM taiwan_air_hourly
+        WHERE site_id in
+        <foreach collection ="siteid" item="siteId" open="(" close=")" separator=",">
+            #{siteId}
+        </foreach>
+        ORDER BY tw_time DESC
+        LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+
+    <select id="selectByPage" resultMap="twepa">
+        SELECT <include refid="selectFields"></include>
+        FROM taiwan_air_hourly ORDER BY tw_time DESC
+        LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+
+
+</mapper>

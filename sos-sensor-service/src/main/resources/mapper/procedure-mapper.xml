@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sensorweb.sossensorservice.dao.ProcedureMapper">
+    <sql id="insertFields">
+        proc_id, proc_name, proc_des, is_platform, status, file_path
+    </sql>
+
+    <sql id="selectFields">
+        id, proc_id, proc_name, proc_des, is_platform, status, file_path
+    </sql>
+
+    <insert id="insertData" parameterType="Procedure">
+        INSERT INTO procedure (<include refid="insertFields"></include>)
+        VALUES (#{id}, #{name}, #{description}, #{isPlatform}, #{status}, #{descriptionFile})
+    </insert>
+
+    <delete id="deleteById" parameterType="java.lang.String">
+        DELETE FROM procedure
+        WHERE proc_id = #{id}
+    </delete>
+
+    <select id="selectById" parameterType="java.lang.String" resultMap="procedure">
+        SELECT <include refid="selectFields"></include>
+        FROM procedure
+        WHERE proc_id = #{id}
+    </select>
+
+    <select id="selectById123" parameterType="java.lang.String" resultMap="procedure">
+        SELECT proc_name
+        FROM procedure
+        WHERE proc_id = #{id}
+    </select>
+
+    <select id="selectAllProcedureIds" resultType="java.lang.String">
+        SELECT proc_id
+        FROM procedure
+    </select>
+
+    <select id="selectAllSensorIds" resultType="java.lang.String">
+        SELECT proc_id
+        FROM procedure
+        WHERE is_platform = 0
+    </select>
+
+    <select id="selectAllPlatformIds" resultType="java.lang.String">
+        SELECT proc_id
+        FROM procedure
+        WHERE is_platform = 1
+        ORDER BY proc_id DESC
+    </select>
+
+    <select id="isExist" resultType="java.lang.Boolean">
+        SELECT count(proc_id)
+        FROM procedure
+        WHERE proc_id = #{procedureId}
+    </select>
+
+    <resultMap id="procedure" type="Procedure">
+        <id property="id" column="proc_id"/>
+        <result property="name" column="proc_name"/>
+        <result property="description" column="proc_des"/>
+        <result property="isPlatform" column="is_platform"/>
+        <result property="status" column="status"/>
+        <result property="descriptionFile" column="file_path"/>
+    </resultMap>
+
+</mapper>

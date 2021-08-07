@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sensorweb.sossensorservice.dao.VectorMapper">
+    <sql id="insertFields">
+        vec_name, lon, lat, alt, geom, out_id
+    </sql>
+
+    <sql id="selectFields">
+       id, vec_name, lon, lat, alt, out_id
+    </sql>
+
+    <insert id="insertData" parameterType="Vector">
+        INSERT INTO swe_vector (<include refid="insertFields"></include>)
+        VALUES (#{name}, #{longitude}, #{latitude}, #{altitude}, ST_GeomFromText(#{wkt}, 4326), #{outId})
+    </insert>
+
+    <delete id="deleteByOutId">
+        DELETE FROM swe_vector
+        WHERE out_id = #{outId}
+    </delete>
+
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM swe_vector
+        WHERE id = #{id}
+    </delete>
+
+    <select id="selectByOutId" resultMap="vector">
+        SELECT <include refid="selectFields"></include>
+        FROM swe_vector
+        WHERE out_id = #{outId}
+    </select>
+
+    <select id="selectByLowerCorner" resultType="java.lang.String">
+        SELECT out_id
+        FROM swe_vector
+        WHERE lat <![CDATA[>=]]> #{lat} AND lon <![CDATA[>=]]> #{lon} AND vec_name = 'Low'
+    </select>
+
+    <select id="selectByUpperCorner" resultType="java.lang.String">
+        SELECT out_id
+        FROM swe_vector
+        WHERE lat <![CDATA[<=]]> #{lat} AND lon <![CDATA[<=]]> #{lon} AND vec_name = 'up'
+    </select>
+
+    <resultMap id="vector" type="Vector">
+        <id property="id" column="id"/>
+        <result property="name" column="vec_name"/>
+        <result property="longitude" column="lon"/>
+        <result property="latitude" column="lat"/>
+        <result property="altitude" column="alt"/>
+        <result property="outId" column="out_id"/>
+    </resultMap>
+
+</mapper>
