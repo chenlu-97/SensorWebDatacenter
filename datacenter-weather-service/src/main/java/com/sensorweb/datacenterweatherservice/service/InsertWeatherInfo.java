@@ -50,7 +50,7 @@ public class InsertWeatherInfo {
     /**
      * 每小时接入一次数据
      */
-    @Scheduled(cron = "0 20 0/1 * * ?") //每个小时的35分开始接入
+    @Scheduled(cron = "0 35 0/1 * * ?") //每个小时的35分开始接入
     public void insertDataByHour() {
         LocalDateTime dateTime = LocalDateTime.now(ZoneId.of("Asia/Shanghai"));
         new Thread(new Runnable() {
@@ -58,7 +58,7 @@ public class InsertWeatherInfo {
             public void run() {
                 boolean flag = false;
                 try {
-                    flag = insertWeatherInfoBatch(getWeatherInfo123());
+                    flag = insertWeatherInfoBatch(getWeatherInfo());
                     if (flag) {
                         log.info("中国气象局接入时间: " + dateTime.toString() + "Status: Success");
                         System.out.println("中国气象局接入时间: " + dateTime.toString() + "Status: Success");
@@ -151,6 +151,7 @@ public class InsertWeatherInfo {
     public List<ChinaWeather> getWeatherInfo() throws IOException, ParseException {
         List<ChinaWeather> res = new ArrayList<>();
         List<WeatherStationModel> weatherStationModels = weatherStationMapper.selectByStationType("wh_1+8_weather");
+        System.out.println("weatherStationModels.size() = " + weatherStationModels.size());
         for (int i=0; i< weatherStationModels.size();) {
             StringBuilder sb = new StringBuilder();
             for (int j = 0; j<20 && i< weatherStationModels.size(); j++) {
@@ -193,23 +194,16 @@ public class InsertWeatherInfo {
     public List<ChinaWeather> getWeatherInfo123() throws IOException, ParseException {
         List<ChinaWeather> res = new ArrayList<>();
         List<WeatherStationModel> weatherStationModels = weatherStationMapper.selectByStationType("wh_1+8_weather");
+        if(weatherStationModels !=null && weatherStationModels.size()>0){
         for (int i=0; i< weatherStationModels.size();i++) {
-//            StringBuilder sb = new StringBuilder();
-//            for (int j = 0; j<20 && i< weatherStationModels.size(); j++) {
-//                sb.append(weatherStationModels.get(i).getStationId()).append("|");
-//                i++;
-//            }
             String areaIds = weatherStationModels.get(i).getStationId();
             JSONObject jsonObject = getWeatherResultByArea(URLEncoder.encode(areaIds, "utf-8"));
-            if (jsonObject!=null) {
+            if (jsonObject != null) {
                 JSONObject observes = jsonObject.getJSONObject("observe");
                 int size = observes.size();
                 Set<String> keys = observes.keySet();
-                for (String key:keys) {
+                for (String key : keys) {
                     JSONObject result = observes.getJSONObject(key).getJSONObject("1001002");
-//                    if (key.equals("101200406003")) {
-//                        System.out.println(getNowTime(result.getString("000")));
-//                    }
                     ChinaWeather chinaWeather = new ChinaWeather();
                     chinaWeather.setStationId(key);
                     chinaWeather.setQueryTime(getNowTime(result.getString("000")));
@@ -226,10 +220,12 @@ public class InsertWeatherInfo {
                     res.add(chinaWeather);
                 }
             }
+        }
 
         }
         return res;
     }
+
 
     /**
      * 根据时间生成日期时间

@@ -18,8 +18,11 @@ class DatacenterWeatherServiceApplicationTests {
 
     @Test
     void contextLoads() throws IOException, ParseException {
-        List<ChinaWeather> chinaWeathers = insertWeatherInfo.getWeatherInfo();
-        System.out.println("!!!");
+//        List<ChinaWeather> chinaWeathers = insertWeatherInfo.getWeatherInfo();
+//        System.out.println("!!!");
+
+        boolean flag = insertWeatherInfo.insertWeatherInfoBatch(insertWeatherInfo.getWeatherInfo());
+        System.out.println("flag = " + flag);
     }
 
 }

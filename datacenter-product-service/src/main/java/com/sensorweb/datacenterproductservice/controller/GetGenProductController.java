@@ -96,7 +96,7 @@ public class GetGenProductController {
 //        String time1 = time.substring(0, time.indexOf(":"));
 //        String time2 = time1 + ":00:00";
         Instant timeNow = string2LocalDateTime(time).atZone(ZoneId.of("GMT+8")).toInstant();
-//        System.out.println("timeNow = " + timeNow);
+        System.out.println("timeNow = " + timeNow);
         String filePath = getFilePath123(type, spa,timeNow);
         return filePath;
     }

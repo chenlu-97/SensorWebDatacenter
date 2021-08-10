@@ -4,23 +4,23 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sensorweb.datacenterhimawariservice.dao.HimawariMapper">
     <sql id="insertFields">
-        h_name, h_time, h_area, pixel_num, line_num, file_url, local_path
+        h_name, h_time, h_area, pixel_num, line_num, file_url, local_path,wave_band,band_info
     </sql>
 
     <sql id="selectFields">
-        id, h_name, h_time, h_area, pixel_num, line_num, file_url, local_path
+        id, h_name, h_time, h_area, pixel_num, line_num, file_url, local_path,wave_band,band_info
     </sql>
 
     <insert id="insertData" parameterType="Himawari" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO himawari (<include refid="insertFields"></include>)
-        VALUES (#{name}, #{time}, #{area}, #{pixelNum}, #{lineNum}, #{url}, #{localPath})
+        VALUES (#{name}, #{time}, #{area}, #{pixelNum}, #{lineNum}, #{url}, #{localPath}, #{waveBand}, #{bandInfo})
     </insert>
 
     <insert id="insertDataBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO himawari (<include refid="insertFields"></include>)
         VALUES
         <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.name}, #{item.time}, #{item.area}, #{item.pixelNum}, #{item.lineNum}, #{item.url}, #{item.localPath})
+            (#{item.name}, #{item.time}, #{item.area}, #{item.pixelNum}, #{item.lineNum}, #{item.url}, #{item.localPath},#{item.waveBand},#{item.bandInfo})
         </foreach>
     </insert>
 
@@ -66,6 +66,8 @@
         <result property="lineNum" column="line_num"/>
         <result property="url" column="file_url"/>
         <result property="localPath" column="local_path"/>
+        <result property="waveBand" column="wave_band"/>
+        <result property="bandInfo" column="band_info"/>
     </resultMap>
 
     <select id="selectNum" resultType="java.lang.Integer">

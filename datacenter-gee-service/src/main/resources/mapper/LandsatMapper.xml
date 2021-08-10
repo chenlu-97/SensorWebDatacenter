@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sensorweb.datacentergeeservice.dao.LandsatMapper" >
+
+
   <resultMap id="BaseResultMap" type="Landsat" >
     <result column="imageid" property="imageID"/>
     <result column="sensorid" property="sensorID"/>
@@ -14,69 +16,12 @@
     <result column="thumburl" property="Thumburl"/>
     <result column="imagetype" property="imageType"/>
     <result column="filepath" property="filePath"/>
+    <result column="wave_band" property="waveBand"/>
+    <result column="band_info" property="bandInfo"/>
   </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-
-  <sql id="Update_By_Example_Where_Clause" >
-    <where >
-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
 
   <sql id="selectFields" >
-        imageid,sensorid,spacecraftid,coordinates,date,time,imagesize,ellipsoid,cloudcover,thumburl,imagetype,filepath
+        imageid,sensorid,spacecraftid,coordinates,date,time,imagesize,ellipsoid,cloudcover,thumburl,imagetype,filepath,wave_band,band_info
   </sql>
 
   <select id="selectAll" resultMap="BaseResultMap">
@@ -103,11 +48,6 @@
     </if>
   </select>
 
-<!--  <select id="selectByPage" resultMap="BaseResultMap">-->
-<!--    SELECT <include refid="selectFields"></include>-->
-<!--    FROM landast-->
-<!--    LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})-->
-<!--  </select>-->
 
   <select id="selectNum" resultType="java.lang.Integer">
     SELECT count(*)

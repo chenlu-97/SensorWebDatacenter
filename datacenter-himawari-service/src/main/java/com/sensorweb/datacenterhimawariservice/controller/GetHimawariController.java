@@ -115,7 +115,7 @@ public class GetHimawariController {
             for (Himawari himawari : info) {
                 Map map = new LinkedHashMap();
                 String id = himawari.getName();
-                String str = "75,1,75,55,150,1,150,55,75,1";
+                String str = "75,1,75,55,150,55,150,1,75,1";
                 String[] tmp = str.split(",");
                 List<Integer> point = new ArrayList<>();
                 for(String num :tmp){

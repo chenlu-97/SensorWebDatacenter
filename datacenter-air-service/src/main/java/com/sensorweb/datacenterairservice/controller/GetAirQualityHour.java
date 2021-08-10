@@ -259,4 +259,18 @@ public class GetAirQualityHour {
         String out4 = out3.replace(":","");
         return  out4;
     }
+
+
+    @ApiOperation("更新台湾缺失的数据")
+    @GetMapping(path = "UpdateTWAir")
+    public boolean UpdateTWAir() {
+
+        boolean count = true;
+        return count;
+    }
+
+
+
+
+
 }
