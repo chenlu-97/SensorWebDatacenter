@@ -33,8 +33,19 @@
     <select id="selectByIdsAndTime" resultMap="chinaWeather">
         SELECT <include refid="selectFields"></include>
         FROM "wuhanCC_weather_hourly"
-        WHERE "StationID" = #{id} AND "QueryTime" =#{time}
-        Limit 1
+        WHERE "QueryTime" =#{time} AND "StationID" in
+        (SELECT station_id
+        FROM station
+        WHERE stype = #{type} AND
+        <if test="spa == 'wuhanCC'">
+            ST_Intersects(geom, (SELECT geom FROM wuhancitycircle)) = true
+        </if>
+        <if test="spa == 'yangtzeRiverEB'">
+            ST_Intersects(geom, (SELECT geom FROM changjiang)) = true
+        </if>
+        <if test="spa == 'china'">
+            ST_Intersects(geom, (SELECT geom FROM china_1984_mian)) = true
+        </if>)
     </select>
 
 

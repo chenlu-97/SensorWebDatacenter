@@ -23,8 +23,6 @@ public interface AirQualityHourMapper {
 
     List<AirQualityHour> selectAll();
 
-    AirQualityHour selectByIdAndTime(@Param("uniquecode") String uniquecode, @Param("time")Instant time);
-
     List<AirQualityHour> selectByPage(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
 
     int selectNum();
@@ -34,4 +32,8 @@ public interface AirQualityHourMapper {
     List<AirQualityHour> selectByTemporal(@Param("begin") Instant begin, @Param("end") Instant end);
 
     int selectByTime(@Param("begin") Instant begin, @Param("end") Instant end);
+
+    AirQualityHour selectByIdAndTime(@Param("uniquecode")String uniquecode, @Param("time")Instant time);
+
+    List<AirQualityHour> selectByIdAndTimeNew(@Param("type") String type , @Param("spa") String spa, @Param("time")Instant time);
 }

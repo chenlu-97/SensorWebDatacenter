@@ -3,10 +3,7 @@ package com.sensorweb.datacenterproductservice.controller;
 import com.sensorweb.datacenterproductservice.entity.DataPath;
 import com.sensorweb.datacenterproductservice.entity.GenProduct;
 import com.sensorweb.datacenterproductservice.entity.Observation;
-import com.sensorweb.datacenterproductservice.feign.AirFeignClient;
-import com.sensorweb.datacenterproductservice.feign.HimawariFeignClient;
-import com.sensorweb.datacenterproductservice.feign.ObsFeignClient;
-import com.sensorweb.datacenterproductservice.feign.WeatherFeignClient;
+import com.sensorweb.datacenterproductservice.feign.*;
 import com.sensorweb.datacenterproductservice.service.GetGenProductService;
 import com.sensorweb.datacenterproductservice.service.InsertGenProductService;
 import com.sensorweb.datacenterutil.utils.DataCenterUtils;
@@ -48,6 +45,9 @@ public class GetGenProductController {
 
     @Autowired
     private InsertGenProductService insertGenProductService;
+
+    @Autowired
+    private OfflineFeignClient offlineFeignClient;
 
 
     @GetMapping(value = "getGenProductById")
@@ -145,88 +145,72 @@ public class GetGenProductController {
      * @param timeEnd 结束时间
      * @return
      */
-//    修改后的查询方式，用新的查询表
-//    @GetMapping(value = "getFilePath")
-//    public List<Map<String, List<String>>> getFilePathTest(@RequestParam("productType") String productType, @RequestParam("spaRes") String spaRes,
-//                                                           @RequestParam("ranType") String ranType, @RequestParam("ranSpa") String ranSpa,
-//                                                           @RequestParam("timeRes") String timeRes, @RequestParam("timeBegin") String timeBegin,
-//                                                           @RequestParam("timeEnd") String timeEnd) {
-//        List<Map<String, List<String>>> finalres = new ArrayList<>() ;
-//        GenProduct genProduct = getGenProductService.getGenProductByTypeAndRegion(productType, ranSpa);
-//        String[] dataTypes = genProduct.getDataNeeded().split(",");
-//        System.out.println("数据类别数：" + dataTypes.length + "-->" + Arrays.toString(dataTypes));
-//        try {
-//            LocalDateTime start = string2LocalDateTime3(timeBegin);
-//            Instant begin = start.atZone(ZoneId.of("GMT+8")).toInstant();
-//            System.out.println("time: " + begin.toString());
-//            LocalDateTime end = string2LocalDateTime3(timeEnd);
-//            Instant stop = end.atZone(ZoneId.of("GMT+8")).toInstant();
-//            System.out.println("time: " + stop.toString());
-//            if (timeRes.equals("1小时")) {
-//                while (begin.isBefore(stop)) {
-//                    Map<String, List<String>> res = new HashMap<>();
-//                    List<String> filePaths = new ArrayList<>();
-//                    for (String dataType:dataTypes) {
-//                        String filePath = getGenProductService.selectFilePathByTimeAndType(begin,dataType,ranSpa);
-//                        filePaths.add(filePath);
-//                    }
-//                    Instant out_time = begin.plusSeconds(8*60*60);
-//                    res.put(replace(out_time.toString()),filePaths);
-//                    finalres.add(res);
-//                    begin = begin.plusSeconds(60 * 60);
-//                }
-//            }
-//
-//            System.out.println("--------------end--------------");
-//        }
-//        catch (Exception e) {
-//            log.error(e.getMessage());
-//            e.printStackTrace();
-//        }
-//        return finalres;
-//    }
-
     //    修改后的查询方式，用新的查询表
     @GetMapping(value = "getFilePath")
     public List<Map<String, List<String>>> getFilePath(@RequestParam("productType") String productType, @RequestParam("spaRes") String spaRes,
                                                            @RequestParam("ranType") String ranType, @RequestParam("ranSpa") String ranSpa,
                                                            @RequestParam("timeRes") String timeRes, @RequestParam("timeBegin") String timeBegin,
-                                                           @RequestParam("timeEnd") String timeEnd) {
-        List<Map<String, List<String>>> finalres = new ArrayList<>() ;
-        GenProduct genProduct = getGenProductService.getGenProductByTypeAndRegion(productType, ranSpa);
-//        String[] dataTypes = genProduct.getDataNeeded().split(",");
-        String id = "AIR,Himawari,WEATHER";
-        String[] dataTypes = id.split(",");
-        System.out.println("数据类别数：" + dataTypes.length + "-->" + Arrays.toString(dataTypes));
-        try {
+                                                           @RequestParam("timeEnd") String timeEnd) throws ParseException {
+        List<Map<String, List<String>>> finalres = new ArrayList<>();
+        if(productType.equals("植被指数")){
             LocalDateTime start = string2LocalDateTime3(timeBegin);
             Instant begin = start.atZone(ZoneId.of("GMT+8")).toInstant();
-            System.out.println("time: " + begin.toString());
+//            System.out.println("time: " + begin.toString());
             LocalDateTime end = string2LocalDateTime3(timeEnd);
             Instant stop = end.atZone(ZoneId.of("GMT+8")).toInstant();
-            System.out.println("time: " + stop.toString());
-            if (timeRes.equals("1小时")) {
-                while (begin.isBefore(stop)) {
-                    Map<String, List<String>> res = new HashMap<>();
-                    List<String> filePaths = new ArrayList<>();
-                    for (String dataType:dataTypes) {
-                        String filePath = getFilePath(dataType, ranSpa, begin);
-                        filePaths.add(filePath);
-                    }
-                    Instant out_time = begin.plusSeconds(8*60*60);
-                    res.put(replace(out_time.toString()),filePaths);
-                    finalres.add(res);
-                    begin = begin.plusSeconds(60 * 60);
-                }
-            }
+//            System.out.println("time: " + stop.toString());
+//用每幅影像的中心距离进行计算，返回
+            Map<String,List<String>> filePaths = offlineFeignClient.selectGFByImageIDAndTime(ranSpa,begin,stop);
+            finalres.add(filePaths);
 
-            System.out.println("--------------end--------------");
+//简单的用一副影像进行计算，返回路径
+//            String filepath = offlineFeignClient.selectGFByImageID(ranSpa);
+//            Map<String, List<String>> res = new HashMap<>();
+//            List<String> filePaths = new ArrayList<>();
+//            filePaths.add(filepath);
+//            Instant out_time = begin.plusSeconds(8 * 60 * 60);
+//            res.put(replace(out_time.toString()), filePaths);
+//            finalres.add(res);
+
+            return finalres;
         }
-        catch (Exception e) {
-            log.error(e.getMessage());
-            e.printStackTrace();
+
+        else {
+//            GenProduct genProduct = getGenProductService.getGenProductByTypeAndRegion(productType, ranSpa);
+//            String[] dataTypes = genProduct.getDataNeeded().split(",");
+            String id = "AIR,Himawari,WEATHER";
+            String[] dataTypes = id.split(",");
+            System.out.println("数据类别数：" + dataTypes.length + "-->" + Arrays.toString(dataTypes));
+            try {
+                LocalDateTime start = string2LocalDateTime3(timeBegin);
+                Instant begin = start.atZone(ZoneId.of("GMT+8")).toInstant();
+                System.out.println("time: " + begin.toString());
+                LocalDateTime end = string2LocalDateTime3(timeEnd);
+                Instant stop = end.atZone(ZoneId.of("GMT+8")).toInstant();
+                System.out.println("time: " + stop.toString());
+                if (timeRes.equals("1小时")) {
+                    while (begin.isBefore(stop.plusSeconds(60*60))) {
+                        Map<String, List<String>> res = new HashMap<>();
+                        List<String> filePaths = new ArrayList<>();
+                        for (String dataType : dataTypes) {
+                            String filePath = getFilePath(dataType, ranSpa, begin);
+                            filePaths.add(filePath);
+                        }
+                        Instant out_time = begin.plusSeconds(8 * 60 * 60);
+                        res.put(replace(out_time.toString()), filePaths);
+                        finalres.add(res);
+                        begin = begin.plusSeconds(60 * 60);
+                    }
+                }
+
+                System.out.println("--------------end--------------");
+            } catch (Exception e) {
+                log.error(e.getMessage());
+                e.printStackTrace();
+            }
+            return finalres;
         }
-        return finalres;
+
     }
 
 
@@ -283,66 +267,64 @@ public class GetGenProductController {
 
     }
 
-
-
-    @GetMapping(value = "insertFilePath")
-    public boolean  insertFilePath( @RequestParam("timeBegin") String timeBegin, @RequestParam("timeEnd") String timeEnd) {
-        boolean res = false;
-        String Type = "AIR,Himawari,WEATHER";
-        String ranSpa = "wuhanCC,yangtzeRiverEB,china";
-        String[] dataTypes = Type.split(",");
-        String[] ranSpas = ranSpa.split(",");
-        System.out.println("数据类别数：" + dataTypes.length + "-->" + Arrays.toString(dataTypes));
-        try {
-            LocalDateTime start = string2LocalDateTime3(timeBegin);
-            Instant begin = start.atZone(ZoneId.of("GMT+8")).toInstant();
-            System.out.println("time: " + begin.toString());
-            LocalDateTime end = string2LocalDateTime3(timeEnd);
-            Instant stop = end.atZone(ZoneId.of("GMT+8")).toInstant();
-            System.out.println("time: " + stop.toString());
-//            Instant time_tmp1 = begin.minusSeconds(8 * 60 * 60);
-            for (String dataType:dataTypes) {
-                    for (String spa:ranSpas) {
-                        Instant time = begin;
-                        while (time.isBefore(stop)) {
-                        DataPath datapath = new DataPath();
-                        //查询后插入dataneed表，方便后续查询
-                        if (dataType.equals("Himawari")) {
-                            String filepath = himawariFeignClient.getHimawariDataById(time);
-//                            if(filepath  == null){
-//                                filepath = himawariFeignClient.getHimawariMaxTimeData();
-//                            }
-                            Instant out_time = time.plusSeconds(8 * 60 * 60);
-                            datapath.setDataId(dataType + "_" + spa + "_" + replace(out_time.toString()));
-                            datapath.setGeoType(spa);
-                            datapath.setDataType(dataType);
-                            datapath.setFilePath(filepath);
-                            datapath.setBeginTime(time);
-                            datapath.setEndTime(time);
-                            res = insertGenProductService.insertDataPathByHour(datapath);
-                        } else {
-                            String filepath = getFilePath123(dataType,spa,time);
-                            Instant out_time = time.plusSeconds(8 * 60 * 60);
-                            datapath.setDataId(dataType + "_" + spa + "_" + replace(out_time.toString()));
-                            datapath.setGeoType(spa);
-                            datapath.setDataType(dataType);
-                            datapath.setFilePath(filepath);
-                            datapath.setBeginTime(time);
-                            datapath.setEndTime(time);
-                            res = insertGenProductService.insertDataPathByHour(datapath);
-                        }
-                        time  = time.plusSeconds(60*60);
-                        } }
-                }
-            System.out.println("--------------end--------------");
-        }
-        catch (Exception e) {
-            log.error(e.getMessage());
-            e.printStackTrace();
-        }
-        return res;
-
-    }
+//    @GetMapping(value = "insertFilePath")
+//    public boolean  insertFilePath( @RequestParam("timeBegin") String timeBegin, @RequestParam("timeEnd") String timeEnd) {
+//        boolean res = false;
+//        String Type = "AIR,Himawari,WEATHER";
+//        String ranSpa = "wuhanCC,yangtzeRiverEB,china";
+//        String[] dataTypes = Type.split(",");
+//        String[] ranSpas = ranSpa.split(",");
+//        System.out.println("数据类别数：" + dataTypes.length + "-->" + Arrays.toString(dataTypes));
+//        try {
+//            LocalDateTime start = string2LocalDateTime3(timeBegin);
+//            Instant begin = start.atZone(ZoneId.of("GMT+8")).toInstant();
+//            System.out.println("time: " + begin.toString());
+//            LocalDateTime end = string2LocalDateTime3(timeEnd);
+//            Instant stop = end.atZone(ZoneId.of("GMT+8")).toInstant();
+//            System.out.println("time: " + stop.toString());
+////            Instant time_tmp1 = begin.minusSeconds(8 * 60 * 60);
+//            for (String dataType:dataTypes) {
+//                    for (String spa:ranSpas) {
+//                        Instant time = begin;
+//                        while (time.isBefore(stop)) {
+//                        DataPath datapath = new DataPath();
+//                        //查询后插入dataneed表，方便后续查询
+//                        if (dataType.equals("Himawari")) {
+//                            String filepath = himawariFeignClient.getHimawariDataById(time);
+////                            if(filepath  == null){
+////                                filepath = himawariFeignClient.getHimawariMaxTimeData();
+////                            }
+//                            Instant out_time = time.plusSeconds(8 * 60 * 60);
+//                            datapath.setDataId(dataType + "_" + spa + "_" + replace(out_time.toString()));
+//                            datapath.setGeoType(spa);
+//                            datapath.setDataType(dataType);
+//                            datapath.setFilePath(filepath);
+//                            datapath.setBeginTime(time);
+//                            datapath.setEndTime(time);
+//                            res = insertGenProductService.insertDataPathByHour(datapath);
+//                        } else {
+//                            String filepath = getFilePath123(dataType,spa,time);
+//                            Instant out_time = time.plusSeconds(8 * 60 * 60);
+//                            datapath.setDataId(dataType + "_" + spa + "_" + replace(out_time.toString()));
+//                            datapath.setGeoType(spa);
+//                            datapath.setDataType(dataType);
+//                            datapath.setFilePath(filepath);
+//                            datapath.setBeginTime(time);
+//                            datapath.setEndTime(time);
+//                            res = insertGenProductService.insertDataPathByHour(datapath);
+//                        }
+//                        time  = time.plusSeconds(60*60);
+//                        } }
+//                }
+//            System.out.println("--------------end--------------");
+//        }
+//        catch (Exception e) {
+//            log.error(e.getMessage());
+//            e.printStackTrace();
+//        }
+//        return res;
+//
+//    }
 
 
     public String getDataPath(Map<String,List<String>> stationIDs, Instant time, String geotype) {

@@ -4,6 +4,7 @@ import com.sensorweb.datacenterofflineservice.dao.GFMapper;
 import com.sensorweb.datacenterofflineservice.entity.GF;
 import com.sensorweb.datacenterofflineservice.entity.WaterPollution;
 import com.sensorweb.datacenterofflineservice.service.GetGFService;
+import com.thoughtworks.xstream.core.util.OrderRetainingMap;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.*;
 
 @Slf4j
@@ -196,6 +198,42 @@ public class GetGF {
         return res;
     }
 
+
+    @ApiOperation("根据影像ID查询，返回文件路径")
+    @GetMapping (value = "selectGFByImageID")
+    @ResponseBody
+    public String selectGFByImageID(@RequestParam(value = "imageId") String imageId)  {
+        String res = getGFService.selectGFByImageId(imageId);
+        return res;
+    }
+
+
+    @ApiOperation("根据影像ID查询，返回文件路径")
+    @GetMapping (value = "selectGFByImageIDAndTime")
+    @ResponseBody
+    public Map<String,List<String>> selectGFByImageIDAndTime(@RequestParam(value = "imageId") String imageId,@RequestParam(value = "begin") Instant begin,@RequestParam(value = "end") Instant end)  {
+//        List<String> geoms = getGFService.selectGFGeom(begin,end);
+        List<GF> images =  getGFService.selectGFByImageIDAndTime(imageId,begin,end);
+
+        Map<String,List<String>> res = new HashMap<>();
+        for(GF image :images){
+            if (image !=null) {
+                String out_time = replace(image.getQueryTime().plusSeconds(8 * 60 * 60).toString());
+                List<String> filepath = new ArrayList<>();
+                filepath.add(image.getFilePath());
+                res.put(out_time, filepath);
+            }
+        }
+        return res;
+    }
+
+    public String replace (String out){
+        String out1 =out.replace("-","");
+        String out2 = out1.replace("T","");
+        String out3 = out2.replace("Z","");
+        String out4 = out3.replace(":","");
+        return  out4;
+    }
 
 
 

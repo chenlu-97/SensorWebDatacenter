@@ -16,7 +16,7 @@ public interface WeatherMapper {
 
     ChinaWeather selectById(int id);
 
-    ChinaWeather selectByIdsAndTime(@Param("id") String id, @Param("time") Instant time);
+    List<ChinaWeather> selectByIdsAndTime(@Param("type") String type , @Param("spa") String spa, @Param("time")Instant time);
 
     List<ChinaWeather> selectByTemporal(@Param("begin") Instant begin, @Param("end") Instant end);
 

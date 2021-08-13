@@ -66,37 +66,37 @@ public class InsertGenProductService {
     /**
      * 每小时接入一次数据
      */
-    @Scheduled(cron = "0 50 0/1 * * ?") //每个小时的55分开始接入
-    public void insertDataByHour() {
-        LocalDateTime dateTime = LocalDateTime.now(ZoneId.of("Asia/Shanghai"));
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:00:00").withZone(ZoneId.of("Asia/Shanghai"));
-        String time = formatter.format(dateTime);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                boolean flag = true;
-                while (flag) {
-                    try {
-                        String timeBegin = time;
-                        String timeEnd = time;
-                        flag = getFilePath(timeBegin,timeEnd);
-                        if (flag) {
-                            log.info("所有文件路径的接入时间: " + time + "Status: Success");
-                            System.out.println("所有文件路径的接入时间:  " + time + "Status: Success");
-                        } else {
-                            System.out.println("所有文件路径的接入时间:  " + time + "Status: Fail");
-                        }
-//                        Thread.sleep(5 * 60 * 1000);
-                        } catch(Exception e){
-                            log.error(e.getMessage());
-                            log.info("所有文件路径的接入时间:  " + time + "Status: Fail");
-                            System.out.println(e.getMessage());
-                            break;
-                        }
-                    }
-                }
-            }).start();
-    }
+//    @Scheduled(cron = "0 50 0/1 * * ?") //每个小时的55分开始接入
+//    public void insertDataByHour() {
+//        LocalDateTime dateTime = LocalDateTime.now(ZoneId.of("Asia/Shanghai"));
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:00:00").withZone(ZoneId.of("Asia/Shanghai"));
+//        String time = formatter.format(dateTime);
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                boolean flag = true;
+//                while (flag) {
+//                    try {
+//                        String timeBegin = time;
+//                        String timeEnd = time;
+//                        flag = getFilePath(timeBegin,timeEnd);
+//                        if (flag) {
+//                            log.info("所有文件路径的接入时间: " + time + "Status: Success");
+//                            System.out.println("所有文件路径的接入时间:  " + time + "Status: Success");
+//                        } else {
+//                            System.out.println("所有文件路径的接入时间:  " + time + "Status: Fail");
+//                        }
+////                        Thread.sleep(5 * 60 * 1000);
+//                        } catch(Exception e){
+//                            log.error(e.getMessage());
+//                            log.info("所有文件路径的接入时间:  " + time + "Status: Fail");
+//                            System.out.println(e.getMessage());
+//                            break;
+//                        }
+//                    }
+//                }
+//            }).start();
+//    }
 
     public boolean getFilePath(String timeBegin, String timeEnd) {
         boolean res = false;

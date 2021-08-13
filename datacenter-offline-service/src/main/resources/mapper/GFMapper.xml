@@ -32,6 +32,34 @@ topleftlongitude,toprightlatitude,toprightlongitude,bottomrightlatitude,bottomri
         WHERE 1=1
     </select>
 
+
+    <select id="selectGFByImageId" resultType="java.lang.String">
+        SELECT file_path
+        FROM gf
+        WHERE image_id = #{imageId}
+    </select>
+
+
+
+
+    <select id="selectGFGeom" resultType="java.lang.String">
+        SELECT geom
+        FROM gf
+        WHERE query_time <![CDATA[>=]]> #{begin} AND query_time <![CDATA[<=]]> #{end} AND image_type = 'MSS1' OR image_type = 'MUX'
+    </select>
+
+
+    <select id="selectGFByImageIDAndTime" resultMap="GF">
+        SELECT file_path,query_time
+        FROM gf
+        WHERE query_time <![CDATA[>=]]> #{begin} AND query_time <![CDATA[<=]]> #{end} AND image_type IN ('MSS1','MUX') AND
+<!--        <foreach collection="geoms" item="item" index="index" separator="OR" open="(" close=")">-->
+        (select ST_Distance( (select ST_Centroid(geom) from gf where image_id = #{imageId}),(ST_Centroid(geom))) <![CDATA[<=]]> 0.1) =true
+<!--        </foreach>-->
+    </select>
+
+
+
     <select id="selectGFByAttribute" resultMap="GF">
         SELECT *
         FROM gf

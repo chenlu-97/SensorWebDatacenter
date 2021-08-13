@@ -192,25 +192,21 @@ public class GetAirQualityHour {
     }
 
     @GetMapping(path = "getExportHBAirDataByIds")
-    public Map<String, String> getExportHBAirDataByIds(@RequestParam(value = "ids") List<String> ids, @RequestParam(value = "time") Instant time,@RequestParam(value = "geotype") String geotype) throws ParseException {
+    public Map<String, String> getExportHBAirDataByIds( @RequestParam(value = "ids") List<String> ids,@RequestParam(value = "time") Instant time,@RequestParam(value = "geotype") String geotype)  {
         Map<String, String> res = new HashMap<>();
-        List<AirQualityHour> airQualityHours = new ArrayList<>();
+        System.out.println("geotype = " + geotype);
+        List<AirQualityHour> airQualityHours = airQualityHourMapper.selectByIdAndTimeNew("HB_AIR",geotype,time);
         String filename = null;
-        if (ids!=null && ids.size()>0) {
-            for (String id:ids) {
-                AirQualityHour airQualityHour = airQualityHourMapper.selectByIdAndTime(id,time);
-                if(airQualityHour !=null) {
-                    airQualityHours.add(airQualityHour);
-                    String tmp = time.plusSeconds(8*60*60).toString();
-                    filename = replace(tmp);
-                }
-            }
+        if(airQualityHours !=null && airQualityHours.size()>0) {
+            String tmp = time.plusSeconds(8 * 60 * 60).toString();
+            filename = replace(tmp);
         }
-        filename = "AIR" +"_"+geotype+"_" +filename;
-        String filePath = getAirService.exportTXT_WH(airQualityHours,filename);
-        res.put("filePath", filePath);
+            filename = "AIR" + "_" + geotype + "_" + filename;
+            String filePath = getAirService.exportTXT_WH(airQualityHours, filename);
+            res.put("filePath", filePath);
         return res;
     }
+
 
     @GetMapping(path = "getExportTWAirDataByIds")
     public void getExportTWAirDataByIds(@RequestParam(value = "ids") List<String> ids, @RequestParam(value = "time") Instant time,@RequestParam(value = "geotype") String geotype) throws ParseException {

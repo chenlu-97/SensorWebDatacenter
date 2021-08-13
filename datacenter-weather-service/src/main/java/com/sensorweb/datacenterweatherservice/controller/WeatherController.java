@@ -91,22 +91,16 @@ public class WeatherController {
     @GetMapping(path = "getExportWeatherDataByIds")
     public Map<String, String> getExportWeatherDataIds(@RequestParam(value = "ids") List<String> ids, @RequestParam(value = "time") Instant time , @RequestParam(value = "geotype") String  geotype) throws ParseException {
         Map<String, String> res = new HashMap<>();
-        List<ChinaWeather> chinaWeathers = new ArrayList<>();
+        List<ChinaWeather> chinaWeathers = weatherMapper.selectByIdsAndTime("wh_1+8_weather",geotype,time);
         String filename = null;
-        if (ids!=null && ids.size()>0) {
-            for (String id:ids) {
-                ChinaWeather chinaWeather = weatherMapper.selectByIdsAndTime(id,time);
-                if(chinaWeather !=null) {
-                    String out_time = chinaWeather.getQueryTime().toString();
-                    chinaWeathers.add(chinaWeather);
+                if(chinaWeathers !=null && chinaWeathers.size()>0) {
+                    String out_time = chinaWeathers.get(0).getQueryTime().toString();
                     String pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'";
                     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(pattern);
                     dateTimeFormatter.withZone(ZoneId.of("Asia/Shanghai"));
                     LocalDateTime localTime = LocalDateTime.parse(out_time, dateTimeFormatter).plusSeconds(8*60*60);
                     filename = replace(localTime.toString()+"00");
                 }
-            }
-        }
         filename = "WEATHER" +"_"+geotype+"_" +filename;
         String filePath = getWeatherInfo.exportTXT(chinaWeathers,filename);
         res.put("filePath", filePath);

@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.util.List;
 
 @Repository
@@ -26,4 +27,10 @@ public interface GFMapper {
     List<GF> selectByName(@Param("satelliteId") String satelliteId,@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
 
     List<GF> selectByPage(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
+
+    String selectGFByImageId(@Param("imageId") String imageId);
+
+    List<GF> selectGFByImageIDAndTime(@Param("imageId") String imageId,@Param("begin") Instant begin, @Param("end") Instant end);
+
+    List<String> selectGFGeom(@Param("begin") Instant begin, @Param("end") Instant end);
 }
