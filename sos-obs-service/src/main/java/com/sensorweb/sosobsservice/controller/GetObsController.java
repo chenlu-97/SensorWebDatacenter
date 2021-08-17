@@ -83,7 +83,7 @@ public class GetObsController implements ObsConstant {
         while(start.isBefore(stop)){
             int count1 =airFeignClient.getAirCountOfHour(start);
             int count2 =weatherFeignClient.getWeatherCountOfHour(start);
-            int count = count1;
+            int count = count1+count2;
             Map<String,Object> tmp = new HashMap<>();
             String time = start.plusSeconds(9*60*60).toString();
             tmp.put("count",count);

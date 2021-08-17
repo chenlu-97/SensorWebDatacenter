@@ -25,4 +25,6 @@ public interface TWEPAMapper {
     List<TWEPA> selectByPage(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
 
     List<TWEPA> selectByIds(@Param("siteid") List<String> siteid,@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
+
+    List<TWEPA> selectByIdAndTimeNew(@Param("type") String type , @Param("spa") String spa, @Param("time")Instant time);
 }

@@ -53,7 +53,7 @@ public class InsertHimawariService implements HimawariConstant {
     /**
      * 每隔一个小时执行一次，为了以小时为单位接入数据
      */
-    @Scheduled(cron = "00 35 * * * ?")//每小时的35分00秒执行一次(本来是每小时的30分数据更新一次，但是由于数据量的关系，可能造成在半点的时候数据并没有完成上传而导致的获取数据失败，所以这里提前半个小时，)
+//    @Scheduled(cron = "00 35 * * * ?")//每小时的35分00秒执行一次(本来是每小时的30分数据更新一次，但是由于数据量的关系，可能造成在半点的时候数据并没有完成上传而导致的获取数据失败，所以这里提前半个小时，)
     @Scheduled(cron = "0 35 0/1 * * ?")
     public void insertDataByHour() {
         LocalDateTime dateTime = LocalDateTime.now();

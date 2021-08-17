@@ -37,6 +37,26 @@ publish_time, so2, so2_avg, site_engname, site_id, site_name, site_type, status,
         WHERE site_id = #{uniquecode} AND tw_time = #{time}
     </select>
 
+    <select id="selectByIdAndTimeNew" resultMap="twepa">
+        SELECT <include refid="selectFields"></include>
+        FROM taiwan_air_hourly
+        WHERE  tw_time = #{time}  AND
+        site_id in
+        (SELECT station_id
+        FROM station
+        WHERE stype = #{type} AND
+        <if test="spa == 'wuhanCC'">
+            ST_Intersects(geom, (SELECT geom FROM wuhancitycircle)) = true
+        </if>
+        <if test="spa == 'yangtzeRiverEB'">
+            ST_Intersects(geom, (SELECT geom FROM changjiang)) = true
+        </if>
+        <if test="spa == 'china'">
+            ST_Intersects(geom, (SELECT geom FROM china_1984_mian)) = true
+        </if>)
+    </select>
+
+
 
     <select id="selectByTemporal" resultMap="twepa">
         SELECT <include refid="selectFields"></include>

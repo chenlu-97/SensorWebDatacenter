@@ -16,6 +16,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -194,15 +195,13 @@ public class GetAirQualityHour {
     @GetMapping(path = "getExportHBAirDataByIds")
     public Map<String, String> getExportHBAirDataByIds( @RequestParam(value = "ids") List<String> ids,@RequestParam(value = "time") Instant time,@RequestParam(value = "geotype") String geotype)  {
         Map<String, String> res = new HashMap<>();
-        System.out.println("geotype = " + geotype);
         List<AirQualityHour> airQualityHours = airQualityHourMapper.selectByIdAndTimeNew("HB_AIR",geotype,time);
-        String filename = null;
+        String filePath =null;
         if(airQualityHours !=null && airQualityHours.size()>0) {
             String tmp = time.plusSeconds(8 * 60 * 60).toString();
-            filename = replace(tmp);
+            String filename = "AIR" + "_" + geotype + "_" + replace(tmp);
+            filePath = getAirService.exportTXT_WH(airQualityHours, filename);
         }
-            filename = "AIR" + "_" + geotype + "_" + filename;
-            String filePath = getAirService.exportTXT_WH(airQualityHours, filename);
             res.put("filePath", filePath);
         return res;
     }
@@ -211,20 +210,13 @@ public class GetAirQualityHour {
     @GetMapping(path = "getExportTWAirDataByIds")
     public void getExportTWAirDataByIds(@RequestParam(value = "ids") List<String> ids, @RequestParam(value = "time") Instant time,@RequestParam(value = "geotype") String geotype) throws ParseException {
         Map<String, String> res = new HashMap<>();
-        List<TWEPA> twepas = new ArrayList<>();
-        String filename = null;
-        if (ids!=null && ids.size()>0) {
-            for (String id:ids) {
-                TWEPA twepa = twepaMapper.selectByIdAndTime(id,time);
-                if(twepa !=null) {
-                    twepas.add(twepa);
-                    String tmp = time.plusSeconds(8*60*60).toString();
-                    filename = replace(tmp);
-                }
-            }
+        List<TWEPA> twepas = twepaMapper.selectByIdAndTimeNew("TW_EPA_AIR",geotype,time);
+        if(twepas  !=null && twepas.size()>0) {
+            String tmp = time.plusSeconds(8*60*60).toString();
+            String filename =  "AIR" +"_"+geotype+"_" +replace(tmp);
+            getAirService.exportTXT_TW(twepas,filename);
         }
-        filename = "AIR" +"_"+geotype+"_" +filename;
-        getAirService.exportTXT_TW(twepas,filename);
+
 //        res.put("filePath", filePath);
 //        return res;
     }
@@ -232,18 +224,12 @@ public class GetAirQualityHour {
     @GetMapping(path = "getExportCHAirDataByIds")
     public Map<String, String> getExportCHAirDataByIds(@RequestParam(value = "ids") List<String> ids, @RequestParam(value = "time") Long time,@RequestParam(value = "geotype") String geotype) throws ParseException {
         Map<String, String> res = new HashMap<>();
-        List<ChinaAirQualityHour> chinaAirQualityHours = new ArrayList<>();
-        String filename = null;
-        if (ids!=null && ids.size()>0) {
-//            for (String id:ids) {
-                chinaAirQualityHours = chinaAirQualityHourMapper.selectByIdAndTime(ids, time);
-                if (chinaAirQualityHours != null && chinaAirQualityHours.size()>0) {
-                    filename = time.toString();
-                }
-//            }
+        List<ChinaAirQualityHour> chinaAirQualityHours = chinaAirQualityHourMapper.selectByIdAndTimeNew("CH_AIR",geotype,time);
+        String filePath = null;
+        if (chinaAirQualityHours != null && chinaAirQualityHours.size()>0) {
+            String filename = "AIR" +"_"+geotype+"_" +time.toString();
+            filePath = getAirService.exportTXT_CH(chinaAirQualityHours,filename);
         }
-            filename = "AIR" +"_"+geotype+"_" +filename;
-            String filePath = getAirService.exportTXT_CH(chinaAirQualityHours,filename);
             res.put("filePath", filePath);
         return res;
     }
@@ -257,15 +243,35 @@ public class GetAirQualityHour {
     }
 
 
-    @ApiOperation("更新台湾缺失的数据")
-    @GetMapping(path = "UpdateTWAir")
-    public boolean UpdateTWAir() {
+//    @ApiOperation("更新台湾缺失的数据")
+//    @GetMapping(path = "UpdateTWAir")
+//    public boolean UpdateTWAir() {
+//
+////        String path =getFiles();
+////        String document = getDocumentByGZip(path);
+////
+////        TWEPA twepa = new TWEPA();
+//        boolean count = TWEPAMapper.updateTWData();
+//
+//        return count;
+//    }
 
-        boolean count = true;
-        return count;
+    public static List<String> getFiles(String path) {
+        List<String> files = new ArrayList();
+        File file = new File(path);
+        File[] tempList = file.listFiles();
+        for (int i = 0; i < tempList.length; i++) {
+            if (tempList[i].isFile()) {
+                files.add(tempList[i].toString());
+                //文件名，不包含路径
+                //String fileName = tempList[i].getName();
+            }
+            if (tempList[i].isDirectory()) {
+                //这里就不递归了，
+            }
+        }
+        return files;
     }
-
-
 
 
 

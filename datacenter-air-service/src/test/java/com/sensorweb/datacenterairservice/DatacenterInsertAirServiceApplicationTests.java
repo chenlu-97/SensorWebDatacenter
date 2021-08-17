@@ -50,13 +50,13 @@ class DatacenterInsertAirServiceApplicationTests {
 //        int status = airQualityHourMapper.insertData(airQualityHour);
 //        System.out.println(status);
 
-        List<AirStationModel> stations = airStationMapper.selectByAll();
-        for(AirStationModel station:stations){
-            String wkt = "POINT(" +station.getLon() + " " + station.getLat() + ")";
-            System.out.println(wkt);
-            boolean res = airStationMapper.updateGeom(wkt,station.getLon(),station.getLat());
-            System.out.println(res);
-        }
+//        List<AirStationModel> stations = airStationMapper.selectByAll();
+//        for(AirStationModel station:stations){
+//            String wkt = "POINT(" +station.getLon() + " " + station.getLat() + ")";
+//            System.out.println(wkt);
+//            boolean res = airStationMapper.updateGeom(wkt,station.getLon(),station.getLat());
+//            System.out.println(res);
+//        }
     }
 
 

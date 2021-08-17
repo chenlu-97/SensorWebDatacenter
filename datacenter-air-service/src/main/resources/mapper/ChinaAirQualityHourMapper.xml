@@ -35,6 +35,27 @@
     </foreach>
   </select>
 
+
+  <select id="selectByIdAndTimeNew" resultMap="chinaAirQualityHour">
+    SELECT <include refid="selectFields"></include>
+    FROM china_air_hourly
+    WHERE time = #{time} AND station_code in
+    (SELECT station_id
+    FROM station
+    WHERE stype = #{type} AND
+    <if test="spa == 'wuhanCC'">
+      ST_Intersects(geom, (SELECT geom FROM wuhancitycircle)) = true
+    </if>
+    <if test="spa == 'yangtzeRiverEB'">
+      ST_Intersects(geom, (SELECT geom FROM changjiang)) = true
+    </if>
+    <if test="spa == 'china'">
+      ST_Intersects(geom, (SELECT geom FROM china_1984_mian)) = true
+    </if>)
+  </select>
+
+
+
   <resultMap id="chinaAirQualityHour" type="ChinaAirQualityHour">
     <result column="aqi" property="aqi"/>
     <result column="area" property="area"/>

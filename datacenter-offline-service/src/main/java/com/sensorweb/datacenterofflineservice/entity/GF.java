@@ -1,7 +1,10 @@
 package com.sensorweb.datacenterofflineservice.entity;
 
+import lombok.Data;
+
 import java.time.Instant;
 
+@Data
 public class GF {
     private Integer id;
 
@@ -41,162 +44,8 @@ public class GF {
 
     private float bottomleftlongitude;
 
+    private String waveBand = "450nm~900nm";
 
+    private String bandInfo = "可见光&近红外";
 
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getSatelliteId() {
-        return satelliteId;
-    }
-
-    public void setSatelliteId(String satelliteId) {
-        this.satelliteId = satelliteId;
-    }
-
-    public String getSeason() {
-        return season;
-    }
-
-    public void setSeason(String season) {
-        this.season = season;
-    }
-
-
-
-    public String getImageType() {
-        return imageType;
-    }
-
-    public void setImageType(String imageType) {
-        this.imageType = imageType;
-    }
-
-    public String getBbox() {
-        return bbox;
-    }
-
-    public void setBbox(String bbox) {
-        this.bbox = bbox;
-    }
-
-
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
-
-
-    public Instant getQueryTime() {
-        return queryTime;
-    }
-
-    public void setQueryTime(Instant queryTime) {
-        this.queryTime = queryTime;
-    }
-
-    public String getScenePath() {
-        return scenePath;
-    }
-
-    public void setScenePath(String scenePath) {
-        this.scenePath = scenePath;
-    }
-
-    public String getSceneRow() {
-        return sceneRow;
-    }
-
-    public void setSceneRow(String sceneRow) {
-        this.sceneRow = sceneRow;
-    }
-
-    public String getImageId() {
-        return imageId;
-    }
-
-    public void setImageId(String imageId) {
-        this.imageId = imageId;
-    }
-
-    public String getGeom() {
-        return geom;
-    }
-
-    public void setGeom(String geom) {
-        this.geom = geom;
-    }
-
-    public float getTopleftlatitude() {
-        return topleftlatitude;
-    }
-
-    public void setTopleftlatitude(float topleftlatitude) {
-        this.topleftlatitude = topleftlatitude;
-    }
-
-    public float getTopleftlongitude() {
-        return topleftlongitude;
-    }
-
-    public void setTopleftlongitude(float topleftlongitude) {
-        this.topleftlongitude = topleftlongitude;
-    }
-
-    public float getToprightlatitude() {
-        return toprightlatitude;
-    }
-
-    public void setToprightlatitude(float toprightlatitude) {
-        this.toprightlatitude = toprightlatitude;
-    }
-
-    public float getToprightlongitude() {
-        return toprightlongitude;
-    }
-
-    public void setToprightlongitude(float toprightlongitude) {
-        this.toprightlongitude = toprightlongitude;
-    }
-
-    public float getBottomrightlatitude() {
-        return bottomrightlatitude;
-    }
-
-    public void setBottomrightlatitude(float bottomrightlatitude) {
-        this.bottomrightlatitude = bottomrightlatitude;
-    }
-
-    public float getBottomrightlongitude() {
-        return bottomrightlongitude;
-    }
-
-    public void setBottomrightlongitude(float bottomrightlongitude) {
-        this.bottomrightlongitude = bottomrightlongitude;
-    }
-
-    public float getBottomleftlatitude() {
-        return bottomleftlatitude;
-    }
-
-    public void setBottomleftlatitude(float bottomleftlatitude) {
-        this.bottomleftlatitude = bottomleftlatitude;
-    }
-
-    public float getBottomleftlongitude() {
-        return bottomleftlongitude;
-    }
-
-    public void setBottomleftlongitude(float bottomleftlongitude) {
-        this.bottomleftlongitude = bottomleftlongitude;
-    }
 }
