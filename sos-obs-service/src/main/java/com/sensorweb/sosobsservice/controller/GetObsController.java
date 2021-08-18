@@ -80,6 +80,7 @@ public class GetObsController implements ObsConstant {
         String begin = end;
         Instant start = DataCenterUtils.string2Instant(begin).minusSeconds(24*60*60);//减24小时
         Instant stop = DataCenterUtils.string2Instant(end);
+        System.out.println("start = " + start);
         while(start.isBefore(stop)){
             int count1 =airFeignClient.getAirCountOfHour(start);
             int count2 =weatherFeignClient.getWeatherCountOfHour(start);

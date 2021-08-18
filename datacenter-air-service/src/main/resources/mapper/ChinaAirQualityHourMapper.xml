@@ -87,7 +87,7 @@
   <select id="selectByTime" resultType="java.lang.Integer">
     SELECT  count(*)
     FROM china_air_hourly
-    WHERE time_point <![CDATA[>=]]> #{begin} AND time_point <![CDATA[<=]]> #{end}
+    WHERE time <![CDATA[>=]]> #{begin} AND time <![CDATA[<=]]> #{end}
   </select>
 
 

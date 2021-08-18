@@ -1,22 +1,32 @@
 package com.sensorweb.datacenterairservice.controller;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.sensorweb.datacenterairservice.dao.AirQualityHourMapper;
 import com.sensorweb.datacenterairservice.dao.ChinaAirQualityHourMapper;
 import com.sensorweb.datacenterairservice.dao.TWEPAMapper;
 import com.sensorweb.datacenterairservice.entity.AirQualityHour;
+import com.sensorweb.datacenterairservice.entity.AirStationModel;
 import com.sensorweb.datacenterairservice.entity.ChinaAirQualityHour;
 import com.sensorweb.datacenterairservice.entity.TWEPA;
 import com.sensorweb.datacenterairservice.service.GetAirService;
+import com.sensorweb.datacenterairservice.service.InsertTWEPA;
 import com.sensorweb.datacenterutil.utils.DataCenterUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -24,6 +34,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.zip.GZIPInputStream;
 
 @Slf4j
 @RestController
@@ -42,15 +53,22 @@ public class GetAirQualityHour {
     @Autowired
     private ChinaAirQualityHourMapper chinaAirQualityHourMapper;
 
+    @Autowired
+    private InsertTWEPA insertTWEPA;
+
 
 
     @ApiOperation("查询24小时的Air数据接入数量")
     @GetMapping(path = "getAirCountOfHour")
     @ResponseBody
     public Integer getAirCountOfHour(@RequestParam(value = "start") Instant start) {
-            int count1 =airQualityHourMapper.selectByTime(start, start.plusSeconds(60*60));
+//        System.out.println("start = " + start);
+        String time1  = start.plusSeconds(8*60*60).toString().replace("-","").replace("T","").replace(":","").replace("Z","");
+        String time2  = start.plusSeconds(9*60*60).toString().replace("-","").replace("T","").replace(":","").replace("Z","");
+//        System.out.println("time = " + time);
+        int count1 =airQualityHourMapper.selectByTime(start, start.plusSeconds(60*60));
             int count2 =twepaMapper.selectByTime(start, start.plusSeconds(60*60));
-            int count3 = chinaAirQualityHourMapper.selectByTime(start, start.plusSeconds(60*60));
+            int count3 = chinaAirQualityHourMapper.selectByTime(time1, time2);
             int count = count1+count2+count3;
 
         return count;
@@ -243,18 +261,28 @@ public class GetAirQualityHour {
     }
 
 
-//    @ApiOperation("更新台湾缺失的数据")
-//    @GetMapping(path = "UpdateTWAir")
-//    public boolean UpdateTWAir() {
-//
-////        String path =getFiles();
-////        String document = getDocumentByGZip(path);
-////
-////        TWEPA twepa = new TWEPA();
-//        boolean count = TWEPAMapper.updateTWData();
-//
-//        return count;
-//    }
+    @ApiOperation("更新台湾缺失的数据")
+    @GetMapping(path = "UpdateTWAir")
+    public boolean UpdateTWAir() {
+
+        String filepath = "C:/Users/chenlu/Desktop/tw";
+        List<String> paths =getFiles(filepath);
+
+        boolean count = true;
+        for(String path :paths) {
+            String document = insertTWEPA.getDocumentByGZip(path);
+            List<TWEPA> twepas = insertTWEPA.getEPAInfo(document);
+            for(TWEPA twepa :twepas) {
+//            TWEPA twepa = twepas.get(0);
+//              int status = twepaMapper.insertData(twepa);
+                int status = twepaMapper.updateTWData(twepa);
+                count = status >0 ;
+
+            }
+        }
+
+        return count;
+    }
 
     public static List<String> getFiles(String path) {
         List<String> files = new ArrayList();

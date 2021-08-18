@@ -132,4 +132,10 @@ publish_time, so2, so2_avg, site_engname, site_id, site_name, site_type, status,
     </select>
 
 
+    <update id="updateTWData" parameterType="TWEPA">
+        UPDATE taiwan_air_hourly SET import_date = #{importDate} , pm25 =  #{pm25} , pollutant = #{pollutant} , tw_date = #{date}
+        WHERE tw_time = #{time} AND site_id = #{siteId}
+    </update>
+
+
 </mapper>

@@ -12,6 +12,7 @@ import java.util.List;
 @Mapper
 public interface TWEPAMapper {
     int insertData(TWEPA twepa);
+
     int insertDataBatch(List<TWEPA> twepas);
 
     TWEPA selectByIdAndTime(@Param("uniquecode") String uniquecode, @Param("time")Instant time);
@@ -27,4 +28,6 @@ public interface TWEPAMapper {
     List<TWEPA> selectByIds(@Param("siteid") List<String> siteid,@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
 
     List<TWEPA> selectByIdAndTimeNew(@Param("type") String type , @Param("spa") String spa, @Param("time")Instant time);
+
+    int updateTWData(TWEPA twepa);
 }
