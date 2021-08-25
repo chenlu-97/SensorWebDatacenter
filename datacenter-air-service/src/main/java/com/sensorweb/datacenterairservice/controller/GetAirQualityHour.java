@@ -189,7 +189,7 @@ public class GetAirQualityHour {
 
 
     @GetMapping(path = "getExportAll_HBAirDataByIds")
-    public Map<String, String> getExportAll_HBAirDataByIds(@RequestParam(value = "ids") List<String> ids, @RequestParam(value = "time") Instant time,@RequestParam(value = "geotype") String geotype) throws ParseException {
+    public Map<String, String> getExportAll_HBAirDataByIds(@RequestParam(value = "ids") List<String> ids, @RequestParam(value = "time") Instant time,@RequestParam(value = "geotype") String geotype)  {
         Map<String, String> res = new HashMap<>();
         List<AirQualityHour> airQualityHours = new ArrayList<>();
         String filename = null;
@@ -226,7 +226,7 @@ public class GetAirQualityHour {
 
 
     @GetMapping(path = "getExportTWAirDataByIds")
-    public void getExportTWAirDataByIds(@RequestParam(value = "ids") List<String> ids, @RequestParam(value = "time") Instant time,@RequestParam(value = "geotype") String geotype) throws ParseException {
+    public void getExportTWAirDataByIds(@RequestParam(value = "ids") List<String> ids, @RequestParam(value = "time") Instant time,@RequestParam(value = "geotype") String geotype)  {
         Map<String, String> res = new HashMap<>();
         List<TWEPA> twepas = twepaMapper.selectByIdAndTimeNew("TW_EPA_AIR",geotype,time);
         if(twepas  !=null && twepas.size()>0) {
@@ -240,7 +240,7 @@ public class GetAirQualityHour {
     }
 
     @GetMapping(path = "getExportCHAirDataByIds")
-    public Map<String, String> getExportCHAirDataByIds(@RequestParam(value = "ids") List<String> ids, @RequestParam(value = "time") Long time,@RequestParam(value = "geotype") String geotype) throws ParseException {
+    public Map<String, String> getExportCHAirDataByIds(@RequestParam(value = "ids") List<String> ids, @RequestParam(value = "time") Long time,@RequestParam(value = "geotype") String geotype)  {
         Map<String, String> res = new HashMap<>();
         List<ChinaAirQualityHour> chinaAirQualityHours = chinaAirQualityHourMapper.selectByIdAndTimeNew("CH_AIR",geotype,time);
         String filePath = null;

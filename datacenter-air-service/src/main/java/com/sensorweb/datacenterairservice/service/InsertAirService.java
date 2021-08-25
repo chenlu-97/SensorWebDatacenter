@@ -55,36 +55,36 @@ public class InsertAirService extends Thread implements AirConstant {
     /**
      * 每小时接入一次数据
      */
-    @Scheduled(cron = "0 25 0/1 * * ?") //每个小时的20分开始接入
-    public void insertDataByHour() {
-        LocalDateTime dateTime = LocalDateTime.now(ZoneId.of("Asia/Shanghai"));
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:00:00").withZone(ZoneId.of("Asia/Shanghai"));
-        String time = formatter.format(dateTime);
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                boolean flag = true;
-                while (flag) {
-                    try {
-                        flag = !insertHourDataByHour(time);
-                        if (!flag) {
-                            log.info("湖北省监测站接入时间: " + dateTime.toString() + "Status: Success");
-                            System.out.println("湖北省监测站接入时间: " + dateTime.toString() + "Status: Success");
-                        } else {
-                            System.out.println("等待中...");
-                        }
-                        Thread.sleep(2 * 60 * 1000);
-                    } catch (Exception e) {
-                        log.error(e.getMessage());
-                        log.info("湖北省监测站接入时间: " + dateTime.toString() + "Status: Fail");
-                        System.out.println(e.getMessage());
-                        break;
-                    }
-                }
-            }
-        }).start();
-    }
+//    @Scheduled(cron = "0 25 0/1 * * ?") //每个小时的20分开始接入
+//    public void insertDataByHour() {
+//        LocalDateTime dateTime = LocalDateTime.now(ZoneId.of("Asia/Shanghai"));
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:00:00").withZone(ZoneId.of("Asia/Shanghai"));
+//        String time = formatter.format(dateTime);
+//
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                boolean flag = true;
+//                while (flag) {
+//                    try {
+//                        flag = !insertHourDataByHour(time);
+//                        if (!flag) {
+//                            log.info("湖北省监测站接入时间: " + dateTime.toString() + "Status: Success");
+//                            System.out.println("湖北省监测站接入时间: " + dateTime.toString() + "Status: Success");
+//                        } else {
+//                            System.out.println("等待中...");
+//                        }
+//                        Thread.sleep(2 * 60 * 1000);
+//                    } catch (Exception e) {
+//                        log.error(e.getMessage());
+//                        log.info("湖北省监测站接入时间: " + dateTime.toString() + "Status: Fail");
+//                        System.out.println(e.getMessage());
+//                        break;
+//                    }
+//                }
+//            }
+//        }).start();
+//    }
 
     /**
      * 根据时间接入指定时间的小时数据（当数据库中缺少某个时间段的数据时，可作为数据补充）

@@ -53,30 +53,30 @@ public class InsertChinaAirService extends Thread implements AirConstant {
     /**
      * 每小时接入一次数据
      */
-    @Scheduled(cron = "0 35 0/1 * * ?") //每个小时的35分开始接入
-    public void insertChinaDataByHour() {
-        LocalDateTime dateTime = LocalDateTime.now(ZoneId.of("Asia/Shanghai"));
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:00:00").withZone(ZoneId.of("Asia/Shanghai"));
-        String time = formatter.format(dateTime);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                boolean flag = false;
-                try {
-                    String str = getApiDocument();
-                    flag = insertDataByHour(getChinaAQHInfo(str));
-                    if (flag) {
-                        log.info("全国空气质量监测站接入时间: " + dateTime.toString() + "Status: Success");
-                        System.out.println("全国空气质量监测站接入时间: " + dateTime.toString() + "Status: Success");
-                    }
-                } catch (Exception e) {
-                    log.info("全国空气质量监测站接入时间: " + dateTime.toString() + "Status: Fail");
-                    System.out.println(e.getMessage());
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
+//    @Scheduled(cron = "0 35 0/1 * * ?") //每个小时的35分开始接入
+//    public void insertChinaDataByHour() {
+//        LocalDateTime dateTime = LocalDateTime.now(ZoneId.of("Asia/Shanghai"));
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:00:00").withZone(ZoneId.of("Asia/Shanghai"));
+//        String time = formatter.format(dateTime);
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                boolean flag = false;
+//                try {
+//                    String str = getApiDocument();
+//                    flag = insertDataByHour(getChinaAQHInfo(str));
+//                    if (flag) {
+//                        log.info("全国空气质量监测站接入时间: " + dateTime.toString() + "Status: Success");
+//                        System.out.println("全国空气质量监测站接入时间: " + dateTime.toString() + "Status: Success");
+//                    }
+//                } catch (Exception e) {
+//                    log.info("全国空气质量监测站接入时间: " + dateTime.toString() + "Status: Fail");
+//                    System.out.println(e.getMessage());
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
+//    }
 
 
     public String getQTInfo(String stationId) {

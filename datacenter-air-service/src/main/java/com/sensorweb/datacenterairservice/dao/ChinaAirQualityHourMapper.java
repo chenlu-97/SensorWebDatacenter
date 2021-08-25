@@ -25,5 +25,5 @@ public interface ChinaAirQualityHourMapper {
 
     List<ChinaAirQualityHour> selectByIds(@Param("stationcode") List<String> stationcode,@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
 
-    List<ChinaAirQualityHour> selectByIdAndTimeNew(@Param("type") String type , @Param("spa") String spa, @Param("time")Long time);
+    List<ChinaAirQualityHour> selectByIdAndTimeNew(@Param("type") String type , @Param("spa") String spa, @Param("time") Long time);
 }

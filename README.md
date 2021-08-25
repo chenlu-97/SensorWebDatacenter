@@ -44,23 +44,117 @@ COMMENT ON TABLE valid_time is '存储传感器的有效作用时间';
 ```
 ### 2.2 观测数据数据库（obs_db）
 ```sql
-CREATE TABLE observation(id SERIAL NOT NULL PRIMARY KEY, proc_id VARCHAR(255), obs_name VARCHAR(255), obs_des VARCHAR(255), obs_time TIMESTAMP, begin_time TIMESTAMP, end_time TIMESTAMP, bbox VARCHAR(255), geom GEOMETRY, obs_property VARCHAR(255), obs_type VARCHAR(255), mapping VARCHAR(255), out_id INT);
+CREATE TABLE observation(id SERIAL NOT NULL PRIMARY KEY, proc_id VARCHAR(255), obs_name VARCHAR(255),obs_des VARCHAR(255), obs_time TIMESTAMP, begin_time TIMESTAMP,end_time TIMESTAMP,bbox VARCHAR(255), geom GEOMETRY, obs_property VARCHAR(255), obs_type VARCHAR(255), mapping VARCHAR(255), out_id INT, geo_type INT);
 
-CREATE TABLE himawari(id SERIAL NOT NULL PRIMARY KEY, h_name VARCHAR(255), h_time TIMESTAMP, h_area VARCHAR(255), pixel_Num INT, line_Num INT, file_url VARCHAR(255), local_path VARCHAR(255));
+CREATE TABLE himawari(id SERIAL NOT NULL PRIMARY KEY, h_name VARCHAR(255), h_time TIMESTAMP, h_area VARCHAR(255), pixel_Num INT, line_Num INT, file_url VARCHAR(255), local_path VARCHAR(255),wave_band varchar(255),band_info varchar(255));
 
 CREATE TABLE record(id SERIAL NOT NULL PRIMARY KEY, identifier VARCHAR(255), title VARCHAR(255), creator VARCHAR(255), publisher VARCHAR(255), mediator VARCHAR(255), rec_type VARCHAR(255), modified TIMESTAMP, rec_begin TIMESTAMP, rec_end TIMESTAMP, reference TEXT, bbox VARCHAR(255), geom GEOMETRY);
 
-CREATE TABLE air_quality_hourly(id SERIAL NOT NULL PRIMARY KEY, station_name VARCHAR(255), uniquecode VARCHAR(255), querytime TIMESTAMP, pm25OneHour VARCHAR(25), pm10OneHour VARCHAR(25), so2OneHour VARCHAR(25), no2OneHour VARCHAR(25), coOneHour VARCHAR(25), o3OneHour VARCHAR(25), aqi VARCHAR(25), primaryEP VARCHAR(25), aqDegree VARCHAR(10), aqType VARCHAR(10));
+CREATE TABLE "public"."wuhanCC_air_hourly" ("station_name" varchar(255) COLLATE "pg_catalog"."default","uniquecode" varchar(255) COLLATE "pg_catalog"."default","querytime" timestamp(6),"pm25onehour" varchar(25) COLLATE "pg_catalog"."default","pm10onehour" varchar(25) COLLATE "pg_catalog"."default","so2onehour" varchar(25) COLLATE "pg_catalog"."default","no2onehour" varchar(25) COLLATE "pg_catalog"."default","coonehour" varchar(25) COLLATE "pg_catalog"."default","o3onehour" varchar(25) COLLATE "pg_catalog"."default","aqi" varchar(25) COLLATE "pg_catalog"."default","primaryep" varchar(25) COLLATE "pg_catalog"."default","aqdegree" varchar(10) COLLATE "pg_catalog"."default","aqtype" varchar(10) COLLATE "pg_catalog"."default","uq" varchar(255) COLLATE "pg_catalog"."default");
 COMMENT ON TABLE air_quality_hourly is '存储湖北省环境监测站的数据';
 
-CREATE TABLE station(city VARCHAR(255), uniquecode VARCHAR(25), sname VARCHAR(255), stype VARCHAR(255), glongitude VARCHAR(255), glatitude VARCHAR(255), cityid int);
-COMMENT ON TABLE station is '存储站点信息';
+CREATE TABLE "public"."station" ("id" int4 NOT NULL DEFAULT nextval('station_id_seq'::regclass),"station_id" varchar(50) COLLATE "pg_catalog"."default","station_name" varchar(255) COLLATE "pg_catalog"."default","township" varchar(255) COLLATE "pg_catalog"."default","region" varchar(128) COLLATE "pg_catalog"."default","city" varchar(50) COLLATE "pg_catalog"."default","province" varchar(50) COLLATE "pg_catalog"."default","lon" float4,"lat" float4,"stype" varchar(50) COLLATE "pg_catalog"."default","geom" "public"."geometry","geo_type" int2)
+COMMENT ON TABLE station is '存储空气、气象、水质等的站点信息';
 
 CREATE TABLE product(id SERIAL NOT NULL PRiMARY KEY, product_id VARCHAR(255), product_name VARCHAR(255), product_des VARCHAR(255), product_keyword VARCHAR(255), manufacture_date VARCHAR(50), organization_name VARCHAR(255), service_name VARCHAR(255), download_address VARCHAR(255), product_type VARCHAR(50), time_resolution VARCHAR(50), spatial_resolution VARCHAR(50), dimension INT, service_target VARCHAR(255));
 COMMENT ON TABLE product is '存储数据产品信息';
 
-CREATE TABLE entry(id SERIAL NOT NULL PRIMARY KEY, entry_id VARCHAR(50), title VARCHAR(255), updated VARCHAR(50), link VARCHAR(255), file_path VARCHAR(255), start_time TIMESTAMP, stop_time TIMESTAMP, bbox VARCHAR(255), geom GEOMETRY(POLYGON, 4326));
+CREATE TABLE entry(id SERIAL NOT NULL PRIMARY KEY, entry_id VARCHAR(50), title VARCHAR(255), updated VARCHAR(50), link VARCHAR(255), file_path VARCHAR(255), start_time TIMESTAMP, stop_time TIMESTAMP, bbox VARCHAR(255), geom GEOMETRY(POLYGON, 4326)),product_type varchar(50),satellite varchar(50);
 COMMENT ON TABLE entry is '存储LAADS Web Service中的entry信息';
+
+CREATE TABLE GF(id SERIAL NOT NULL PRIMARY KEY,satellite_id VARCHAR(255), season VARCHAR(25),image_id VARCHAR(255),image_type VARCHAR(25), bbox VARCHAR(255), geom GEOMETRY, query_time timestamp, scene_path VARCHAR(25), scene_row VARCHAR(25),TopLeftLatitude float, TopLeftLongitude float,TopRightLatitude float,TopRightLongitude float,BottomRightLatitude float,BottomRightLongitude float,BottomLeftLatitude float,BottomLeftLongitude float,file_path VARCHAR(255) ,wave_band varchar(255),band_info varchar(255));
+COMMENT ON TABLE GF is '存储高分影像的相关信息';
+
+CREATE TABLE product_info(id SERIAL NOT NULL PRIMARY KEY, product_type VARCHAR(255) , data_needed VARCHAR(255), module_needed VARCHAR(255),region VARCHAR(255));
+COMMENT ON TABLE product_info is '存储产品对应需要数据的需求信息';
+
+CREATE TABLE weather_forecast(id SERIAL NOT NULL PRIMARY KEY,image_id VARCHAR(255), bbox VARCHAR(255), geom GEOMETRY, query_time timestamp,file_path VARCHAR(255),geo_type int);
+COMMENT ON TABLE weather_forecast is '存储北京气象院天气同化数据';
+
+CREATE TABLE air_pollution_prediction("uniquecode" character(20) COLLATE pg_catalog."default" NOT NULL,"stationname" character(20) COLLATE pg_catalog."default", "so2onehour" integer,"pm25onehour" integer,"pm10onehour" integer,"o3onehour" double precision,"no2onehour" integer,"coonehour" double precision,"aqi" integer,"predictedtime" timestamp NOT NULL,CONSTRAINT air_pollution_prediction_pkey PRIMARY KEY ("uniquecode", "predictedtime"));
+COMMENT ON TABLE air_pollution_prediction is '存储处理后的空气预测数据';
+
+CREATE TABLE WH_Water_Quality(id SERIAL NOT NULL PRIMARY KEY,river_name VARCHAR(25), section_name VARCHAR(25),query_time timestamp, water_temperature REAL,pH REAL,dissolved_oxygen REAL,permanganate_index REAL,biochemical_oxygen_demand REAL,total_phosphorus REAL,ammonia_nitrogen REAL,total_nitrogen REAL);
+COMMENT ON TABLE WH_Water_Quality is '存储武汉1+8城市圈的水质数据';
+
+CREATE TABLE WH_Water_Quality_Auto(id SERIAL NOT NULL PRIMARY KEY,river_name VARCHAR(25),section_name VARCHAR(25),query_time timestamp,turbidity REAL,chlorophyll REAL);
+COMMENT ON TABLE WH_Water_Quality_Auto is '存储武汉1+8城市圈的水质自动站的数据';
+
+CREATE TABLE HB_WaterPollution(id SERIAL NOT NULL PRIMARY KEY,company_name VARCHAR(255),station_name VARCHAR(255),station_type VARCHAR(255),station_item VARCHAR(255),flow REAL, concentration REAL,isoverstandard VARCHAR(255),overstandard_reason VARCHAR(255), emission_cap REAL ,emission_limit REAL, monitoring_time timestamp);
+COMMENT ON TABLE HB_WaterPollution is '存储湖北省的企业排污口监测的数据';
+
+CREATE TABLE landsat(ImageID  varchar(1024)  not null  primary key, SensorID varchar (1024), SpacecraftID varchar (1024),  geom geometry, coordinates varchar(1024) ,Date  timestamp,  Time varchar (1024), ImageSize varchar (1024),  Ellipsoid varchar (1024),  CloudCover float(54),  ThumbURL varchar (1024),ImageType varchar(1024),FilePath varchar(1024),wave_band varchar(255),band_info varchar(255));
+COMMENT ON TABLE landsat is '存储landsat影像的元数据';
+
+CREATE TABLE "public"."wuhanCC_weather_hourly" ("StationID" varchar(50) COLLATE "pg_catalog"."default","QueryTime" timestamp(6),"Precipitation" varchar(50) COLLATE "pg_catalog"."default","Update_time" timestamp(6),"Pressure" varchar(50) COLLATE "pg_catalog"."default","Wind_d" varchar(50) COLLATE "pg_catalog"."default","Wind_p" varchar(50) COLLATE "pg_catalog"."default","Humidity" varchar(50) COLLATE "pg_catalog"."default","Temperature" varchar(50) COLLATE "pg_catalog"."default","WP" varchar(50) COLLATE "pg_catalog"."default","QS" varchar(50) COLLATE "pg_catalog"."default","StationName" varchar(255) COLLATE "pg_catalog"."default","Weather_p" varchar(255) COLLATE "pg_catalog"."default","Lng" varchar(255) COLLATE "pg_catalog"."default","Lat" varchar(255) COLLATE "pg_catalog"."default")
+COMMENT ON TABLE "wuhanCC_weather_hourly" is '存储武汉1+8城市群气象数据';
+
+CREATE TABLE "public"."taiwan_air_hourly" (
+                                             "id" int4 NOT NULL DEFAULT nextval('tw_epa_id_seq'::regclass),
+                                             "tw_time" timestamp(6),
+                                             "aqi" varchar(50) COLLATE "pg_catalog"."default",
+                                             "co" varchar(50) COLLATE "pg_catalog"."default",
+                                             "co_8hr" varchar(50) COLLATE "pg_catalog"."default",
+                                             "country" varchar(50) COLLATE "pg_catalog"."default",
+                                             "import_date" timestamp(6),
+                                             "lon" float4,
+                                             "lat" float4,
+                                             "no" varchar(50) COLLATE "pg_catalog"."default",
+                                             "no2" varchar(50) COLLATE "pg_catalog"."default",
+                                             "nox" varchar(50) COLLATE "pg_catalog"."default",
+                                             "o3" varchar(50) COLLATE "pg_catalog"."default",
+                                             "o3_8hr" varchar(50) COLLATE "pg_catalog"."default",
+                                             "pm10" varchar(50) COLLATE "pg_catalog"."default",
+                                             "pm10_avg" varchar(50) COLLATE "pg_catalog"."default",
+                                             "pm25" varchar(50) COLLATE "pg_catalog"."default",
+                                             "pm25_avg" varchar(50) COLLATE "pg_catalog"."default",
+                                             "pollutant" varchar(50) COLLATE "pg_catalog"."default",
+                                             "publish_time" timestamp(6),
+                                             "so2" varchar(50) COLLATE "pg_catalog"."default",
+                                             "so2_avg" varchar(50) COLLATE "pg_catalog"."default",
+                                             "site_engname" varchar(50) COLLATE "pg_catalog"."default",
+                                             "site_id" varchar(50) COLLATE "pg_catalog"."default",
+                                             "site_name" varchar(50) COLLATE "pg_catalog"."default",
+                                             "site_type" varchar(50) COLLATE "pg_catalog"."default",
+                                             "status" varchar(50) COLLATE "pg_catalog"."default",
+                                             "wind_d" varchar(50) COLLATE "pg_catalog"."default",
+                                             "wind_s" varchar(50) COLLATE "pg_catalog"."default",
+                                             "app" varchar(50) COLLATE "pg_catalog"."default",
+                                             "tw_date" varchar(50) COLLATE "pg_catalog"."default",
+                                             "fmt_opt" varchar(50) COLLATE "pg_catalog"."default",
+                                             "ver_format" varchar(50) COLLATE "pg_catalog"."default",
+                                             "device_id" varchar(50) COLLATE "pg_catalog"."default"
+);
+COMMENT ON TABLE "taiwan_air_hourly" is '存储台湾空气质量数据';
+
+CREATE TABLE "public"."china_air_hourly" (
+                                            "aqi" int2,
+                                            "area" varchar(50) COLLATE "pg_catalog"."default",
+                                            "co" float4,
+                                            "co_24h" float4,
+                                            "no2" int2,
+                                            "no2_24h" int2,
+                                            "o3" int2,
+                                            "o3_24h" int2,
+                                            "o3_8h" int2,
+                                            "o3_8h_24h" int2,
+                                            "pm10" int2,
+                                            "pm10_24h" int2,
+                                            "pm2_5" int2,
+                                            "pm2_5_24h" int2,
+                                            "position_name" varchar(50) COLLATE "pg_catalog"."default",
+                                            "primary_pollutant" varchar(50) COLLATE "pg_catalog"."default",
+                                            "quality" varchar(30) COLLATE "pg_catalog"."default",
+                                            "so2" int2,
+                                            "so2_24h" int2,
+                                            "station_code" varchar(50) COLLATE "pg_catalog"."default",
+                                            "time_point" timestamp(6),
+                                            "lng" varchar(255) COLLATE "pg_catalog"."default",
+                                            "lat" varchar(255) COLLATE "pg_catalog"."default",
+                                            "QT" int8,
+                                            "time" int8
+);
+COMMENT ON TABLE "china_air_hourly" is '存储全国空气质量数据';
 ```
 ### 2.3 用户权限数据库（user_db）
 ```sql

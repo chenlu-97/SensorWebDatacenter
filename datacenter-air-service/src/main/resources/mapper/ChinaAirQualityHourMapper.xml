@@ -43,15 +43,25 @@
     (SELECT station_id
     FROM station
     WHERE stype = #{type} AND
+<!--    <if test="spa == 'wuhanCC'">-->
+<!--      ST_Intersects(geom, (SELECT geom FROM wuhancitycircle)) = true-->
+<!--    </if>-->
+<!--    <if test="spa == 'yangtzeRiverEB'">-->
+<!--      ST_Intersects(geom, (SELECT geom FROM changjiang)) = true-->
+<!--    </if>-->
+<!--    <if test="spa == 'china'">-->
+<!--      ST_Intersects(geom, (SELECT geom FROM china_1984_mian)) = true-->
+<!--    </if>-->
     <if test="spa == 'wuhanCC'">
-      ST_Intersects(geom, (SELECT geom FROM wuhancitycircle)) = true
-    </if>
-    <if test="spa == 'yangtzeRiverEB'">
-      ST_Intersects(geom, (SELECT geom FROM changjiang)) = true
+      geo_type = 1
     </if>
     <if test="spa == 'china'">
-      ST_Intersects(geom, (SELECT geom FROM china_1984_mian)) = true
-    </if>)
+      geo_type = 3 or geo_type = 1 or geo_type = 2
+    </if>
+    <if test="spa == 'yangtzeRiverEB'">
+      geo_type = 2 or geo_type = 1
+    </if>
+    )
   </select>
 
 

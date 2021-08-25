@@ -65,7 +65,7 @@ public class InsertObservationService {
         //插入观测数据
         if (sensorFeignClient.isExist(observation.getProcedureId())) {
 //            observationMapper.insertData(observation);
-            //OM注册逻辑徐修改
+            //OM注册逻辑修改
         } else {
             log.info("This procedure is not exist");
             throw new Exception("This procedure is not exist");

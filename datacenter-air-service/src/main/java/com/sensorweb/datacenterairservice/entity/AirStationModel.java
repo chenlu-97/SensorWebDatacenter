@@ -18,4 +18,5 @@ public class AirStationModel {
     private float lat;
     private String stationType;
     private String geom;
+    private String geoType;
 }

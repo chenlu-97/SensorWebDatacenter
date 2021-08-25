@@ -134,7 +134,6 @@ public class GetGenProductController {
     }
 
 
-
     /**
      * 通过给出的参数，查询出相应产品类型所需要的所有数据的路径（本地路径）
      * @param productType 产品类型
@@ -189,11 +188,14 @@ public class GetGenProductController {
                 Instant stop = end.atZone(ZoneId.of("GMT+8")).toInstant();
                 System.out.println("time: " + stop.toString());
                 if (timeRes.equals("1小时")) {
+
+
 //                    Map<String,List<Map<String, String>>> all_data = new HashMap<>();
 //                    for (String dataType : dataTypes) {
 //                        List<Map<String, String>> dataOfHour = getFilePath(dataType, ranSpa, begin, end);
 //                        all_data.put(dataType,dataOfHour);
 //                    }
+
 
                     while (begin.isBefore(stop.plusSeconds(60*60))) {
                         Map<String, List<String>> res = new HashMap<>();
@@ -218,6 +220,8 @@ public class GetGenProductController {
         }
 
     }
+
+
 
 
 
@@ -263,7 +267,7 @@ public class GetGenProductController {
 //                    System.out.println("stationIDs = " + stationIDs);
                     res = getDataPath(dataType, begin, spa);
                 }
-            System.out.println("--------------end--------------");
+//            System.out.println("--------------end--------------");
         }
         catch (Exception e) {
             log.error(e.getMessage());
@@ -332,7 +336,6 @@ public class GetGenProductController {
 //
 //    }
 
-
     public String getDataPath(String Type, Instant time, String geotype) {
         String path = null;
         String[] dataTypes = null;
@@ -344,6 +347,7 @@ public class GetGenProductController {
             String type = "wh_1+8_weather";
             dataTypes = type.split(",");
         }
+
             for (String dataType : dataTypes) {
                 if(geotype.equals("wuhanCC")){
                         if(dataType.equals("HB_AIR")) {
@@ -363,8 +367,7 @@ public class GetGenProductController {
                 else if(geotype.equals("yangtzeRiverEB")){
 //                        System.out.println("CH_AIR-->id: " + stationIDs.size());
                     if(dataType.equals("CH_AIR")) {
-                        Map<String, String> CH_AIR = airFeignClient.getExportCHAirDataByIds(stationIDs, Long.valueOf(replace(time.plusSeconds(8*60*60).toString()).trim()), geotype);
-//                        System.out.println(Long.valueOf(replace(time.plusSeconds(8*60*60).toString()).trim()));
+                        Map<String, String> CH_AIR = airFeignClient.getExportCHAirDataByIds(stationIDs, Long.valueOf(replace(time.plusSeconds(8*60*60).toString())), geotype);
                         if(CH_AIR !=null){
                             path = CH_AIR.get("filePath");
                         }
@@ -372,8 +375,7 @@ public class GetGenProductController {
                         }
                 else if (geotype.equals("china")){
                         if(dataType.equals("CH_AIR")) {
-//                        System.out.println("CH_AIR-->id: " + stationIDs.size());
-                            Map<String, String> CH_AIR = airFeignClient.getExportCHAirDataByIds(stationIDs, Long.valueOf(replace(time.plusSeconds(8*60*60).toString()).trim()), geotype);
+                            Map<String, String> CH_AIR = airFeignClient.getExportCHAirDataByIds(stationIDs, Long.valueOf(replace(time.plusSeconds(8*60*60).toString())), geotype);
                             if(CH_AIR !=null){
                                 path = CH_AIR.get("filePath");
                             }
@@ -389,6 +391,9 @@ public class GetGenProductController {
             }
         return path;
     }
+
+
+
 
 
     public static LocalDateTime string2LocalDateTime3(String time) throws ParseException {
