@@ -86,75 +86,16 @@ COMMENT ON TABLE HB_WaterPollution is '存储湖北省的企业排污口监测�
 CREATE TABLE landsat(ImageID  varchar(1024)  not null  primary key, SensorID varchar (1024), SpacecraftID varchar (1024),  geom geometry, coordinates varchar(1024) ,Date  timestamp,  Time varchar (1024), ImageSize varchar (1024),  Ellipsoid varchar (1024),  CloudCover float(54),  ThumbURL varchar (1024),ImageType varchar(1024),FilePath varchar(1024),wave_band varchar(255),band_info varchar(255));
 COMMENT ON TABLE landsat is '存储landsat影像的元数据';
 
-CREATE TABLE "public"."wuhanCC_weather_hourly" ("StationID" varchar(50) COLLATE "pg_catalog"."default","QueryTime" timestamp(6),"Precipitation" varchar(50) COLLATE "pg_catalog"."default","Update_time" timestamp(6),"Pressure" varchar(50) COLLATE "pg_catalog"."default","Wind_d" varchar(50) COLLATE "pg_catalog"."default","Wind_p" varchar(50) COLLATE "pg_catalog"."default","Humidity" varchar(50) COLLATE "pg_catalog"."default","Temperature" varchar(50) COLLATE "pg_catalog"."default","WP" varchar(50) COLLATE "pg_catalog"."default","QS" varchar(50) COLLATE "pg_catalog"."default","StationName" varchar(255) COLLATE "pg_catalog"."default","Weather_p" varchar(255) COLLATE "pg_catalog"."default","Lng" varchar(255) COLLATE "pg_catalog"."default","Lat" varchar(255) COLLATE "pg_catalog"."default")
+CREATE TABLE "wuhanCC_weather_hourly" ("StationID" varchar(50) COLLATE "pg_catalog"."default","QueryTime" timestamp(6),"Precipitation" varchar(50) COLLATE "pg_catalog"."default","Update_time" timestamp(6),"Pressure" varchar(50) COLLATE "pg_catalog"."default","Wind_d" varchar(50) COLLATE "pg_catalog"."default","Wind_p" varchar(50) COLLATE "pg_catalog"."default","Humidity" varchar(50) COLLATE "pg_catalog"."default","Temperature" varchar(50) COLLATE "pg_catalog"."default","WP" varchar(50) COLLATE "pg_catalog"."default","QS" varchar(50) COLLATE "pg_catalog"."default","StationName" varchar(255) COLLATE "pg_catalog"."default","Weather_p" varchar(255) COLLATE "pg_catalog"."default","Lng" varchar(255) COLLATE "pg_catalog"."default","Lat" varchar(255) COLLATE "pg_catalog"."default")
 COMMENT ON TABLE "wuhanCC_weather_hourly" is '存储武汉1+8城市群气象数据';
 
-CREATE TABLE "public"."taiwan_air_hourly" (
-                                             "id" int4 NOT NULL DEFAULT nextval('tw_epa_id_seq'::regclass),
-                                             "tw_time" timestamp(6),
-                                             "aqi" varchar(50) COLLATE "pg_catalog"."default",
-                                             "co" varchar(50) COLLATE "pg_catalog"."default",
-                                             "co_8hr" varchar(50) COLLATE "pg_catalog"."default",
-                                             "country" varchar(50) COLLATE "pg_catalog"."default",
-                                             "import_date" timestamp(6),
-                                             "lon" float4,
-                                             "lat" float4,
-                                             "no" varchar(50) COLLATE "pg_catalog"."default",
-                                             "no2" varchar(50) COLLATE "pg_catalog"."default",
-                                             "nox" varchar(50) COLLATE "pg_catalog"."default",
-                                             "o3" varchar(50) COLLATE "pg_catalog"."default",
-                                             "o3_8hr" varchar(50) COLLATE "pg_catalog"."default",
-                                             "pm10" varchar(50) COLLATE "pg_catalog"."default",
-                                             "pm10_avg" varchar(50) COLLATE "pg_catalog"."default",
-                                             "pm25" varchar(50) COLLATE "pg_catalog"."default",
-                                             "pm25_avg" varchar(50) COLLATE "pg_catalog"."default",
-                                             "pollutant" varchar(50) COLLATE "pg_catalog"."default",
-                                             "publish_time" timestamp(6),
-                                             "so2" varchar(50) COLLATE "pg_catalog"."default",
-                                             "so2_avg" varchar(50) COLLATE "pg_catalog"."default",
-                                             "site_engname" varchar(50) COLLATE "pg_catalog"."default",
-                                             "site_id" varchar(50) COLLATE "pg_catalog"."default",
-                                             "site_name" varchar(50) COLLATE "pg_catalog"."default",
-                                             "site_type" varchar(50) COLLATE "pg_catalog"."default",
-                                             "status" varchar(50) COLLATE "pg_catalog"."default",
-                                             "wind_d" varchar(50) COLLATE "pg_catalog"."default",
-                                             "wind_s" varchar(50) COLLATE "pg_catalog"."default",
-                                             "app" varchar(50) COLLATE "pg_catalog"."default",
-                                             "tw_date" varchar(50) COLLATE "pg_catalog"."default",
-                                             "fmt_opt" varchar(50) COLLATE "pg_catalog"."default",
-                                             "ver_format" varchar(50) COLLATE "pg_catalog"."default",
-                                             "device_id" varchar(50) COLLATE "pg_catalog"."default"
-);
+CREATE TABLE "pubtaiwan_air_hourly" ("id" int4 NOT NULL DEFAULT nextval('tw_epa_id_seq'::regclass),"tw_time" timestamp(6),"aqi" varchar(50) ,"co" varchar(50) ,"co_8hr" varchar(50) ,"country" varchar(50) ,"import_date" timestamp(6),"lon" float4,"lat" float4,"no" varchar(50) ,"no2" varchar(50), "nox" varchar(50) ,"o3" varchar(50) ,"o3_8hr" varchar(50) ,"pm10" varchar(50),"pm10_avg" varchar(50) ,"pm25" varchar(50) ,"pm25_avg" varchar(50) ,"pollutant" varchar(50) ,"publish_time" timestamp(6),"so2" varchar(50) ,"so2_avg" varchar(50),"site_engname" varchar(50) ,"site_id" varchar(50) ,"site_name" varchar(50),"site_type" varchar(50) ,"status" varchar(50) ,"wind_d" varchar(50) ,"wind_s" varchar(50),"app" varchar(50) ,"tw_date" varchar(50) ,"fmt_opt" varchar(50),"ver_format" varchar(50) ,"device_id" varchar(50));
 COMMENT ON TABLE "taiwan_air_hourly" is '存储台湾空气质量数据';
 
-CREATE TABLE "public"."china_air_hourly" (
-                                            "aqi" int2,
-                                            "area" varchar(50) COLLATE "pg_catalog"."default",
-                                            "co" float4,
-                                            "co_24h" float4,
-                                            "no2" int2,
-                                            "no2_24h" int2,
-                                            "o3" int2,
-                                            "o3_24h" int2,
-                                            "o3_8h" int2,
-                                            "o3_8h_24h" int2,
-                                            "pm10" int2,
-                                            "pm10_24h" int2,
-                                            "pm2_5" int2,
-                                            "pm2_5_24h" int2,
-                                            "position_name" varchar(50) COLLATE "pg_catalog"."default",
-                                            "primary_pollutant" varchar(50) COLLATE "pg_catalog"."default",
-                                            "quality" varchar(30) COLLATE "pg_catalog"."default",
-                                            "so2" int2,
-                                            "so2_24h" int2,
-                                            "station_code" varchar(50) COLLATE "pg_catalog"."default",
-                                            "time_point" timestamp(6),
-                                            "lng" varchar(255) COLLATE "pg_catalog"."default",
-                                            "lat" varchar(255) COLLATE "pg_catalog"."default",
-                                            "QT" int8,
-                                            "time" int8
-);
+CREATE TABLE "china_air_hourly" ("aqi" int2,"area" varchar(50),"co" float4,"co_24h" float4,"no2" int2,"no2_24h" int2,"o3" int2,"o3_24h" int2,"o3_8h" int2,"o3_8h_24h" int2,"pm10" int2,"pm10_24h" int2,"pm2_5" int2,"pm2_5_24h" int2,"position_name" varchar(50) ,"primary_pollutant" varchar(50) ,"quality" varchar(30),"so2" int2,"so2_24h" int2,"station_code" varchar(50) ,"time_point" timestamp(6),"lng" varchar(255) ,"lat" varchar(255),"QT" int8,"time" int8);
 COMMENT ON TABLE "china_air_hourly" is '存储全国空气质量数据';
+
+
 ```
 ### 2.3 用户权限数据库（user_db）
 ```sql
@@ -308,19 +249,23 @@ JWT就是在这样的背景下诞生的，从本质上来说，jwt就是一种�
 4. ogc-services-swe: ogc规范中的swe工具类，上述swe*几个包都会引用该部分内容（工具包，不是微服务）
 5. ogc-services-sos: ogc规范中的sos服务所需的工具类（工具包，不是微服务）
 6. sensorml-core: sensorml工具包，主要是sensorml的构建和解析（工具包。不是微服务）
-7. datacenter-util: 整个系统所需要的自定义工具类集合
+7. datacenter-util: 整个系统所需要的自定义工具类集合（自定义的工具包。不是微服务）
 8. eureka-server0*: eureka微服务注册中心，设置三个注册中心的目的是为了能够在某些条件下实现分布式高可用特性
 9. sos-sensor-service: 传感器服务，包括传感器的注册和查询等功能（微服务）
 10. sos-obs-service: 观测数据服务，观测数据的注册和查询（微服务）
-11. datacenter-air-service: 湖北省环境监测站数据接入微服务，主要实现对湖北省环境监测站数据的接入、注册、查询等功能
-12. datacenter-himawari-service: 葵花卫星数据接入微服务，实现葵花卫星数据的接入、注册、查询、下载等功能
-13. datacenter-laads-service: NASA LAADS数据中心数据接入微服务。。。。。。
-14. datacenter-cwic-service: CWIC目录服务数据接入微服务，。。。。。。
-15. datacenter-gee-service: Google Earth Engine数据接入微服务
-16. datacenter-product-service: 数据产品接入微服务
-17. datacenter-indicator-service: 数据指标接入微服务
-18. datacenter-auth2-service: 资源鉴权微服务
-19. datacenter-gateway-service: 网关微服务
+11. datacenter-air-service: 湖北省环境监测站、全国空气质量、台湾空气质量数据接入微服务，主要实现对空气质量监测站数据的接入、注册、查询等功能（微服务）
+12. datacenter-himawari-service: 葵花卫星数据接入微服务，实现葵花卫星数据的接入、注册、查询、下载等功能（微服务）
+13. datacenter-laads-service: NASA LAADS数据中心数据接入微服务。。。。。。（微服务）
+14. datacenter-cwic-service: CWIC目录服务数据接入微服务，。。。。。。（微服务）
+15. datacenter-gee-service: Google Earth Engine数据接入微服务（微服务）
+16. datacenter-product-service: 数据产品接入、查询等功能的微服务（微服务）
+17. datacenter-indicator-service: 数据指标接入微服务（微服务）
+18. datacenter-auth2-service: 资源鉴权微服务（微服务）
+19. datacenter-gateway-service: 网关微服务（微服务）
+20. datacenter-offline-service: 对项目的离线数据入库和查询等功能（微服务）
+21. datacenter-littleSensor-service: 微小传感器的查询等功能（微服务）
+22. datacenter-weather-service: 对武汉1+8城市群气象数据的接入、查询等功能（微服务）
+23. datacenter-hikvision-service: 对hikvision视频的接入、查询等功能，暂未完成（微服务）
 
 ### 1-7 数据注册中心工具类
 该部分主要是整个系统的所需要的工具类包：
@@ -339,7 +284,7 @@ Spring Boot微服务项目，SSM框架。分为config、controller、dao、entit
 1. config中包含有两个类:CXFConfig和Swagger3Configuration。其中CXFConfig为Apache CXF开源框架的配置，CXF框架的作用是便于发布WebService；Swagger3Confoguration为Swagger3.0的配置类，作用是在前后开发的过程中能够实时查看已发布的接口。
 2. controller包中有四个类，分别是DeleteSensorController、GetCapabilitiesController、GetSensorController、InsertSensorController，分别对应service包中的DeleteSensorService、GetCapabilitiesService、GetSensorService、InsertSensorService。该层是为了发布服务接口，供第三方应用通过RESTful API调用。
 ### 10. sos-obs-service: 观测数据微服务
-### 11. datacenter-air-service: 湖北省环境监测站数据接入微服务
+### 11. datacenter-air-service: 湖北省环境监测站、中国空气质量网、台湾EPA空气质量数据接入微服务
 ### 12. datacenter-himawari-service: 葵花卫星数据接入微服务
 ### 13. datacenter-laads-service: NASA LAADS数据中心数据接入微服务
 ### 14. datacenter-cwic-service: CWIC目录服务数据接入微服务
@@ -348,3 +293,7 @@ Spring Boot微服务项目，SSM框架。分为config、controller、dao、entit
 ### 17. datacenter-indicator-service: 数据指标接入微服务
 ### 18. datacenter-auth2-service: 资源鉴权微服务
 ### 19. datacenter-gateway-service: 网关微服务
+### 20. datacenter-offline-service: 对项目的离线数据的微服务
+### 21. datacenter-littleSensor-service: 空气微小传感器管理的微服务
+### 22. datacenter-weather-service: 武汉1+8城市群气象数据的微服务
+### 23. datacenter-hikvision-service: hikvision视频的微服务（暂未完成）
