@@ -19,5 +19,5 @@ public interface LittleSensorMapper {
 
     List<LittleSensor> selectByPage(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
 
-    List<LittleSensor> selectByIds(@Param("id") List<String> id,@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
+    List<LittleSensor> selectByIds(@Param("deviceid") List<String> deviceid,@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
 }

@@ -51,10 +51,10 @@
 
     <select id="selectByIds" resultMap="littleSensor" >
         SELECT <include refid="selectFields"></include>
-        FROM sensors_data ORDER BY receipt_time DESC
+        FROM sensors_data
         WHERE device_id in
-        <foreach collection="id" item="id" open="(" close=")" separator=",">
-            #{id}
+        <foreach collection="deviceid" item="deviceId" open="(" close=")" separator=",">
+            #{deviceId}
         </foreach>
         LIMIT #{pageNum},#{pageSize}
     </select>

@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -62,10 +63,9 @@ public class GetAirQualityHour {
     @GetMapping(path = "getAirCountOfHour")
     @ResponseBody
     public Integer getAirCountOfHour(@RequestParam(value = "start") Instant start) {
-//        System.out.println("start = " + start);
-        String time1  = start.plusSeconds(8*60*60).toString().replace("-","").replace("T","").replace(":","").replace("Z","");
-        String time2  = start.plusSeconds(9*60*60).toString().replace("-","").replace("T","").replace(":","").replace("Z","");
-//        System.out.println("time = " + time);
+
+        Long time1  = Long.valueOf(start.plusSeconds(8*60*60).toString().replace("-","").replace("T","").replace(":","").replace("Z",""));
+        Long time2  = Long.valueOf(start.plusSeconds(9*60*60).toString().replace("-","").replace("T","").replace(":","").replace("Z",""));
         int count1 =airQualityHourMapper.selectByTime(start, start.plusSeconds(60*60));
             int count2 =twepaMapper.selectByTime(start, start.plusSeconds(60*60));
             int count3 = chinaAirQualityHourMapper.selectByTime(time1, time2);
@@ -146,7 +146,6 @@ public class GetAirQualityHour {
         List<TWEPA> info =  twepaMapper.selectByPage(pageNum, pageSize);
         res.put("Info", info);
         return res;
-
     }
 
     @ApiOperation("根据id的分页查询TW_Air数据")
@@ -265,7 +264,8 @@ public class GetAirQualityHour {
     @GetMapping(path = "UpdateTWAir")
     public boolean UpdateTWAir() {
 
-        String filepath = "C:/Users/chenlu/Desktop/tw";
+//        String filepath = "C:/Users/chenlu/Desktop/tw";
+        String filepath = "/data/Ai-Sensing/DataCenter/air-quality/tmp";
         List<String> paths =getFiles(filepath);
 
         boolean count = true;
