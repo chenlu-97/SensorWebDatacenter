@@ -42,8 +42,6 @@
         <module>datacenter-offline-service</module>
         <module>datacenter-weather-service</module>
         <module>datacenter-littleSensor-service</module>
-        <module>datacenter-service</module>
-        <module>datacenter-online-service</module>
     </modules>
 
     <dependencies>
