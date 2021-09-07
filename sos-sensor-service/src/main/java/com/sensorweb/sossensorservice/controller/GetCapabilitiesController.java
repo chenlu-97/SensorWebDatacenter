@@ -38,7 +38,6 @@ public class GetCapabilitiesController {
         }
         model.addAttribute("GetCapabilitiesRequest", requestContent);
         model.addAttribute("tag","GetCapabilities");
-
         return "index";
     }
 }

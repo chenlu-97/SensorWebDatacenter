@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sensorweb.datacenterweatherservice.dao.TianXingZhouMapper">
+    <sql id="insertFields">
+        station_id,lon, lat, geom, querytime, air_temperature, air_humidity, pressure,so2,wind_speed, wind_direction,o3,co,no2,pm25,pm10
+    </sql>
+
+    <sql id="selectFields">
+        station_id,lon, lat, geom, querytime, air_temperature, air_humidity, pressure,so2,wind_speed, wind_direction,o3,co,no2,pm25,pm10
+    </sql>
+
+
+    <insert id="insertData" parameterType="TianXingZhouStation" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO tianxingzhou_station (<include refid="insertFields"></include>)
+        VALUES (#{stationId},#{lon}, #{lat}, ST_GeomFromText(#{geom}, 4326), #{queryTime},#{airTemperature}, #{airHumidity}, #{pressure}, #{so2},#{windSpeed},#{windDirection},
+        #{o3},#{co},#{no2},#{pm25},#{pm10})
+    </insert>
+
+
+    <resultMap id="tianXingZhouStation" type="TianXingZhouStation">
+        <result column="station_id" property="stationId"/>
+        <result column="lon" property="lon"/>
+        <result column="lat" property="lat"/>
+        <result column="querytime" property="queryTime"/>
+        <result column="air_temperature" property="airTemperature"/>
+        <result column="air_humidity" property="airHumidity"/>
+        <result column="pressure" property="pressure"/>
+        <result column="so2" property="so2"/>
+        <result column="wind_speed" property="windSpeed"/>
+        <result column="wind_direction" property="windDirection"/>
+        <result column="o3" property="o3"/>
+        <result column="co" property="co"/>
+        <result column="no2" property="no2"/>
+        <result column="pm25" property="pm25"/>
+        <result column="pm10" property="pm10"/>
+<!--        <result column="soil_temperature" property="soilTemperature"/>-->
+<!--        <result column="soil_humidity" property="soilHumidity"/>-->
+    </resultMap>
+
+    <select id="selectByPage" resultMap="tianXingZhouStation">
+        SELECT <include refid="selectFields"></include>
+        FROM tianxingzhou_station
+        LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+</mapper>

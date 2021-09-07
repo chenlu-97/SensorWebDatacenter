@@ -12,6 +12,7 @@ import java.util.List;
 @Mapper
 public interface WeatherMapper {
     int insertData(ChinaWeather chinaWeather);
+
     int insertDataBatch(List<ChinaWeather> chinaWeathers);
 
     ChinaWeather selectById(int id);

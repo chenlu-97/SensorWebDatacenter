@@ -8,4 +8,7 @@ public interface WeatherConstant {
     String BAIDU_ADDRESS_API = "http://api.map.baidu.com/geocoding/v3/";
 
     String BAIDU_AK = "DUljkTDcLCQ00d6ZofaN8FgTnRf4YWAu";
+
+
+    String TianXingZhou_URL = "http://iot.ainongye.cn/json";
 }
