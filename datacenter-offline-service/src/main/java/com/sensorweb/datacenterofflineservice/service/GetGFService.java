@@ -26,6 +26,10 @@ public class GetGFService {
     @Autowired
     private GFMapper gfMapper;
 
+    public  List<String> getGFByWKT(String wkt, String satelliteID, String season) {
+        return gfMapper.selectGFByWKT(wkt,satelliteID,season);
+    }
+
 
     public int insertGF() throws Exception {
 

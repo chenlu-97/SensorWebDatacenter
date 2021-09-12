@@ -118,7 +118,7 @@
 
   <select id="selectByPage" resultMap="chinaAirQualityHour">
     SELECT <include refid="selectFields"></include>
-    FROM china_air_hourly
+    FROM china_air_hourly order by time desc
     LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
   </select>
 

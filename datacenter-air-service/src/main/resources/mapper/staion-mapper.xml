@@ -101,5 +101,11 @@
         where lon=#{lon} and lat = #{lat}
     </update>
 
+    <select id="selectStation" resultType="java.lang.String">
+        SELECT station_name
+        FROM station
+        WHERE stype=#{stype}
+    </select>
+
 
 </mapper>

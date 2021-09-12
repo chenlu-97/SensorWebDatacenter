@@ -1,12 +1,11 @@
 package com.sensorweb.datacentergeeservice.entity;
 
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
-import java.time.Instant;
 @Data
-public class Landsat {
-
+public class Sentinel {
     private String imageID;
     private String sensorID;
     private String spacecraftID;
@@ -20,6 +19,6 @@ public class Landsat {
     private String Thumburl;
     private String imageType;
     private String filePath;
-    private String waveBand = "430nm~12510nm";
-    private String bandInfo = "可见光&近红外&远红外";
+    private String waveBand;
+    private String bandInfo;
 }

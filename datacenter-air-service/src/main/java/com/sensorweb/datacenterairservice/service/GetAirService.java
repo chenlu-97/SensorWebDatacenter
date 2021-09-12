@@ -229,4 +229,20 @@ public class GetAirService {
 //        return null;
     }
 
+    public List<AirQualityHour> getDataByNameAndTime(String name) {
+        SimpleDateFormat sd = new SimpleDateFormat();// 格式化时间
+        sd.applyPattern("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();// 获取当前时间
+//        System.out.println("现在时间：" + sd.format(date));
+        String time = sd.format(date);
+        String time1 = time.substring(0, time.indexOf(":"));
+        String time2 = time1 + ":00:00";
+        Instant nowTime = DataCenterUtils.string2Instant(time2);
+        List<AirQualityHour> res = new ArrayList<>();
+        res = airQualityHourMapper.getDataByNameAndTime(name,nowTime);
+        if(res.size() ==0 ){
+            res = airQualityHourMapper.getDataByNameAndTime(name,nowTime.minusSeconds(60*60));
+        }
+        return res;
+    }
 }

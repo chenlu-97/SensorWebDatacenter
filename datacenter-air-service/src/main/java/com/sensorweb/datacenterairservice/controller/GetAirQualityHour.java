@@ -4,6 +4,8 @@ package com.sensorweb.datacenterairservice.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sensorweb.datacenterairservice.dao.AirQualityHourMapper;
 import com.sensorweb.datacenterairservice.dao.ChinaAirQualityHourMapper;
 import com.sensorweb.datacenterairservice.dao.TWEPAMapper;
@@ -264,7 +266,7 @@ public class GetAirQualityHour {
     @GetMapping(path = "UpdateTWAir")
     public boolean UpdateTWAir() {
 
-//        String filepath = "C:/Users/chenlu/Desktop/tw";
+//      String filepath = "C:/Users/chenlu/Desktop/tw";
         String filepath = "/data/Ai-Sensing/DataCenter/air-quality/tmp";
         List<String> paths =getFiles(filepath);
 
@@ -299,6 +301,15 @@ public class GetAirQualityHour {
             }
         }
         return files;
+    }
+
+
+
+    @ApiOperation("手动接入和查询")
+    @GetMapping(path = "getData")
+    public List<AirQualityHour> getData(@RequestParam(value = "name") String name){
+        List<AirQualityHour> res = getAirService.getDataByNameAndTime(name);
+        return res;
     }
 
 

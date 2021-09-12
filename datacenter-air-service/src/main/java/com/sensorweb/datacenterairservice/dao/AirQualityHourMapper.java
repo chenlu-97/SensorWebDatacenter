@@ -36,4 +36,6 @@ public interface AirQualityHourMapper {
     AirQualityHour selectByIdAndTime(@Param("uniquecode")String uniquecode, @Param("time")Instant time);
 
     List<AirQualityHour> selectByIdAndTimeNew(@Param("type") String type , @Param("spa") String spa, @Param("time")Instant time);
+
+    List<AirQualityHour> getDataByNameAndTime(@Param("name")String name,@Param("time")Instant time);
 }

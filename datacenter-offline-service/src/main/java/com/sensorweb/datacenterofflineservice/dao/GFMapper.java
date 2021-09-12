@@ -33,4 +33,6 @@ public interface GFMapper {
     List<GF> selectGFByImageIDAndTime(@Param("imageId") String imageId,@Param("begin") Instant begin, @Param("end") Instant end);
 
     List<String> selectGFGeom(@Param("begin") Instant begin, @Param("end") Instant end);
+
+    List<String> selectGFByWKT(@Param("wkt")String wkt, @Param("satelliteID")String satelliteID, @Param("season")String season);
 }

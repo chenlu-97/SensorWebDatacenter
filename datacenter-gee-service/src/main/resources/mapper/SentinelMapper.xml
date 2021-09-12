@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sensorweb.datacentergeeservice.dao.SentinelMapper" >
+
+
+  <resultMap id="BaseResultMap" type="Sentinel" >
+    <result column="imageid" property="imageID"/>
+    <result column="sensorid" property="sensorID"/>
+    <result column="spacecraftid" property="spacecraftID"/>
+    <result column="coordinates" property="Coordinates"/>
+    <result column="imagesize" property="imageSize"/>
+    <result column="date" property="Date"/>
+    <result column="time" property="Time"/>
+    <result column="ellipsoid" property="Ellipsoid"/>
+    <result column="cloudcover" property="Cloudcover"/>
+    <result column="thumburl" property="Thumburl"/>
+    <result column="imagetype" property="imageType"/>
+    <result column="filepath" property="filePath"/>
+    <result column="wave_band" property="waveBand"/>
+    <result column="band_info" property="bandInfo"/>
+  </resultMap>
+
+  <sql id="selectFields" >
+        imageid,sensorid,spacecraftid,coordinates,date,time,imagesize,ellipsoid,cloudcover,thumburl,imagetype,filepath,wave_band,band_info
+  </sql>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select <include refid="selectFields"></include>
+    from sentinel
+    where 1=1
+  </select>
+
+  <select id="selectByattribute" resultMap="BaseResultMap">
+    <if test="spacecraftID != null  or Date != null or Cloudcover != null or imageType != null "  >
+    select * from sentinel where
+    <if test="spacecraftID != null and spacecraftID != '' "  >
+      AND spacecraftid = #{spacecraftID}
+    </if>
+    <if test="Date != null and Date != ''">
+      AND dates &lt;= #{Date}
+    </if>
+    <if test="Cloudcover != null and Cloudcover != ''">
+      AND cloudcover &lt;= #{Cloudcover}
+    </if>
+    <if test="imageType != '' and imageType != null ">
+      AND imagetype = #{imageType}
+    </if>
+    </if>
+  </select>
+
+
+  <select id="selectNum" resultType="java.lang.Integer">
+    SELECT count(*)
+    FROM sentinel
+  </select>
+
+  <select id="selectByIds" resultMap="BaseResultMap" >
+    SELECT <include refid="selectFields"></include>
+    FROM sentinel ORDER BY date DESC
+    WHERE imageid in
+    <foreach collection ="imageid" item="imageID" open="(" close=")" separator=",">
+      #{imageID}
+    </foreach>
+    LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+  </select>
+
+  <select id="selectByPage" resultMap="BaseResultMap">
+    SELECT <include refid="selectFields"></include>
+    FROM sentinel ORDER BY date DESC
+    LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+  </select>
+
+</mapper>

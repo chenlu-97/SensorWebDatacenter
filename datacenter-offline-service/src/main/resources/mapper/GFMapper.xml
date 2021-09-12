@@ -110,4 +110,21 @@ topleftlongitude,toprightlatitude,toprightlongitude,bottomrightlatitude,bottomri
     </select>
 
 
+    <select id="selectGFByWKT" resultType="java.lang.String">
+
+        <if test="satelliteID != null  or season != null or wkt != null "  >
+            SELECT file_path FROM gf WHERE image_type IN ('MSS1','MUX')
+            <if test="satelliteID != null and satelliteID != '' "  >
+                AND satellite_id = #{satelliteID}
+            </if>
+            <if test="season != null and season != ''">
+                AND season = #{season}
+            </if>
+            <if test="wkt != null and wkt != ''">
+                AND ST_Intersects(geom, ST_GeomFromText(#{wkt}, 4326)) = true
+            </if>
+        </if>
+    </select>
+
+
 </mapper>

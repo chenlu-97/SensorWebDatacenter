@@ -14,26 +14,7 @@
         values (#{imageId}, #{bbox}, ST_GeomFromText(#{geom}, 4326), #{queryTime}, #{filePath},#{geoType})
     </insert>
 
-<!--    <select id="selectByIds" resultMap="GF">-->
-<!--        SELECT id,file_path-->
-<!--        FROM gf-->
-<!--        WHERE id in-->
-<!--        <foreach collection="ids" item="id" open="(" close=")" separator=",">-->
-<!--            #{id}-->
-<!--        </foreach>-->
-<!--    </select>-->
 
-<!--    <select id="selectGF" resultMap="GF">-->
-<!--        SELECT *-->
-<!--        FROM gf-->
-<!--        WHERE 1=1-->
-<!--    </select>-->
-
-<!--    <select id="selectGFByAttribute" resultMap="GF">-->
-<!--        SELECT *-->
-<!--        FROM gf-->
-<!--        WHERE satellite_id = #{satelliteID} AND season = #{season} AND image_type IN ('MSS1','MUX')-->
-<!--    </select>-->
 
     <resultMap id="WF" type="WF">
         <id column="id" property="id"/>

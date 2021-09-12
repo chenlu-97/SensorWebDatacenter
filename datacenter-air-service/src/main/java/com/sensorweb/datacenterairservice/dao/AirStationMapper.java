@@ -10,6 +10,7 @@ import java.util.List;
 @Repository
 @Mapper
 public interface AirStationMapper {
+
     int insertData(AirStationModel airStationModel);
     int insertDataBatch(List<AirStationModel> airStationModels);
 
@@ -22,4 +23,7 @@ public interface AirStationMapper {
     List<String> selectStationByTypeAndSpa(@Param("type") String type , @Param("spa") String spa);
 
     boolean updateGeom(@Param("wkt") String wkt,@Param("lon") double lon,@Param("lat") double lat);
+
+
+    List<String> selectStation(@Param("stype")String stype);
 }

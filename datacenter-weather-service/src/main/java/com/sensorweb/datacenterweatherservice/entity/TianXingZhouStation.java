@@ -11,6 +11,7 @@ public class TianXingZhouStation {
    // air-weather
     private int id;
     private String stationId;
+    private String stationName = "天兴洲综合站";
     private float lon;
     private float lat;
     private Instant queryTime;

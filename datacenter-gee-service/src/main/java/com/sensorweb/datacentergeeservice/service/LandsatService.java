@@ -45,7 +45,6 @@ public class LandsatService {
     }
 
     public List<Landsat> getByattribute(String spacecraftID, String Date, String Cloudcover, String imageType) {
-
         return landsatMapper.selectByattribute(spacecraftID,Date,Cloudcover,imageType);
     }
 

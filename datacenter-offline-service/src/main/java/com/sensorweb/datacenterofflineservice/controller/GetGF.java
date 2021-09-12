@@ -186,7 +186,6 @@ public class GetGF {
     @GetMapping (value = "selectGFByIds")
     @ResponseBody
     public List<Map<String,String>> selectGFByIds(@RequestParam(value = "ids") List<Integer> ids)  {
-        System.out.println(ids);
         List<GF> tmp = getGFService.selectGFByIds(ids);
         List<Map<String,String>> res = new ArrayList<>();
 
@@ -269,6 +268,17 @@ public class GetGF {
         }
         return res;
     }
+
+
+    @ApiOperation("根据wkt和一些参数查询GF，返回文件路径")
+    @GetMapping (value = "selectGFByWKT")
+    @ResponseBody
+    public List<String> selectGFByWKT(@RequestParam(value = "wkt") String wkt,@Param(value = "SatelliteID") String SatelliteID, @Param(value = "Season") String Season)  {
+
+        List<String> filePaths = getGFService.getGFByWKT(wkt,SatelliteID,Season);
+        return filePaths;
+    }
+
 
 
 }

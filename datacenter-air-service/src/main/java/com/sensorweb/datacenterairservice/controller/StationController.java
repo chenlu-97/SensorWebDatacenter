@@ -162,7 +162,21 @@ public class StationController implements AirConstant {
         return res;
     }
 
-
+    @GetMapping(value = "getStation")
+    public List<String> getStation(@RequestParam(value = "type") String type){
+        List<String> ids = new ArrayList<>();
+        if(type.equals("中国气象局网")){
+             ids = airStationMapper.selectStation("wh_1+8_weather");
+        }else if (type.equals("全国空气质量网")){
+             ids = airStationMapper.selectStation("CH_AIR");
+        }else if (type.equals("长江流域水环境中心")){
+            ids = airStationMapper.selectStation("wh_1+8_Water");
+        }else if (type.equals("湖北省环境监测站")){
+            ids = airStationMapper.selectStation("HB_AIR");
+        }
+//        ids = airStationMapper.selectStation(type);
+        return ids;
+    }
 
 
 

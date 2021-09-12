@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface RoleMapper {
     int insertData(Role role);
-
     Role selectById(int id);
     Role selectByName(String name);
 }

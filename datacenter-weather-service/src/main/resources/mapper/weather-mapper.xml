@@ -106,7 +106,7 @@
 
     <select id="selectByPage" resultMap="chinaWeather">
         SELECT <include refid="selectFields"></include>
-        FROM "wuhanCC_weather_hourly"
+        FROM "wuhanCC_weather_hourly"  order by "QueryTime" desc
         LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
     </select>
 

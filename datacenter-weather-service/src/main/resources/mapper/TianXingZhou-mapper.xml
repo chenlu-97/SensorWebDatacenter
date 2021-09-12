@@ -8,7 +8,7 @@
     </sql>
 
     <sql id="selectFields">
-        station_id,lon, lat, geom, querytime, air_temperature, air_humidity, pressure,so2,wind_speed, wind_direction,o3,co,no2,pm25,pm10
+        station_id,lon, lat, querytime, air_temperature, air_humidity, pressure,so2,wind_speed, wind_direction,o3,co,no2,pm25,pm10
     </sql>
 
 
@@ -41,7 +41,13 @@
 
     <select id="selectByPage" resultMap="tianXingZhouStation">
         SELECT <include refid="selectFields"></include>
-        FROM tianxingzhou_station
+        FROM tianxingzhou_station order by querytime desc
         LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+
+
+    <select id="selectNum" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM tianxingzhou_station
     </select>
 </mapper>

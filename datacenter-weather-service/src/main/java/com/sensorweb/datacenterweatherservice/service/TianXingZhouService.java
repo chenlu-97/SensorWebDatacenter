@@ -7,14 +7,19 @@ import com.alibaba.fastjson.JSONObject;
 import com.sensorweb.datacenterutil.utils.DataCenterUtils;
 
 import com.sensorweb.datacenterweatherservice.dao.TianXingZhouMapper;
+import com.sensorweb.datacenterweatherservice.entity.ChinaWeather;
 import com.sensorweb.datacenterweatherservice.entity.TianXingZhouStation;
 import com.sensorweb.datacenterweatherservice.util.WeatherConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.xalan.lib.sql.ObjectArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -22,6 +27,31 @@ import java.io.IOException;
 public class TianXingZhouService {
     @Autowired
     TianXingZhouMapper tianXingZhouMapper;
+
+    /**
+     * 每小时接入一次数据
+     */
+    @Scheduled(cron = "0 */1 * * * ?") //每分钟接入
+    public void insertDataByHour() {
+        LocalDateTime dateTime = LocalDateTime.now(ZoneId.of("Asia/Shanghai"));
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean flag = false;
+                try {
+                    flag = getIOTInfo();
+                    if (flag) {
+                        log.info("天兴洲综合站接入时间: " + dateTime.toString() + "Status: Success");
+                        System.out.println("天兴洲综合站接入时间: " + dateTime.toString() + "Status: Success");
+                    }
+                } catch (Exception e) {
+                    log.error(e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
 
     /**
      * 通过调用天兴洲传感器IOT的JSON接口获取对应的传感器ID的气象数据，最后以json对象的形式返回
@@ -39,13 +69,14 @@ public class TianXingZhouService {
     /**
      * 调用API获取气象数据
      */
+
     public boolean getIOTInfo() throws IOException {
         int statue = 0;
         String station_id = "868739058202031";
         String[] ids = station_id.split(",");
         for (String id : ids) {
             JSONObject jsonObject = getIOTResultByID(id);
-            System.out.println(jsonObject);
+//            System.out.println(jsonObject);
             TianXingZhouStation tianXingZhouStation = new TianXingZhouStation();
             if (jsonObject != null) {
                 String datetime = jsonObject.get("datetime").toString();
@@ -74,4 +105,11 @@ public class TianXingZhouService {
         return statue > 0;
 
     }
+
+
+    public List<TianXingZhouStation> getDataByPage(int pageNum, int pageSize) {
+        return tianXingZhouMapper.selectByPage(pageNum, pageSize);
+    }
+
+
 }

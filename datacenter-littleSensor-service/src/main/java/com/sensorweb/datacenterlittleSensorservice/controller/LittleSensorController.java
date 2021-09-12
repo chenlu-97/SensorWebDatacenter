@@ -49,9 +49,17 @@ public class LittleSensorController {
     @ApiOperation("根据id的分页查询LittleSensor数据")
     @GetMapping(path = "getLittleSensorByID")
     @ResponseBody
-    public Map<String, List<LittleSensor>> getLittleSensorByID(@RequestParam(value = "uniquecode") List<String> uniquecode, @Param("pageNum") int pageNum, @Param("pageSize") int pageSize) {
-        Map<String, List<LittleSensor>> res = new HashMap<>();
+    public Map<String, Object> getLittleSensorByID(@RequestParam(value = "uniquecode") List<String> uniquecode, @Param("pageNum") int pageNum, @Param("pageSize") int pageSize) {
+        Map<String, Object> res = new HashMap<>();
+
         List<LittleSensor> info =  littleSensorMapper.selectByIds(uniquecode,pageNum,pageSize);
+        int sensor_size = uniquecode.size();
+        int obs_size = info.size();
+
+        Object num1 = new Integer(sensor_size);
+        Object num2 = new Integer(obs_size);
+        res.put("sensor_size", num1);
+        res.put("obs_size", num2);
         res.put("Info", info);
         return res;
     }

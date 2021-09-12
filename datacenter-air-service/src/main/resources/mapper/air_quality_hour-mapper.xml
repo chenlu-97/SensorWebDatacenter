@@ -36,7 +36,7 @@
 
     <select id="selectByPage" resultMap="airQualityHour">
         SELECT <include refid="selectFields"></include>
-        FROM "wuhanCC_air_hourly"
+        FROM "wuhanCC_air_hourly" order by querytime desc
         LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
     </select>
 
@@ -127,6 +127,13 @@
         SELECT  count(*)
         FROM "wuhanCC_air_hourly"
         WHERE querytime <![CDATA[>=]]> #{begin} AND querytime <![CDATA[<=]]> #{end}
+    </select>
+
+
+    <select id="getDataByNameAndTime" resultMap="airQualityHour">
+        SELECT  <include refid="selectFields"></include>
+        FROM "wuhanCC_air_hourly"
+        WHERE station_name = #{name} AND querytime = #{time}
     </select>
 
 </mapper>

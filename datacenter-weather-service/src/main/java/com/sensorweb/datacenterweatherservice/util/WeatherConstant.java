@@ -9,6 +9,5 @@ public interface WeatherConstant {
 
     String BAIDU_AK = "DUljkTDcLCQ00d6ZofaN8FgTnRf4YWAu";
 
-
     String TianXingZhou_URL = "http://iot.ainongye.cn/json";
 }

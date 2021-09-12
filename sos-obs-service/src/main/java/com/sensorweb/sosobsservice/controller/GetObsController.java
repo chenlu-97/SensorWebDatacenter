@@ -105,8 +105,9 @@ public class GetObsController implements ObsConstant {
         int AirStation = airFeignClient.getCHAirNum()+ airFeignClient.getHBAirNum()+ airFeignClient.getTWAirNum();
         int WeatherStation = weatherFeignClient.getWeatherNum();
         int WaterStation = offlineFeignClient.getWaterQualityNum()+ offlineFeignClient.getWaterPollutionNum();
-        int littleSensor = littleSensorFeignClient.getLittleSensorNumber();
-        int num = HBHJStation+CHAirStation+TWAirStation+CHWeatherStation+AirStation+WeatherStation+WaterStation+littleSensor;
+//        int littleSensor = littleSensorFeignClient.getLittleSensorNumber();
+        int num = HBHJStation+CHAirStation+TWAirStation+CHWeatherStation+AirStation+WeatherStation+WaterStation;
+
         return num;
     }
 

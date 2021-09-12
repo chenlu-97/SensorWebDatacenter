@@ -15,4 +15,5 @@ public interface TianXingZhouMapper {
 
     List<TianXingZhouStation> selectByPage(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
 
+    int selectNum();
 }
