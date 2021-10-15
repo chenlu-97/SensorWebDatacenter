@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.*;
 
 @Slf4j
@@ -38,15 +37,15 @@ public class GetLandsatController {
     }
 
 
-//    @ApiOperation("根据id的分页查询landsat数据")
-//    @GetMapping(path = "getLandsatByID")
-//    @ResponseBody
-//    public Map<String, List<Landsat>> getLandsatByID(@RequestParam(value = "imageid") List<String> imageid, @Param("pageNum") int pageNum, @Param("pageSize") int pageSize) {
-//        Map<String, List<Landsat>> res = new HashMap<>();
-//        List<Landsat> info =  landsatMapper.selectByIds(imageid,pageNum,pageSize);
-//        res.put("Info", info);
-//        return res;
-//    }
+    @ApiOperation("根据id的分页查询landsat数据")
+    @GetMapping(path = "getLandsatByID")
+    @ResponseBody
+    public Map<String, List<Landsat>> getLandsatByID(@RequestParam(value = "imageid") List<String> imageid, @Param("pageNum") int pageNum, @Param("pageSize") int pageSize) {
+        Map<String, List<Landsat>> res = new HashMap<>();
+        List<Landsat> info =  landsatMapper.selectByIds(imageid,pageNum,pageSize);
+        res.put("Info", info);
+        return res;
+    }
 
 
 

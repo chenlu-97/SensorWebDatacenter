@@ -27,7 +27,7 @@ public class GetWH_WaterStation {
     @PostMapping(value = "registryWHWaterStation")
     public Map<String, String> registryWHWaterStation(@RequestParam("file") MultipartFile file) {
         String tmpDir = "/data/Ai-Sensing/DataCenter/water/water_data/";
-//        String tmpDir = "C:/Users/chenlu/Desktop/省站资料/省站资料（修改）/water_data/站点/";
+//      String tmpDir = "C:/Users/chenlu/Desktop/省站资料/省站资料（修改）/water_data/站点/";
         Map<String, String> res = new HashMap<>();
         try {
             if (file!=null) {

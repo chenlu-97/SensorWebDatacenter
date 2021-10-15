@@ -151,9 +151,28 @@
 #          uri: lb://datacenter-littleSensor-service
 #          predicates:
 #            - Path=/littleSensor/**
-#            # 加上StripPrefix=1,否则转发到后端服务时会带上weather前缀
+#            # 加上StripPrefix=1,否则转发到后端服务时会带上前缀
 #          filters:
 #            - StripPrefix=1
+#
+#        - id: AI-SENSING-BACK-SERVICE
+#          # lb代表从注册中心获取服务,且以负载均衡方式转发
+#          uri: lb://AI-SENSING-BACK-SERVICE
+#          predicates:
+#            - Path=/AI-SENSING-BACK-SERVICE/**
+#            # 加上StripPrefix=1,否则转发到后端服务时会带上前缀
+#          filters:
+#            - StripPrefix=1
+#
+#        - id: modulecenter
+#          # lb代表从注册中心获取服务,且以负载均衡方式转发
+#          uri: lb://modulecenter
+#          predicates:
+#            - Path=/modulecenter/**
+#            # 加上StripPrefix=1,否则转发到后端服务时会带上前缀
+#          filters:
+#            - StripPrefix=1
+#
 ## eureka注册中心
 #eureka:
 #  instance:
@@ -179,6 +198,7 @@
 #  configuration:
 #    use-generated-keys: true
 #    map-underscore-to-camel-case: true
+
 
 
 

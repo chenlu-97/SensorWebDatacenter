@@ -86,6 +86,7 @@ public class GetWH_WaterQuality {
 
 
 
+
     @PostMapping(value = "registryWHWaterQuality1")
     public Map<String, String> registryWHWaterQuality1(@RequestParam("file") MultipartFile file) {
         String tmpDir = "/data/Ai-Sensing/DataCenter/water/water_data/";

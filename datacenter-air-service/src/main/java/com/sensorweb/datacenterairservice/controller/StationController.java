@@ -72,9 +72,6 @@ public class StationController implements AirConstant {
     }
 
 
-
-
-
     @ApiOperation("由于station原先没有geom的空间范围，重新获取点坐标后进行插入")
     @GetMapping(value="insertGeom")
     public Boolean insertGeom(){
@@ -141,6 +138,7 @@ public class StationController implements AirConstant {
         return res;
     }
 
+
     @GetMapping(value = "registryTWAirStation")
     public Map<String, String> registryTWAirStation() {
         Map<String, String> res = new HashMap<>();
@@ -161,6 +159,7 @@ public class StationController implements AirConstant {
         }
         return res;
     }
+
 
     @GetMapping(value = "getStation")
     public List<String> getStation(@RequestParam(value = "type") String type){

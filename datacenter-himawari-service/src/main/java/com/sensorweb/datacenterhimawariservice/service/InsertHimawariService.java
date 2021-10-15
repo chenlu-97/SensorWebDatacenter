@@ -53,58 +53,58 @@ public class InsertHimawariService implements HimawariConstant {
     /**
      * 每隔一个小时执行一次，为了以小时为单位接入数据
      */
-//    @Scheduled(cron = "00 35 * * * ?")//每小时的35分00秒执行一次(本来是每小时的30分数据更新一次，但是由于数据量的关系，可能造成在半点的时候数据并没有完成上传而导致的获取数据失败，所以这里提前半个小时，)
-    @Scheduled(cron = "0 35 0/1 * * ?")
-    public void insertDataByHour() {
-        LocalDateTime dateTime = LocalDateTime.now();
-//        LocalDateTime dateTime = LocalDateTime.now(ZoneId.of("UTC"));  //由于接入的文件不稳定，这里准备是晚8小时进行接入
-//        接入因更新时间错开导致的未能及时接入的数据时间
-        if (temp.size()>0) {
-            for (int i=temp.size(); i>0; i--) {
-                try {
-                    insertData(temp.get(i-1));
-                    temp.remove(i-1);
-                } catch (Exception e) {
-                    log.info(e.getMessage());
-                }
-            }
-        }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                int count = 0;
-                boolean flag = true;
-                LocalDateTime time = dateTime;
-                while (flag && count<10) {
-                    int year = time.getYear();
-                    Month month = time.getMonth();
-                    String monthValue = month.getValue()<10?"0"+month.getValue():month.getValue()+"";
-                    String day = time.getDayOfMonth()<10?"0"+time.getDayOfMonth():time.getDayOfMonth()+"";
-                    String hour = time.getHour()<10?"0"+time.getHour():time.getHour()+"";
-                    String minute = time.getMinute()<10?"0"+time.getMinute():time.getMinute()+"";
-                    String fileName = getName(year+"", monthValue, day, hour, minute);
-                    if (himawariMapper.selectByName(fileName)!=null) {
-                        log.info("数据已存在");
-                        return;
-                    }
-                    try {
-                        flag = !insertData(time);
-                        if (!flag) {
-                            log.info("Himawari接入时间: " + time + "Status: Success");
-                        }
-                        time = time.minusHours(1);
-                        count++;
-                        Thread.sleep(2 * 60 * 1000);
-                    } catch (Exception e) {
-                        log.error(e.getMessage());
-                    }
-                }
-                if (count==10) {
-                    temp.add(time);
-                }
-            }
-        }).start();
-    }
+////    @Scheduled(cron = "00 35 * * * ?")//每小时的35分00秒执行一次(本来是每小时的30分数据更新一次，但是由于数据量的关系，可能造成在半点的时候数据并没有完成上传而导致的获取数据失败，所以这里提前半个小时，)
+//    @Scheduled(cron = "0 35 0/1 * * ?")
+//    public void insertDataByHour() {
+//        LocalDateTime dateTime = LocalDateTime.now();
+////        LocalDateTime dateTime = LocalDateTime.now(ZoneId.of("UTC"));  //由于接入的文件不稳定，这里准备是晚8小时进行接入
+////        接入因更新时间错开导致的未能及时接入的数据时间
+//        if (temp.size()>0) {
+//            for (int i=temp.size(); i>0; i--) {
+//                try {
+//                    insertData(temp.get(i-1));
+//                    temp.remove(i-1);
+//                } catch (Exception e) {
+//                    log.info(e.getMessage());
+//                }
+//            }
+//        }
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                int count = 0;
+//                boolean flag = true;
+//                LocalDateTime time = dateTime;
+//                while (flag && count<10) {
+//                    int year = time.getYear();
+//                    Month month = time.getMonth();
+//                    String monthValue = month.getValue()<10?"0"+month.getValue():month.getValue()+"";
+//                    String day = time.getDayOfMonth()<10?"0"+time.getDayOfMonth():time.getDayOfMonth()+"";
+//                    String hour = time.getHour()<10?"0"+time.getHour():time.getHour()+"";
+//                    String minute = time.getMinute()<10?"0"+time.getMinute():time.getMinute()+"";
+//                    String fileName = getName(year+"", monthValue, day, hour, minute);
+//                    if (himawariMapper.selectByName(fileName)!=null) {
+//                        log.info("数据已存在");
+//                        return;
+//                    }
+//                    try {
+//                        flag = !insertData(time);
+//                        if (!flag) {
+//                            log.info("Himawari接入时间: " + time + "Status: Success");
+//                        }
+//                        time = time.minusHours(1);
+//                        count++;
+//                        Thread.sleep(2 * 60 * 1000);
+//                    } catch (Exception e) {
+//                        log.error(e.getMessage());
+//                    }
+//                }
+//                if (count==10) {
+//                    temp.add(time);
+//                }
+//            }
+//        }).start();
+//    }
 
     /**
      * Registry Himawari Data, from dateTime to now

@@ -1,9 +1,6 @@
 package com.sensorweb.datacentergeeservice.service;
 
-
-import com.sensorweb.datacentergeeservice.dao.LandsatMapper;
 import com.sensorweb.datacentergeeservice.dao.SentinelMapper;
-import com.sensorweb.datacentergeeservice.entity.Landsat;
 import com.sensorweb.datacentergeeservice.entity.Sentinel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

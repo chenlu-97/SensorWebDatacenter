@@ -47,7 +47,4 @@ public class GetCWICController {
         return res;
     }
 
-
-
-
 }

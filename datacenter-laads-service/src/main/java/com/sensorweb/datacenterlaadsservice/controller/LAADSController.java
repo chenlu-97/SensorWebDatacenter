@@ -84,7 +84,7 @@ public class LAADSController {
 
 
 
-    @ApiOperation("分页查询TW_Air数据")
+    @ApiOperation("分页查询laads数据")
     @GetMapping(path = "getLaadsByPage")
     public Map<String, Object> getLaadsByPage(@ApiParam(name = "pageNum", value = "当前页码") @Param("pageNum") int pageNum,
                                                               @ApiParam(name = "pageSize", value = "每页的数据条目数") @Param("pageSize") int pageSize) {
@@ -98,7 +98,7 @@ public class LAADSController {
 
     }
 
-    @ApiOperation("根据id的分页查询TW_Air数据")
+    @ApiOperation("根据id的laads分页查询")
     @GetMapping(path = "getLaadsByID")
     @ResponseBody
     public Map<String, List<Entry>> getLaadsByID(@RequestParam(value = "uniquecode") List<String> uniquecode, @Param("pageNum") int pageNum, @Param("pageSize") int pageSize) {

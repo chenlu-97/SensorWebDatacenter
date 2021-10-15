@@ -63,29 +63,29 @@ public class InsertTWEPA implements AirConstant {
     /**
      * 每小时接入一次数据
      */
-    @Scheduled(cron = "0 30 0/1 * * ?") //每个小时的30分开始接入
-    public void insertDataByHour() {
-        LocalDateTime dateTime = LocalDateTime.now(ZoneId.of("Asia/Shanghai"));
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                boolean flag = false;
-                try {
-                    String path = downloadFile();
-                    String document = getDocumentByGZip(path);
-                    flag = insertTwEPAInfoBatch(getEPAInfo(document));
-                    if (flag) {
-                        log.info("台湾EPA接入时间: " + dateTime.toString() + "Status: Success");
-                        System.out.println("台湾EPA接入时间: " + dateTime.toString() + "Status: Success");
-                    }
-                } catch (Exception e) {
-                    log.error(e.getMessage());
-                    log.info("台湾EPA接入时间: " + dateTime.toString() + "Status: Fail");
-                    System.out.println(e.getMessage());
-                }
-            }
-        }).start();
-    }
+//    @Scheduled(cron = "0 30 0/1 * * ?") //每个小时的30分开始接入
+//    public void insertDataByHour() {
+//        LocalDateTime dateTime = LocalDateTime.now(ZoneId.of("Asia/Shanghai"));
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                boolean flag = false;
+//                try {
+//                    String path = downloadFile();
+//                    String document = getDocumentByGZip(path);
+//                    flag = insertTwEPAInfoBatch(getEPAInfo(document));
+//                    if (flag) {
+//                        log.info("台湾EPA接入时间: " + dateTime.toString() + "Status: Success");
+//                        System.out.println("台湾EPA接入时间: " + dateTime.toString() + "Status: Success");
+//                    }
+//                } catch (Exception e) {
+//                    log.error(e.getMessage());
+//                    log.info("台湾EPA接入时间: " + dateTime.toString() + "Status: Fail");
+//                    System.out.println(e.getMessage());
+//                }
+//            }
+//        }).start();
+//    }
 
     @Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean insertTwEPAInfoBatch(List<TWEPA> twepas) {

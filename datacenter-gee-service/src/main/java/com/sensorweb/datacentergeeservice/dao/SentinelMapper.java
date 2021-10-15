@@ -1,7 +1,4 @@
 package com.sensorweb.datacentergeeservice.dao;
-
-
-import com.sensorweb.datacentergeeservice.entity.Landsat;
 import com.sensorweb.datacentergeeservice.entity.Sentinel;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

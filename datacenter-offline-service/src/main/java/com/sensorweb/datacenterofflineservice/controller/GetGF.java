@@ -56,7 +56,7 @@ public class GetGF {
     }
 
 
-    @ApiOperation("根据分页查询高分数据")
+    @ApiOperation("根据id查询高分数据")
     @GetMapping(path = "getGFByID")
     @ResponseBody
     public Map<String, List<GF>> getGFByID(@RequestParam(value = "uniquecode") String uniquecode, @Param("pageNum") int pageNum, @Param("pageSize") int pageSize) {

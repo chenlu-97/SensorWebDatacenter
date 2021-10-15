@@ -37,7 +37,7 @@
 
 
   <select id="selectByIdAndTimeNew" resultMap="chinaAirQualityHour">
-    SELECT <include refid="selectFields"></include>
+    SELECT distinct on ("QT") <include refid="selectFields"></include>
     FROM china_air_hourly
     WHERE time = #{time} AND station_code in
     (SELECT station_id

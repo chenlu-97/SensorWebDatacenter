@@ -1,6 +1,7 @@
 package com.sensorweb.sosobsservice.service;
 
 import com.sensorweb.sosobsservice.dao.ObservationMapper;
+import com.sensorweb.sosobsservice.entity.OMModel;
 import com.sensorweb.sosobsservice.entity.Observation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -101,19 +102,19 @@ public class GetObservationExpandService {
     public String getOMByObs(Observation observation) {
         String res = "";
 
-//        OMModel omModel = new OMModel();
-//        //元数据内容
-//        omModel.setIdentifier(observation.getProcedureId());
-//        omModel.setName(observation.getName());
-//        omModel.setDescription(observation.getDescription());
-//        omModel.setObservableProperty(observation.getObsProperty());
-//        omModel.setResultTime(observation.getObsTime());
-//        Instant[] phenomenon = new Instant[2];
-//        phenomenon[0] = observation.getBeginTime();
-//        phenomenon[1] = observation.getEndTime();
-//        omModel.setPhenomenonTime(phenomenon);
-//        omModel.setFeatureOfInterest(observation.getBbox());
-        //具体观测数据部分
+        OMModel omModel = new OMModel();
+        //元数据内容
+        omModel.setIdentifier(observation.getProcedureId());
+        omModel.setName(observation.getName());
+        omModel.setDescription(observation.getDescription());
+        omModel.setObservableProperty(observation.getObsProperty());
+        omModel.setResultTime(observation.getObsTime());
+        Instant[] phenomenon = new Instant[2];
+        phenomenon[0] = observation.getBeginTime();
+        phenomenon[1] = observation.getEndTime();
+        omModel.setPhenomenonTime(phenomenon);
+        omModel.setFeatureOfInterest(observation.getBbox());
+//        具体观测数据部分
 
         return res;
     }

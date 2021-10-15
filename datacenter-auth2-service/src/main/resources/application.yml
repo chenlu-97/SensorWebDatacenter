@@ -1,43 +1,3 @@
-#server:
-#  port: 9401
-#spring:
-#  profiles:
-#    active: dev
-#  application:
-#    name: datacenter-auth2-service
-#  jackson:
-#    date-format: yyyy-MM-dd HH:mm:ss
-#  datasource:
-#    driver-class-name: org.postgresql.Driver
-#    jdbc-url: jdbc:postgresql://localhost:5432/user_db
-#    username: postgres
-#    password: 12345
-#    type: com.zaxxer.hikari.HikariDataSource
-#    hikari:
-#      maximum-pool-size: 15
-#      minimum-idle: 5
-#      idle-timeout: 30000
-#mybatis:
-#  mapper-locations: classpath:mapper/*.xml
-#  type-aliases-package: com.sensorweb.datacenterauth2service.entity
-#  configuration:
-#    use-generated-keys: true
-#    map-underscore-to-camel-case: true
-#management:
-#  endpoints:
-#    web:
-#      exposure:
-#        include: "*"
-#
-## eureka注册中心
-#eureka:
-#  instance:
-#    prefer-ip-address: true
-#  client:
-#    service-url:
-#      defaultZone: http://localhost:7001/eureka/,http://localhost:7002/eureka/,http://localhost:7003/eureka/
-
-
 server:
   port: 9401
 spring:
@@ -49,7 +9,7 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
   datasource:
     driver-class-name: org.postgresql.Driver
-    jdbc-url: jdbc:postgresql://172.16.100.2:5432/postgres
+    jdbc-url: jdbc:postgresql://localhost:5432/user_db
     username: postgres
     password: 12345
     type: com.zaxxer.hikari.HikariDataSource
@@ -75,4 +35,45 @@ eureka:
     prefer-ip-address: true
   client:
     service-url:
-      defaultZone: http://172.16.100.2:7001/eureka/,http://172.16.100.2:7002/eureka/,http://172.16.100.2:7003/eureka/
+      defaultZone: http://localhost:7001/eureka/
+#      ,http://localhost:7002/eureka/,http://localhost:7003/eureka/
+
+
+#server:
+#  port: 9401
+#spring:
+#  profiles:
+#    active: dev
+#  application:
+#    name: datacenter-auth2-service
+#  jackson:
+#    date-format: yyyy-MM-dd HH:mm:ss
+#  datasource:
+#    driver-class-name: org.postgresql.Driver
+#    jdbc-url: jdbc:postgresql://172.16.100.2:5432/postgres
+#    username: postgres
+#    password: 12345
+#    type: com.zaxxer.hikari.HikariDataSource
+#    hikari:
+#      maximum-pool-size: 15
+#      minimum-idle: 5
+#      idle-timeout: 30000
+#mybatis:
+#  mapper-locations: classpath:mapper/*.xml
+#  type-aliases-package: com.sensorweb.datacenterauth2service.entity
+#  configuration:
+#    use-generated-keys: true
+#    map-underscore-to-camel-case: true
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: "*"
+#
+## eureka注册中心
+#eureka:
+#  instance:
+#    prefer-ip-address: true
+#  client:
+#    service-url:
+#      defaultZone: http://172.16.100.2:7001/eureka/,http://172.16.100.2:7002/eureka/,http://172.16.100.2:7003/eureka/

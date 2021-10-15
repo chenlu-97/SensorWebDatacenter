@@ -68,7 +68,7 @@ public class GetObsController implements ObsConstant {
     }
 
 
-    @ApiOperation("查询24小时的Air数据接入数量")
+    @ApiOperation("查询24小时的数据接入数量")
     @GetMapping(path = "getCountOfHour")
     @ResponseBody
     public List<Map<String,Object>> getCountOfHour() {

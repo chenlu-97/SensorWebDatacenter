@@ -31,26 +31,26 @@ public class TianXingZhouService {
     /**
      * 每小时接入一次数据
      */
-    @Scheduled(cron = "0 */1 * * * ?") //每分钟接入
-    public void insertDataByHour() {
-        LocalDateTime dateTime = LocalDateTime.now(ZoneId.of("Asia/Shanghai"));
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                boolean flag = false;
-                try {
-                    flag = getIOTInfo();
-                    if (flag) {
-                        log.info("天兴洲综合站接入时间: " + dateTime.toString() + "Status: Success");
-                        System.out.println("天兴洲综合站接入时间: " + dateTime.toString() + "Status: Success");
-                    }
-                } catch (Exception e) {
-                    log.error(e.getMessage());
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
+//    @Scheduled(cron = "0 */1 * * * ?") //每分钟接入
+//    public void insertDataByHour() {
+//        LocalDateTime dateTime = LocalDateTime.now(ZoneId.of("Asia/Shanghai"));
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                boolean flag = false;
+//                try {
+//                    flag = getIOTInfo();
+//                    if (flag) {
+//                        log.info("天兴洲综合站接入时间: " + dateTime.toString() + "Status: Success");
+//                        System.out.println("天兴洲综合站接入时间: " + dateTime.toString() + "Status: Success");
+//                    }
+//                } catch (Exception e) {
+//                    log.error(e.getMessage());
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
+//    }
 
 
     /**
