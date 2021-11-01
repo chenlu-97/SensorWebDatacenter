@@ -1,0 +1,38 @@
+package com.sensorweb.datacenterweatherservice.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Date;
+
+//接收端的代码
+public class DD implements Runnable {
+
+    @Override
+    public void run() {
+        try {
+            ServerSocket server = new ServerSocket(6800);
+            // 调用accept监听，等待客户端连接
+            System.out.println("********服务器即将启动，等待客户端连接********************");
+            while (true) {
+                Socket socket = server.accept();
+                System.out.println("客户端ip："+new Date() +"  " +socket.getInetAddress());
+                ServerThread serverThread = new ServerThread(socket);
+                serverThread.start();
+                // 统计功能
+                InetAddress inetAddress = socket.getInetAddress();
+                System.out.println("****==========客户端地址" + inetAddress.getHostAddress()+"==================*****************");
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+}
+

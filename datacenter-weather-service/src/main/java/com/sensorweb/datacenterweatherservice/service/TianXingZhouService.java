@@ -28,9 +28,9 @@ public class TianXingZhouService {
     @Autowired
     TianXingZhouMapper tianXingZhouMapper;
 
-    /**
-     * 每小时接入一次数据
-     */
+//    /**
+//     * 每小时接入一次数据
+//     */
 //    @Scheduled(cron = "0 */1 * * * ?") //每分钟接入
 //    public void insertDataByHour() {
 //        LocalDateTime dateTime = LocalDateTime.now(ZoneId.of("Asia/Shanghai"));
@@ -67,7 +67,7 @@ public class TianXingZhouService {
     }
 
     /**
-     * 调用API获取气象数据
+     *
      */
 
     public boolean getIOTInfo() throws IOException {

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sensorweb.datacenterweatherservice.dao.MeasuringVehicleMapper">
+    <sql id="insertFields">
+        datatime ,lon , lat, geom, air_temperature, air_humidity, air_pressure ,wind_speed , wind_direction , tvocs
+    </sql>
+
+    <sql id="selectFields">
+        datatime ,lon , lat, geom, air_temperature, air_humidity, air_pressure ,wind_speed , wind_direction , tvocs
+    </sql>
+
+
+    <insert id="insertData" parameterType="MeasuringVehicle" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO measuring_vehicle (<include refid="insertFields"></include>)
+        VALUES (#{dataTime},#{lon}, #{lat}, ST_GeomFromText(#{geom}, 4326),#{airTemperature}, #{airHumidity}, #{airPressure},#{windSpeed},#{windDirection}, #{TVOCs})
+    </insert>
+
+
+    <resultMap id="measuringVehicle" type="MeasuringVehicle">
+        <result column="datatime" property="dataTime"/>
+        <result column="lon" property="lon"/>
+        <result column="lat" property="lat"/>
+        <result column="air_temperature" property="airTemperature"/>
+        <result column="air_humidity" property="airHumidity"/>
+        <result column="air_pressure" property="airPressure"/>
+        <result column="wind_speed" property="windSpeed"/>
+        <result column="wind_direction" property="windDirection"/>
+        <result column="tvocs" property="TVOCs"/>
+    </resultMap>
+
+    <select id="selectByPage" resultMap="measuringVehicle">
+        SELECT <include refid="selectFields"></include>
+        FROM measuring_vehicle order by datatime desc
+        LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+
+
+    <select id="selectNum" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM measuring_vehicle
+    </select>
+</mapper>
