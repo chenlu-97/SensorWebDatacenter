@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sensorweb.datacenterweatherservice.dao.FY4AMapper">
+    <sql id="insertFields">
+        file_name,format,file_size,file_url,imgbase64,datetime,sate_sensor_chanl
+    </sql>
+
+
+
+    <insert id="insertData"  parameterType="com.sensorweb.datacenterweatherservice.entity.FY4A" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO fy4a_awx (<include refid="insertFields"></include>)
+        VALUES (#{fileName},#{format},#{fileSize},#{fileUrl},#{imgBasE64},#{dateTime},#{sateSensorChanl})
+    </insert>
+
+    <resultMap id="fY4A" type="FY4A">
+        <result column="file_name" property="fileName"/>
+        <result column="format" property="format"/>
+        <result column="file_size" property="fileSize"/>
+        <result column="file_url" property="fileUrl"/>
+        <result column="imgbase64" property="imgBasE64"/>
+        <result column="datetime" property="dateTime"/>
+        <result column="sate_sensor_chanl" property="sateSensorChanl"/>
+    </resultMap>
+
+</mapper>
