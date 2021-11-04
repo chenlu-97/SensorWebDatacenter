@@ -1,4 +1,4 @@
-package com.sensorweb.datacenterweatherservice.entity;
+package com.sensorweb.datacentermobileservice.entity;
 
 
 import lombok.Data;

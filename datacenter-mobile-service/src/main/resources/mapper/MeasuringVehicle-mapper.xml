@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.sensorweb.datacenterweatherservice.dao.MeasuringVehicleMapper">
+<mapper namespace="com.sensorweb.datacentermobileservice.dao.MeasuringVehicleMapper">
     <sql id="insertFields">
         datatime ,lon , lat, geom, air_temperature, air_humidity, air_pressure ,wind_speed , wind_direction , tvocs
     </sql>

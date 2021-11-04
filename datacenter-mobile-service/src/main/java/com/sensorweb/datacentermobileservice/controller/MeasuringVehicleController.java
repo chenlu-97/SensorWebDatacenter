@@ -1,12 +1,9 @@
-package com.sensorweb.datacenterweatherservice.controller;
+package com.sensorweb.datacentermobileservice.controller;
 
 
-import com.sensorweb.datacenterweatherservice.dao.MeasuringVehicleMapper;
-import com.sensorweb.datacenterweatherservice.dao.TianXingZhouMapper;
-import com.sensorweb.datacenterweatherservice.entity.MeasuringVehicle;
-import com.sensorweb.datacenterweatherservice.entity.TianXingZhouStation;
-import com.sensorweb.datacenterweatherservice.service.MeasuringVehicleService;
-import com.sensorweb.datacenterweatherservice.service.TianXingZhouService;
+import com.sensorweb.datacentermobileservice.dao.MeasuringVehicleMapper;
+import com.sensorweb.datacentermobileservice.entity.MeasuringVehicle;
+import com.sensorweb.datacentermobileservice.service.MeasuringVehicleService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;

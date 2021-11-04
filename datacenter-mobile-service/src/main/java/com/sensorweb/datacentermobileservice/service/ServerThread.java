@@ -1,4 +1,4 @@
-package com.sensorweb.datacenterweatherservice.service;
+package com.sensorweb.datacentermobileservice.service;
 
 import java.io.BufferedReader;
 import java.io.IOException;

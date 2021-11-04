@@ -1,7 +1,7 @@
-package com.sensorweb.datacenterweatherservice.dao;
+package com.sensorweb.datacentermobileservice.dao;
 
 
-import com.sensorweb.datacenterweatherservice.entity.MeasuringVehicle;
+import com.sensorweb.datacentermobileservice.entity.MeasuringVehicle;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
