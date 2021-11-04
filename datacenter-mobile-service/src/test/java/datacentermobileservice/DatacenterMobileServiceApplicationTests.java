@@ -1,6 +1,6 @@
-package com.sensorweb.datacenterweatherservice;
+package datacentermobileservice;
 
-import com.sensorweb.datacenterweatherservice.service.MeasuringVehicleService;
+import com.sensorweb.datacentermobileservice.service.MeasuringVehicleService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,13 +9,8 @@ import java.io.IOException;
 import java.text.ParseException;
 
 @SpringBootTest
-class DatacenterWeatherServiceApplicationTests {
+class DatacenterMobileServiceApplicationTests {
 
-//    @Autowired
-//    private InsertWeatherInfo insertWeatherInfo;
-
-//    @Autowired
-//    private TianXingZhouService tianXingZhouService;
     @Autowired
     private MeasuringVehicleService measuringVehicleService;
 

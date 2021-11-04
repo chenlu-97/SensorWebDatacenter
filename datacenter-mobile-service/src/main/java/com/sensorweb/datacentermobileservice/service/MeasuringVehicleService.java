@@ -1,16 +1,14 @@
-package com.sensorweb.datacenterweatherservice.service;
+package com.sensorweb.datacentermobileservice.service;
 
 
-import com.sensorweb.datacenterweatherservice.dao.MeasuringVehicleMapper;
-import com.sensorweb.datacenterweatherservice.entity.MeasuringVehicle;
+import com.sensorweb.datacentermobileservice.dao.MeasuringVehicleMapper;
+import com.sensorweb.datacentermobileservice.entity.MeasuringVehicle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;

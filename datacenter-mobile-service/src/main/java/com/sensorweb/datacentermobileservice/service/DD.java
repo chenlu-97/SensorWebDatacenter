@@ -1,4 +1,4 @@
-package com.sensorweb.datacenterweatherservice.service;
+package com.sensorweb.datacentermobileservice.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,7 +13,6 @@ import java.util.Date;
 
 //接收端的代码
 public class DD implements Runnable {
-
     @Override
     public void run() {
         try {
