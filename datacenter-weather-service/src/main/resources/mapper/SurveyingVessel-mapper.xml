@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sensorweb.datacenterweatherservice.dao.TianXingZhouMapper">
+
+    <sql id="insertFields">
+        id,w20138,w20139,w20140,w20142,w20143,w20144,w24003,w24071,w20170,w24004,w24017,w25002,w24049,w25003,w24050,w25010,w25004,w25073,w25038,w25006,w25034,w25013,w25011,w21016,w23002,w21003,w19002,w20117,w01019,w21011,w21001,w20125,w20141,w22001,w01001,w01014,w01010,w01009,w01003,w01022,w01016,w19011,datatime,lon,lat
+    </sql>
+
+    <insert id="insertData" parameterType="SurveyingVessel" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO surveyingVessel (<include refid="insertFields"></include>)
+        VALUES (#{id},#{w20138}, #{w20139}, #{w20140}, #{w20142}, #{w20143}, #{w20144}, #{w24003}, #{w24071}, #{w20170}, #{w24004}, #{w24017}, #{w25002}, #{w24049}, #{w25003}, #{w24050}, #{w25010}, #{w25004}, #{w25073}, #{w25038}, #{w25006}, #{w25034}, #{w25013}, #{w25011}, #{w21016}, #{w23002}, #{w21003}, #{w19002}, #{w20117}, #{w01019}, #{w21011}, #{w21001}, #{w20125}, #{w20141}, #{w22001}, #{w01001}, #{w01014}, #{w01010}, #{w01009}, #{w01003}, #{w01022}, #{w01016}, #{w19011}, #{dataTime}, #{lon}, #{lat})
+    </insert>
+
+
+    <resultMap id="surveyingVessel" type="SurveyingVessel">
+        <result column="id" property="id"/>
+        <result column="w20138" property="w20138"/>
+        <result column="w20139" property="w20139"/>
+        <result column="w20140" property="w20140"/>
+        <result column="w20142" property="w20142"/>
+        <result column="w20143" property="w20143"/>
+        <result column="w20144" property="w20144"/>
+        <result column="w24003" property="w24003"/>
+        <result column="w24071" property="w24071"/>
+        <result column="w20170" property="w20170"/>
+        <result column="w24004" property="w24004"/>
+        <result column="w24017" property="w24017"/>
+        <result column="w25002" property="w25002"/>
+        <result column="w24049" property="w24049"/>
+        <result column="w25003" property="w25003"/>
+        <result column="w24050" property="w24050"/>
+        <result column="w25010" property="w25010"/>
+        <result column="w25004" property="w25004"/>
+        <result column="w25073" property="w25073"/>
+        <result column="w25038" property="w25038"/>
+        <result column="w25006" property="w25006"/>
+        <result column="w25034" property="w25034"/>
+        <result column="w25013" property="w25013"/>
+        <result column="w25011" property="w25011"/>
+        <result column="w21016" property="w21016"/>
+        <result column="w23002" property="w23002"/>
+        <result column="w21003" property="w21003"/>
+        <result column="w19002" property="w19002"/>
+        <result column="w20117" property="w20117"/>
+        <result column="w01019" property="w01019"/>
+        <result column="w21011" property="w21011"/>
+        <result column="w21001" property="w21001"/>
+        <result column="w20125" property="w20125"/>
+        <result column="w20141" property="w20141"/>
+        <result column="w22001" property="w22001"/>
+        <result column="w01001" property="w01001"/>
+        <result column="w01014" property="w01014"/>
+        <result column="w01010" property="w01010"/>
+        <result column="w01009" property="w01009"/>
+        <result column="w01003" property="w01003"/>
+        <result column="w01022" property="w01022"/>
+        <result column="w01016" property="w01016"/>
+        <result column="w19011" property="w19011"/>
+        <result column="datatime" property="dataTime"/>
+        <result column="lon" property="lon"/>
+        <result column="lat" property="lat"/>
+    </resultMap>
+</mapper>
