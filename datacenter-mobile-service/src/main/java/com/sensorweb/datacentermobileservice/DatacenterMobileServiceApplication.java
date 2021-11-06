@@ -1,7 +1,7 @@
 package com.sensorweb.datacentermobileservice;
 
 
-import com.sensorweb.datacentermobileservice.service.DD;
+import com.sensorweb.datacentermobileservice.service.TCPService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -17,8 +17,8 @@ public class DatacenterMobileServiceApplication {
     public static void main(String[] args) {
 
         SpringApplication.run(DatacenterMobileServiceApplication.class, args);
-        new Thread(new DD()).start();
-//        new Thread(new TT()).start();
+        new Thread(new TCPService()).start();
+
     }
 
 }

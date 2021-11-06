@@ -1,4 +1,4 @@
-package com.sensorweb.datacentermobileservice.service;
+package com.sensorweb.datacentermobileservice.util;
 
 
 import org.springframework.context.ApplicationContext;

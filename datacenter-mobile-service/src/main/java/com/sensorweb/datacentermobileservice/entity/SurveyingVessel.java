@@ -1,7 +1,8 @@
-package com.sensorweb.datacenterweatherservice.entity;
+package com.sensorweb.datacentermobileservice.entity;
 
 import lombok.Data;
 
+import java.time.Instant;
 
 
 @Data
@@ -50,7 +51,7 @@ public class SurveyingVessel {
     private float w01022;
     private float w01016;
     private float w19011;
-    private float dataTime;
+    private Instant dataTime;
     private float lon;
     private float lat;
 }

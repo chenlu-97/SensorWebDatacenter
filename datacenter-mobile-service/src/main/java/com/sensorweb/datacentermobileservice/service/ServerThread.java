@@ -1,5 +1,7 @@
 package com.sensorweb.datacentermobileservice.service;
 
+import com.sensorweb.datacentermobileservice.util.ApplicationContextUtil;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,8 +19,8 @@ public class ServerThread extends Thread {
     Socket socket = null;
     public ServerThread(Socket socket) {
         this.socket = socket;
-
     }
+
     @SuppressWarnings("deprecation")
     public void run() {
         try{
@@ -29,8 +31,14 @@ public class ServerThread extends Thread {
             //接收收到的数据
             int line = 0;
             while ((line = is.read(buf)) != -1) {
-                MeasuringVehicleService measuringVehicleService = (MeasuringVehicleService) ApplicationContextUtil.getBean("measuringVehicleService");
-                boolean i = measuringVehicleService.insertData(new String(buf, 0, line));
+
+                SurveyingVesselService surveyingVesselService = (SurveyingVesselService) ApplicationContextUtil.getBean("surveyingVesselService");
+                boolean i = surveyingVesselService.insertData(new String(buf, 0, line));
+
+//              MeasuringVehicleService measuringVehicleService = (MeasuringVehicleService) ApplicationContextUtil.getBean("measuringVehicleService");
+//              boolean i = measuringVehicleService.insertData(new String(buf, 0, line));
+
+
                 if (i == true) {
                     System.out.println("成功!!!!");
                 } else {

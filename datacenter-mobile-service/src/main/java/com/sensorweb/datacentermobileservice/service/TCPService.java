@@ -12,7 +12,7 @@ import java.net.Socket;
 import java.util.Date;
 
 //接收端的代码
-public class DD implements Runnable {
+public class TCPService implements Runnable {
     @Override
     public void run() {
         try {

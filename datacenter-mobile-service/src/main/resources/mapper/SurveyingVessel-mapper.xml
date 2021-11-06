@@ -2,15 +2,19 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.sensorweb.datacenterweatherservice.dao.TianXingZhouMapper">
+<mapper namespace="com.sensorweb.datacentermobileservice.dao.SurveyingVesselMapper">
 
     <sql id="insertFields">
-        id,w20138,w20139,w20140,w20142,w20143,w20144,w24003,w24071,w20170,w24004,w24017,w25002,w24049,w25003,w24050,w25010,w25004,w25073,w25038,w25006,w25034,w25013,w25011,w21016,w23002,w21003,w19002,w20117,w01019,w21011,w21001,w20125,w20141,w22001,w01001,w01014,w01010,w01009,w01003,w01022,w01016,w19011,datatime,lon,lat
+        w20138,w20139,w20140,w20142,w20143,w20144,w24003,w24071,w20170,w24004,w24017,w25002,w24049,w25003,w24050,w25010,w25004,w25073,w25038,w25006,w25034,w25013,w25011,w21016,w23002,w21003,w19002,w20117,w01019,w21011,w21001,w20125,w20141,w22001,w01001,w01014,w01010,w01009,w01003,w01022,w01016,w19011,datatime,lon,lat
+    </sql>
+
+    <sql id="selectFields">
+        w20138,w20139,w20140,w20142,w20143,w20144,w24003,w24071,w20170,w24004,w24017,w25002,w24049,w25003,w24050,w25010,w25004,w25073,w25038,w25006,w25034,w25013,w25011,w21016,w23002,w21003,w19002,w20117,w01019,w21011,w21001,w20125,w20141,w22001,w01001,w01014,w01010,w01009,w01003,w01022,w01016,w19011,datatime,lon,lat
     </sql>
 
     <insert id="insertData" parameterType="SurveyingVessel" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO surveyingVessel (<include refid="insertFields"></include>)
-        VALUES (#{id},#{w20138}, #{w20139}, #{w20140}, #{w20142}, #{w20143}, #{w20144}, #{w24003}, #{w24071}, #{w20170}, #{w24004}, #{w24017}, #{w25002}, #{w24049}, #{w25003}, #{w24050}, #{w25010}, #{w25004}, #{w25073}, #{w25038}, #{w25006}, #{w25034}, #{w25013}, #{w25011}, #{w21016}, #{w23002}, #{w21003}, #{w19002}, #{w20117}, #{w01019}, #{w21011}, #{w21001}, #{w20125}, #{w20141}, #{w22001}, #{w01001}, #{w01014}, #{w01010}, #{w01009}, #{w01003}, #{w01022}, #{w01016}, #{w19011}, #{dataTime}, #{lon}, #{lat})
+        INSERT INTO surveying_vessel (<include refid="insertFields"></include>)
+        VALUES (#{w20138}, #{w20139}, #{w20140}, #{w20142}, #{w20143}, #{w20144}, #{w24003}, #{w24071}, #{w20170}, #{w24004}, #{w24017}, #{w25002}, #{w24049}, #{w25003}, #{w24050}, #{w25010}, #{w25004}, #{w25073}, #{w25038}, #{w25006}, #{w25034}, #{w25013}, #{w25011}, #{w21016}, #{w23002}, #{w21003}, #{w19002}, #{w20117}, #{w01019}, #{w21011}, #{w21001}, #{w20125}, #{w20141}, #{w22001}, #{w01001}, #{w01014}, #{w01010}, #{w01009}, #{w01003}, #{w01022}, #{w01016}, #{w19011}, #{dataTime}, #{lon}, #{lat})
     </insert>
 
 
@@ -62,4 +66,17 @@
         <result column="lon" property="lon"/>
         <result column="lat" property="lat"/>
     </resultMap>
+
+    <select id="selectByPage" resultMap="surveyingVessel">
+        SELECT <include refid="selectFields"></include>
+        FROM surveying_vessel order by datatime desc
+        LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+
+
+    <select id="selectNum" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM surveying_vessel
+    </select>
+
 </mapper>

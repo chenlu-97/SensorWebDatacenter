@@ -6,7 +6,7 @@ import java.io.*;
 import java.net.Socket;
 
 //发送端的代码如下：
-public class TT implements Runnable {
+public class TCPClient implements Runnable {
     @Override
     public void run() {
         try {
