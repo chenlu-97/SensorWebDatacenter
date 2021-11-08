@@ -4,7 +4,9 @@ package com.sensorweb.datacentermobileservice.service;
 import com.sensorweb.datacentermobileservice.dao.SurveyingVesselMapper;
 import com.sensorweb.datacentermobileservice.entity.MeasuringVehicle;
 import com.sensorweb.datacentermobileservice.entity.SurveyingVessel;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
@@ -15,7 +17,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,6 +35,8 @@ public class SurveyingVesselService {
         return surveyingVesselMapper.selectByPage(pageNum, pageSize);
     }
 
+
+
     public boolean insertData(String data) throws IOException {
         int statue = 0;
         String lon = null;
@@ -38,9 +44,9 @@ public class SurveyingVesselService {
         SurveyingVessel surveyingVessel = new SurveyingVessel();
         String cp = null ; //CP=&&数据区&&  整个数据包
         System.out.println("获取到的数据为： " + data);
-
         if(data.startsWith("##")){
             try {
+                Instant time1 = null;
                 Matcher m1 = Pattern.compile("(?<=DataTime=).+?(?=;)").matcher(data);
                 while (m1.find()) {
                     String time = m1.group().trim();
@@ -48,10 +54,9 @@ public class SurveyingVesselService {
                     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(pattern);
                     dateTimeFormatter.withZone(ZoneId.of("Asia/Shanghai"));
                     LocalDateTime localDateTime = LocalDateTime.parse(time, dateTimeFormatter);
-                    Instant time1 = localDateTime.atZone(ZoneId.of("Asia/Shanghai")).toInstant();
+                    time1 = localDateTime.atZone(ZoneId.of("Asia/Shanghai")).toInstant();
                     surveyingVessel.setDataTime(time1);
                 }
-
 //                Matcher cp_match = Pattern.compile("(?<=CP=&&).+?(?=&&)").matcher(data);
 //                while (cp_match.find()) {
 //                    cp = cp_match.group().trim();
@@ -63,7 +68,6 @@ public class SurveyingVesselService {
 //                        System.out.println("item = " + item);
 //                    }
 //                }
-
                 Matcher m2 = Pattern.compile("(?<=w01001-Rtd=).+?(?=,)").matcher(data);
                 while (m2.find()) {
                     String w01001 = m2.group().trim();
@@ -276,7 +280,16 @@ public class SurveyingVesselService {
                 }
 
                 if(surveyingVessel != null) {
-                    statue =surveyingVesselMapper.insertData(surveyingVessel);
+//                    statue =surveyingVesselMapper.insertData(surveyingVessel);
+                    Instant end = time1;
+                    Instant begin = end.minusSeconds(2*60*60);
+                    surveyingVessel.setBegin(begin);
+                    surveyingVessel.setEnd(end);
+                    statue =surveyingVesselMapper.UpdateDataByTime(surveyingVessel);
+                    System.out.println("statue = " + statue);
+                    if(statue==0){
+                        statue =surveyingVesselMapper.insertData(surveyingVessel);
+                    }
                 }
             } catch (Exception e) {
                 // TODO Auto-generated catch block

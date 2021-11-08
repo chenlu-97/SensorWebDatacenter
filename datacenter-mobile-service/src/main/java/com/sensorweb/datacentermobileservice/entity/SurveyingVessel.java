@@ -54,4 +54,8 @@ public class SurveyingVessel {
     private Instant dataTime;
     private float lon;
     private float lat;
+
+
+    private Instant begin;
+    private Instant end ;
 }

@@ -3,31 +3,111 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sensorweb.datacentermobileservice.dao.MeasuringVehicleMapper">
-    <sql id="insertFields">
-        datatime ,lon , lat, geom, air_temperature, air_humidity, air_pressure ,wind_speed , wind_direction , tvocs
-    </sql>
+<!--    <sql id="insertFields">-->
+<!--        datatime,lon,lat,air_temperature,air_humidity,air_pressure,wind_speed , wind_direction , tvocs-->
+<!--    </sql>-->
 
     <sql id="selectFields">
-        datatime ,lon , lat, geom, air_temperature, air_humidity, air_pressure ,wind_speed , wind_direction , tvocs
+        datatime ,lon , lat, air_temperature, air_humidity, air_pressure ,wind_speed , wind_direction , tvocs
     </sql>
 
+    <insert id="insertVocsData" parameterType="MeasuringVehicle" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO measuring_vehicle_vocs (datatime,lon,lat, air_temperature, air_humidity, air_pressure ,wind_speed , wind_direction,tvocs)
+        VALUES (#{dataTime},#{lon}, #{lat},#{airTemperature}, #{airHumidity}, #{airPressure},#{windSpeed},#{windDirection}, #{TVOCs})
+    </insert>
 
-    <insert id="insertData" parameterType="MeasuringVehicle" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO measuring_vehicle (<include refid="insertFields"></include>)
-        VALUES (#{dataTime},#{lon}, #{lat}, ST_GeomFromText(#{geom}, 4326),#{airTemperature}, #{airHumidity}, #{airPressure},#{windSpeed},#{windDirection}, #{TVOCs})
+    <insert id="insertAirData" keyProperty="id" useGeneratedKeys="true" parameterType="MeasuringVehicle">
+    INSERT INTO measuring_vehicle_air (datatime,lon, lat ,so2,no,no2, nox, co,o3)
+    VALUES (#{dataTime},#{lon}, #{lat},#{SO2},#{NO},#{NO2},#{NOX},#{CO},#{O3})
+    </insert>
+
+    <insert id="insertPMData" keyProperty="id" useGeneratedKeys="true" parameterType="MeasuringVehicle">
+        INSERT INTO measuring_vehicle_pm (datatime,lon, lat ,pm10,pm25,pm1)
+        VALUES (#{dataTime},#{lon},#{lat},#{PM10},#{PM25},#{PM1})
+    </insert>
+
+    <insert id="insertHTData" keyProperty="id" useGeneratedKeys="true" parameterType="MeasuringVehicle">
+        INSERT INTO measuring_vehicle_ht (datatime,lon, lat ,c370nm,c470nm,c520nm,c590nm,c660nm,c880nm,c950nm)
+        VALUES (#{dataTime},#{lon},#{lat},#{c370nm},#{c470nm},#{c520nm},#{c590nm},#{c660nm},#{c880nm},#{c950nm})
+    </insert>
+
+    <insert id="insertSPMSData" keyProperty="id" useGeneratedKeys="true" parameterType="MeasuringVehicle">
+        INSERT INTO measuring_vehicle_spms (datatime,lon, lat, dust,biomass_burning,motor_vehicle_exhaust,burning_coal,industrial_process,secondary_inorganic_source,other,food)
+        VALUES (#{dataTime},#{lon},#{lat},#{dust},#{biomassBurning},#{motorVehicleExhaust},#{burningCoal},#{industrialProcess},#{secondaryInorganicSource},#{other},#{food})
+    </insert>
+
+    <insert id="insertRadioData" keyProperty="id" useGeneratedKeys="true" parameterType="MeasuringVehicle">
+        INSERT INTO measuring_vehicle_radio (datatime,lon,lat, file_name,type,file_path)
+        VALUES (#{dataTime},#{lon},#{lat},#{fileName},#{type},#{filePath})
     </insert>
 
 
     <resultMap id="measuringVehicle" type="MeasuringVehicle">
-        <result column="datatime" property="dataTime"/>
-        <result column="lon" property="lon"/>
-        <result column="lat" property="lat"/>
-        <result column="air_temperature" property="airTemperature"/>
-        <result column="air_humidity" property="airHumidity"/>
-        <result column="air_pressure" property="airPressure"/>
-        <result column="wind_speed" property="windSpeed"/>
-        <result column="wind_direction" property="windDirection"/>
-        <result column="tvocs" property="TVOCs"/>
+        <result property="dataTime" column="datatime"/>
+
+        <result property="lon" column="lon"/>
+
+        <result property="lat" column="lat"/>
+
+        <result property="airTemperature" column="air_temperature"/>
+
+        <result property="airHumidity" column="air_humidity"/>
+
+        <result property="airPressure" column="air_pressure"/>
+
+        <result property="windSpeed" column="wind_speed"/>
+
+        <result property="windDirection" column="wind_direction"/>
+
+        <result property="TVOCs" column="tvocs"/>
+
+        <result property="SO2" column="so2"/>
+
+        <result property="NO" column="no"/>
+
+        <result property="NO2" column="no2"/>
+
+        <result property="NOX" column="nox"/>
+
+        <result property="CO" column="co"/>
+
+        <result property="O3" column="o3"/>
+
+        <result property="PM10" column="pm10"/>
+
+        <result property="PM25" column="pm25"/>
+
+        <result property="PM1" column="pm1"/>
+
+        <result property="c370nm" column="c370nm"/>
+
+        <result property="c470nm" column="c470nm"/>
+
+        <result property="c520nm" column="c520nm"/>
+
+        <result property="c590nm" column="c590nm"/>
+
+        <result property="c660nm" column="c660nm"/>
+
+        <result property="c880nm" column="c880nm"/>
+
+        <result property="c950nm" column="c950nm"/>
+
+        <result property="dust" column="dust"/>
+
+        <result property="biomassBurning" column="biomass_burning"/>
+
+        <result property="motorVehicleExhaust" column="motor_vehicle_exhaust"/>
+
+        <result property="burningCoal" column="burning_coal"/>
+
+        <result property="industrialProcess" column="industrial_process"/>
+
+        <result property="secondaryInorganicSource" column="secondary_inorganic_source"/>
+
+        <result property="other" column="other"/>
+
+        <result property="food" column="food"/>
     </resultMap>
 
     <select id="selectByPage" resultMap="measuringVehicle">
@@ -36,6 +116,12 @@
         LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
     </select>
 
+
+    <select id="selectByTime" resultMap="measuringVehicle">
+        SELECT lon,lat
+        FROM measuring_vehicle_vocs
+        WHERE datatime <![CDATA[>]]> #{begin} AND datatime <![CDATA[<]]> #{end}
+    </select>
 
     <select id="selectNum" resultType="java.lang.Integer">
         SELECT count(*)

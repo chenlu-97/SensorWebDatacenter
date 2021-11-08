@@ -11,6 +11,7 @@ import com.sensorweb.datacenterairservice.entity.TWEPA;
 import com.sensorweb.datacenterairservice.feign.ObsFeignClient;
 import com.sensorweb.datacenterairservice.service.InsertChinaAirService;
 import com.sensorweb.datacenterairservice.service.InsertTWEPA;
+import com.sensorweb.datacenterutil.utils.DataCenterUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -57,6 +58,7 @@ class DatacenterInsertAirServiceApplicationTests {
 //            boolean res = airStationMapper.updateGeom(wkt,station.getLon(),station.getLat());
 //            System.out.println(res);
 //        }
+        DataCenterUtils.sendMessage("HB_AIR", "省站湖北空气质量","这是一条省站推送的湖北省空气质量数据");
     }
 
 

@@ -47,30 +47,31 @@ public class InsertWeatherInfo {
     @Autowired
     private ObsFeignClient obsFeignClient;
 
-//    /**
-//     * 每小时接入一次数据
-//     */
-//    @Scheduled(cron = "0 35 0/1 * * ?") //每个小时的35分开始接入
-//    public void insertDataByHour() {
-//        LocalDateTime dateTime = LocalDateTime.now(ZoneId.of("Asia/Shanghai"));
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                boolean flag = false;
-//                try {
-//                    flag = insertWeatherInfoBatch(getWeatherInfo());
-//                    if (flag) {
-//                        log.info("中国气象局接入时间: " + dateTime.toString() + "Status: Success");
-//                        System.out.println("中国气象局接入时间: " + dateTime.toString() + "Status: Success");
-//                    }
-//                    Thread.sleep(2 * 60 * 1000);
-//                } catch (Exception e) {
-//                    log.error(e.getMessage());
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
-//    }
+    /**
+     * 每小时接入一次数据
+     */
+    @Scheduled(cron = "0 35 0/1 * * ?") //每个小时的35分开始接入
+    public void insertDataByHour() {
+        LocalDateTime dateTime = LocalDateTime.now(ZoneId.of("Asia/Shanghai"));
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean flag = false;
+                try {
+                    flag = insertWeatherInfoBatch(getWeatherInfo());
+                    if (flag) {
+                        log.info("中国气象局接入时间: " + dateTime.toString() + "Status: Success");
+                        System.out.println("中国气象局接入时间: " + dateTime.toString() + "Status: Success");
+                        DataCenterUtils.sendMessage("WH_1+8_Weather_"+dateTime.toString(), "武汉1+8城市圈气象数据","这是一条武汉1+8城市圈气象数据的");
+                    }
+                    Thread.sleep(2 * 60 * 1000);
+                } catch (Exception e) {
+                    log.error(e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
 
     @Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean insertWeatherInfoBatch(List<ChinaWeather> chinaWeathers) {

@@ -50,6 +50,7 @@ public class GetAirService {
 
 
 
+
     public List<AirQualityHour> getAll() { return airQualityHourMapper.selectAll(); }
 
 

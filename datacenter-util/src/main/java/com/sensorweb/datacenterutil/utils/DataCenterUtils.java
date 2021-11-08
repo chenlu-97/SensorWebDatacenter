@@ -3,6 +3,8 @@ package com.sensorweb.datacenterutil.utils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -10,9 +12,12 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Element;
+import springfox.documentation.schema.Entry;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -21,6 +26,7 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -31,6 +37,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class DataCenterUtils {
+
+    @Autowired
+    static
+    OkHttpUtil okHttpUtil;
 
     /**
      * 通过Http下载文件，适用于不需要授权的情况下
@@ -73,6 +83,69 @@ public class DataCenterUtils {
 
         return EntityUtils.toString(entity);
     }
+
+
+//    public static String sendGet(String url, Map<String, String> params, Map<String, String> header) throws Exception {
+//        HttpGet httpGet = null;
+//        String body = "";
+//        try {
+//            CloseableHttpClient httpClient = HttpClients.createDefault();
+//            List<String> mapList = new ArrayList<>();
+//            if (params != null) {
+//                for (Map.Entry<String, String> entry : params.entrySet()) {
+//                    mapList.add(entry.getKey() + "=" + entry.getValue());
+//                }
+//            }
+//            if (mapList.size()!=0) {
+//                url = url + "?";
+//                String paramsStr = StringUtils.join(mapList, "&");
+//                url = url + paramsStr;
+//            }
+//            String encodeURL =  URLEncoder.encode(url,"UTF-8");
+//            httpGet = new HttpGet(encodeURL);
+//            httpGet.setHeader("accept", "*/*");
+//            httpGet.setHeader("connection", "Keep-Alive");
+//            httpGet.setHeader("Accept-Charset", "utf-8");
+//            httpGet.setHeader("Content-type", "application/x-www-form-urlencoded");
+//            httpGet.setHeader("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+//            if (header != null) {
+//                for (Map.Entry<String, String> entry : header.entrySet()) {
+//                    httpGet.setHeader(entry.getKey(), entry.getValue());
+//                }
+//            }
+//            HttpResponse response = httpClient.execute(httpGet);
+//
+//            int statusCode = response.getStatusLine().getStatusCode();
+//            if (statusCode != HttpStatus.SC_OK) {
+//                throw new RuntimeException("请求失败");
+//            } else {
+//                body = EntityUtils.toString(response.getEntity(), "UTF-8");
+//            }
+//        } catch (Exception e) {
+//            throw e;
+//        } finally {
+//            if (httpGet != null) {
+//                httpGet.releaseConnection();
+//            }
+//        }
+//        return body;
+//    }
+
+
+    public static void sendMessage(String id, String type, String details) throws Exception {
+        String url = "http://172.16.100.2:9999/ai-sensing-back-service/AI_Sensing_Back/api/ws/dps";
+//        String param = "id="+URLEncoder.encode(id,"utf-8")+"&type="+URLEncoder.encode(type,"utf-8")+"&details="+URLEncoder.encode(details,"utf-8")+"&progress=100";
+       Map<String ,Object> param = new HashMap<>();
+       param.put("id",URLEncoder.encode(id,"utf-8"));
+       param.put("type",URLEncoder.encode(type,"utf-8"));
+        param.put("details",URLEncoder.encode(details,"utf-8"));
+        param.put("progress",100);
+        String document = okHttpUtil.doGet(url, param);
+        System.out.println("发送给前端的数据是 = " + document);
+    }
+
+
+
 
     /**
      * 发送Post请求

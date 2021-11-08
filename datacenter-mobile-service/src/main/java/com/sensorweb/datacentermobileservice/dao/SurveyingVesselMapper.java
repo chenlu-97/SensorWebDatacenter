@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.util.List;
 
 @Repository
@@ -17,4 +18,8 @@ public interface SurveyingVesselMapper {
     List<SurveyingVessel> selectByPage(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
 
     int selectNum();
+
+    int insertPosition(SurveyingVessel surveyingVessel);
+
+    int UpdateDataByTime(SurveyingVessel surveyingVessel);
 }

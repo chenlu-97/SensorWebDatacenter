@@ -67,6 +67,20 @@
         <result column="lat" property="lat"/>
     </resultMap>
 
+
+    <insert id="insertPosition" parameterType="SurveyingVessel" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO surveying_vessel (lon,lat,datatime)
+        VALUES (#{lon}, #{lat}, #{dataTime})
+    </insert>
+
+
+    <update id="UpdateDataByTime" parameterType="SurveyingVessel">
+        UPDATE surveying_vessel SET w20138=#{w20138}, w20139=#{w20139}, w20140=#{w20140}, w20142=#{w20142},w20143=#{w20143},w20144=#{w20144}, w24003=#{w24003}, w24071=#{w24071},w20170=#{w20170}, w24004=#{w24004}, w24017=#{w24017}, w25002=#{w25002}, w24049=#{w24049}, w25003=#{w25003}, w24050=#{w24050}, w25010=#{w25010}, w25004=#{w25004}, w25073=#{w25073}, w25038=#{w25038}, w25006=#{w25006}, w25034=#{w25034}, w25013=#{w25013}, w25011=#{w25011}, w21016=#{w21016}, w23002=#{w23002}, w21003=#{w21003}, w19002=#{w19002}, w20117=#{w20117}, w01019=#{w01019}, w21011=#{w21011}, w21001=#{w21001},w20125= #{w20125}, w20141=#{w20141}, w22001=#{w22001}, w01001=#{w01001}, w01014=#{w01014}, w01010=#{w01010}, w01009=#{w01009}, w01003=#{w01003}, w01022=#{w01022}, w01016=#{w01016}, w19011=#{w19011}
+        WHERE datatime <![CDATA[>=]]> #{begin} AND datatime <![CDATA[<=]]> #{end}
+    </update>
+
+
+
     <select id="selectByPage" resultMap="surveyingVessel">
         SELECT <include refid="selectFields"></include>
         FROM surveying_vessel order by datatime desc
