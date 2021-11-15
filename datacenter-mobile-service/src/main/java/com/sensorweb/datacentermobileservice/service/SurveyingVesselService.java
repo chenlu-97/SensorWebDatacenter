@@ -280,16 +280,16 @@ public class SurveyingVesselService {
                 }
 
                 if(surveyingVessel != null) {
-//                    statue =surveyingVesselMapper.insertData(surveyingVessel);
-                    Instant end = time1;
-                    Instant begin = end.minusSeconds(2*60*60);
-                    surveyingVessel.setBegin(begin);
-                    surveyingVessel.setEnd(end);
-                    statue =surveyingVesselMapper.UpdateDataByTime(surveyingVessel);
-                    System.out.println("statue = " + statue);
-                    if(statue==0){
-                        statue =surveyingVesselMapper.insertData(surveyingVessel);
-                    }
+                    statue =surveyingVesselMapper.insertData(surveyingVessel);
+//                    Instant end = time1;
+//                    Instant begin = end.minusSeconds(2*60*60);
+//                    surveyingVessel.setBegin(begin);
+//                    surveyingVessel.setEnd(end);
+//                    statue =surveyingVesselMapper.UpdateDataByTime(surveyingVessel);
+//                    System.out.println("statue = " + statue);
+//                    if(statue==0){
+//                        statue =surveyingVesselMapper.insertData(surveyingVessel);
+//                    }
                 }
             } catch (Exception e) {
                 // TODO Auto-generated catch block

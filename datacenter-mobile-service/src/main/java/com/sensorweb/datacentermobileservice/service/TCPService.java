@@ -16,7 +16,7 @@ public class TCPService implements Runnable {
     @Override
     public void run() {
         try {
-            ServerSocket server = new ServerSocket(6800);
+            ServerSocket server = new ServerSocket(8081);
             // 调用accept监听，等待客户端连接
             System.out.println("********服务器即将启动，等待客户端连接********************");
             while (true) {
@@ -24,7 +24,6 @@ public class TCPService implements Runnable {
                 System.out.println("客户端ip："+new Date() +"  " +socket.getInetAddress());
                 ServerThread serverThread = new ServerThread(socket);
                 serverThread.start();
-                // 统计功能
                 InetAddress inetAddress = socket.getInetAddress();
                 System.out.println("****==========客户端地址" + inetAddress.getHostAddress()+"==================*****************");
             }

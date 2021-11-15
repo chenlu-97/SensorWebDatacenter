@@ -1,32 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.sensorweb.datacentergeeservice.dao.LandsatMapper" >
+<mapper namespace="com.sensorweb.datacentergeeservice.dao.ModisMapper" >
 
 
-  <resultMap id="BaseResultMap" type="Landsat" >
+  <resultMap id="BaseResultMap" type="Modis" >
     <result column="imageid" property="imageID"/>
-    <result column="sensorid" property="sensorID"/>
     <result column="spacecraftid" property="spacecraftID"/>
     <result column="coordinates" property="Coordinates"/>
     <result column="imagesize" property="imageSize"/>
     <result column="date" property="Date"/>
-    <result column="time" property="Time"/>
-    <result column="ellipsoid" property="Ellipsoid"/>
-    <result column="cloudcover" property="Cloudcover"/>
-    <result column="thumburl" property="Thumburl"/>
     <result column="imagetype" property="imageType"/>
     <result column="filepath" property="filePath"/>
-    <result column="wave_band" property="waveBand"/>
-    <result column="band_info" property="bandInfo"/>
   </resultMap>
 
   <sql id="selectFields" >
-        imageid,sensorid,spacecraftid,coordinates,date,time,imagesize,ellipsoid,cloudcover,thumburl,imagetype,filepath,wave_band,band_info
+        imageid, imagetype ,spacecraftid, coordinates,date, imagesize,filepath
   </sql>
 
   <select id="selectAll" resultMap="BaseResultMap">
     select <include refid="selectFields"></include>
-    from landsat
+    from modis
     where 1=1
     ORDER BY date DESC
     LIMIT 100;
@@ -34,7 +27,7 @@
 
   <select id="selectByattribute" resultMap="BaseResultMap">
     <if test="spacecraftID != null  or Date != null or Cloudcover != null or imageType != null "  >
-    select * from landsat where 1=1
+    select * from modis where 1=1
     <if test="spacecraftID != null and spacecraftID != '' "  >
       AND spacecraftid = #{spacecraftID}
     </if>
@@ -53,12 +46,12 @@
 
   <select id="selectNum" resultType="java.lang.Integer">
     SELECT count(*)
-    FROM landsat
+    FROM modis
   </select>
 
   <select id="selectByIds" resultMap="BaseResultMap" >
     SELECT <include refid="selectFields"></include>
-    FROM landsat ORDER BY date DESC
+    FROM modis ORDER BY date DESC
     WHERE imageid in
     <foreach collection ="imageid" item="imageID" open="(" close=")" separator=",">
       #{imageID}
@@ -66,9 +59,10 @@
     LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
   </select>
 
+
   <select id="selectByPage" resultMap="BaseResultMap">
     SELECT <include refid="selectFields"></include>
-    FROM landsat ORDER BY date DESC
+    FROM modis ORDER BY date DESC
     LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
   </select>
 

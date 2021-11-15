@@ -29,7 +29,7 @@ topleftlongitude,toprightlatitude,toprightlongitude,bottomrightlatitude,bottomri
     <select id="selectGF" resultMap="GF">
         SELECT *
         FROM gf
-        WHERE 1=1
+        ORDER BY query_time DESC
     </select>
 
 

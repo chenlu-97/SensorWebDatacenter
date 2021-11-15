@@ -9,8 +9,9 @@ import java.time.Instant;
 public class MeasuringVehicle {
 
     private int id;
-    //vocs
     private Instant dataTime;
+
+    //vocs
     private float lon;
     private float lat;
     private float airTemperature;
@@ -50,8 +51,11 @@ public class MeasuringVehicle {
 
     //颗粒物雷达
     private String fileName;
+    private String siteId;
     private String type;
     private String filePath;
+    private String pitch;
+    private String heading;
 
 
 }

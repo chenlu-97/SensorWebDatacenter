@@ -3,12 +3,17 @@ package com.sensorweb.datacentergeeservice.controller;
 import com.sensorweb.datacentergeeservice.dao.LandsatMapper;
 import com.sensorweb.datacentergeeservice.entity.Landsat;
 import com.sensorweb.datacentergeeservice.service.LandsatService;
+import com.sensorweb.datacenterutil.utils.DataCenterUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Slf4j
@@ -48,6 +53,24 @@ public class GetLandsatController {
     }
 
 
+    @ApiOperation("获取landsat数据")
+    @GetMapping(path = "getLandsat8")
+    @ResponseBody
+    public void getLandsat() {
+        landsatService.getLandsat();
+    }
+
+    @ApiOperation("发送获取到的信息给前端")
+    @GetMapping(path = "sendLandsat")
+    @ResponseBody
+    public void sendLandsat() throws Exception {
+        LocalDateTime dateTime = LocalDateTime.now(ZoneId.of("Asia/Shanghai"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.of("Asia/Shanghai"));
+        String time = formatter.format(dateTime);
+        DataCenterUtils.sendMessage("Landsat-8"+ time, "Landsat-8","GEE获取的Landsat-8影像成功");
+    }
+
+
 
 
     @GetMapping(value = "getLandsatByattribute")
@@ -81,6 +104,7 @@ public class GetLandsatController {
                 Map map = new LinkedHashMap();
                 String id = landsat.getImageID();
                 String str = landsat.getCoordinates();
+                String time = landsat.getDate();
                 String coordinate = str.replace("POLYGON", "").replace("((","").replace("))","").replace(" ",",");
                 String[] tmp = coordinate.split(",");
                 List<Float> point = new ArrayList<>();
@@ -89,6 +113,7 @@ public class GetLandsatController {
                 }
                 map.put("id",id);
                 map.put("coordinate",point);
+                map.put("time",time);
                 res.add(map);
             }
         }

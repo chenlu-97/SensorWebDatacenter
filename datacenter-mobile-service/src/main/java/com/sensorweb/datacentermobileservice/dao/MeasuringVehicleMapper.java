@@ -25,7 +25,7 @@ public interface MeasuringVehicleMapper {
 
     int insertHTData(MeasuringVehicle measuringVehicle);
 
-    List<MeasuringVehicle> selectByPage(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
+//    List<MeasuringVehicle> selectByPage(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
 
     int selectNum();
 
@@ -33,4 +33,15 @@ public interface MeasuringVehicleMapper {
 
     List<MeasuringVehicle> selectByTime(@Param("begin")Instant begin, @Param("end") Instant end);
 
+
+
+    List<MeasuringVehicle> getVocsByPage(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
+
+    List<MeasuringVehicle> getHTByPage(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
+
+    List<MeasuringVehicle> getPMByPage(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
+
+    List<MeasuringVehicle> getAirByPage(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
+
+    List<MeasuringVehicle> getSPMSByPage(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
 }

@@ -255,6 +255,7 @@ public class GetGF {
                 Map map = new LinkedHashMap();
                 String id = gf.getImageId();
                 String str = gf.getBbox();
+                String time = gf.getQueryTime().toString();
                 String coordinate = str.replace("[", "").replace("]","");
                 String[] tmp = coordinate.split(",");
                 List<Float> point = new ArrayList<>();
@@ -263,6 +264,7 @@ public class GetGF {
                 }
                 map.put("id",id);
                 map.put("coordinate",point);
+                map.put("time",time);
                 res.add(map);
             }
         }

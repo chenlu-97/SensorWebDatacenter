@@ -29,15 +29,49 @@ public class MeasuringVehicleController {
     MeasuringVehicleMapper  measuringVehicleMapper;
 
     @ApiOperation("分页查询数据")
-    @GetMapping(path = "getMeasuringVehicleByPage")
-    public Map<String, Object> getMeasuringVehicleByPage(@ApiParam(name = "pageNum", value = "当前页码") @Param("pageNum") int pageNum,
+    @GetMapping(path = "getVocsByPage")
+    public Map<String, Object> getVocsByPage(@ApiParam(name = "pageNum", value = "当前页码") @Param("pageNum") int pageNum,
                                                        @ApiParam(name = "pageSize", value = "每页的数据条目数") @Param("pageSize") int pageSize) {
         Map<String, Object> res = new HashMap<>();
-        List<MeasuringVehicle> info = measuringVehicleService.getDataByPage(pageNum, pageSize);
-        int count =measuringVehicleMapper.selectNum();
-        Object num = new Integer(count);
+        List<MeasuringVehicle> info = measuringVehicleService.getVocsByPage(pageNum, pageSize);
         res.put("Info", info);
-        res.put("num",num);
+        return res;
+    }
+    @ApiOperation("分页查询数据")
+    @GetMapping(path = "getHTByPage")
+    public Map<String, Object> getHTByPage(@ApiParam(name = "pageNum", value = "当前页码") @Param("pageNum") int pageNum,
+                                                         @ApiParam(name = "pageSize", value = "每页的数据条目数") @Param("pageSize") int pageSize) {
+        Map<String, Object> res = new HashMap<>();
+        List<MeasuringVehicle> info = measuringVehicleService.getHTByPage(pageNum, pageSize);
+        res.put("Info", info);
+        return res;
+    }
+    @ApiOperation("分页查询数据")
+    @GetMapping(path = "getPMByPage")
+    public Map<String, Object> getPMByPage(@ApiParam(name = "pageNum", value = "当前页码") @Param("pageNum") int pageNum,
+                                                         @ApiParam(name = "pageSize", value = "每页的数据条目数") @Param("pageSize") int pageSize) {
+        Map<String, Object> res = new HashMap<>();
+        List<MeasuringVehicle> info = measuringVehicleService.getPMByPage(pageNum, pageSize);
+        res.put("Info", info);
+        return res;
+    }
+    @ApiOperation("分页查询数据")
+    @GetMapping(path = "getAirByPage")
+    public Map<String, Object> getAirByPage(@ApiParam(name = "pageNum", value = "当前页码") @Param("pageNum") int pageNum,
+                                                         @ApiParam(name = "pageSize", value = "每页的数据条目数") @Param("pageSize") int pageSize) {
+        Map<String, Object> res = new HashMap<>();
+        List<MeasuringVehicle> info = measuringVehicleService.getAirByPage(pageNum, pageSize);
+        res.put("Info", info);
+        return res;
+    }
+
+    @ApiOperation("分页查询数据")
+    @GetMapping(path = "getSPMSByPage")
+    public Map<String, Object> getSPMSByPage(@ApiParam(name = "pageNum", value = "当前页码") @Param("pageNum") int pageNum,
+                                                         @ApiParam(name = "pageSize", value = "每页的数据条目数") @Param("pageSize") int pageSize) {
+        Map<String, Object> res = new HashMap<>();
+        List<MeasuringVehicle> info = measuringVehicleService.getSPMSByPage(pageNum, pageSize);
+        res.put("Info", info);
         return res;
     }
 }

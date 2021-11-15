@@ -43,8 +43,8 @@ public class GetSensorController {
     @GetMapping(path = "getCZML")
     public String getCZML() throws IOException {
         String url = "http://www.orbitalpredictor.com/api/predict_orbit";
-        String ids="40267,39084,25994,27424,39150,40118,43484,44703,41882,40697,38038,49256,70394";
-        //Himawari8 40267 landsat8 39084  TERRA  25994  AQUA 27424  GAOFEN 1  39150  GAOFEN 2 40118  GAOFEN 6 43484  GAOFEN 7 44703
+        String ids="40267,39084,25994,27424,39150,40118,43484,44703,41882,40697,38038,49256";
+        //Himawari8 40267 landsat8 39084  TERRA  25994  AQUA 27424  GAOFEN 1  39150  GAOFEN 2 40118  GAOFEN 6 43484  GAOFEN 7 44703, FY-4 40697  zy 38038 jilin-2 49256
         SimpleDateFormat sd = new SimpleDateFormat();// 格式化时间
         sd.applyPattern("yyyy-MM-dd_HH:mm");
         Date date = new Date();// 获取当前时间

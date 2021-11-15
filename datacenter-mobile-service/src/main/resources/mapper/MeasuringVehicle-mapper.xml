@@ -127,4 +127,35 @@
         SELECT count(*)
         FROM measuring_vehicle
     </select>
+
+    <select id="getVocsByPage" resultMap="measuringVehicle">
+        SELECT datatime,lon,lat, air_temperature, air_humidity, air_pressure ,wind_speed , wind_direction,tvocs
+        FROM measuring_vehicle_vocs order by datatime desc
+        LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+
+    <select id="getHTByPage" resultMap="measuringVehicle">
+        SELECT datatime,lon, lat ,c370nm,c470nm,c520nm,c590nm,c660nm,c880nm,c950nm
+        FROM measuring_vehicle_ht order by datatime desc
+        LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+
+    <select id="getPMByPage" resultMap="measuringVehicle">
+        SELECT datatime,lon, lat ,pm10,pm25,pm1
+        FROM measuring_vehicle_pm order by datatime desc
+        LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+
+    <select id="getAirByPage" resultMap="measuringVehicle">
+        SELECT datatime,lon, lat ,so2,no,no2, nox, co,o3
+        FROM measuring_vehicle_air order by datatime desc
+        LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+
+    <select id="getSPMSByPage" resultMap="measuringVehicle">
+        SELECT datatime,lon, lat, dust,biomass_burning,motor_vehicle_exhaust,burning_coal,industrial_process,secondary_inorganic_source,other,food
+        FROM measuring_vehicle_spms order by datatime desc
+        LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
+    </select>
+
 </mapper>

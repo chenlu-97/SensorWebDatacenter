@@ -7,6 +7,7 @@ import com.sensorweb.datacentermobileservice.util.MeasuringVehicleUtil;
 import com.sensorweb.datacenterutil.utils.DataCenterUtils;
 import com.sensorweb.datacenterutil.utils.FTPUtils;
 import io.swagger.models.auth.In;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.net.ftp.FTPClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,10 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,9 +40,23 @@ public class MeasuringVehicleService {
     @Autowired
     MeasuringVehicleMapper  measuringVehicleMapper;
 
-    public List<MeasuringVehicle> getDataByPage(int pageNum, int pageSize) {
-        return measuringVehicleMapper.selectByPage(pageNum, pageSize);
+    public List<MeasuringVehicle> getVocsByPage(int pageNum, int pageSize) {
+        return measuringVehicleMapper.getVocsByPage(pageNum, pageSize);
     }
+    public List<MeasuringVehicle> getHTByPage(int pageNum, int pageSize) {
+        return measuringVehicleMapper.getHTByPage(pageNum, pageSize);
+    }
+    public List<MeasuringVehicle> getPMByPage(int pageNum, int pageSize) {
+        return measuringVehicleMapper.getPMByPage(pageNum, pageSize);
+    }
+    public List<MeasuringVehicle> getAirByPage(int pageNum, int pageSize) {
+        return measuringVehicleMapper.getAirByPage(pageNum, pageSize);
+    }
+    public List<MeasuringVehicle> getSPMSByPage(int pageNum, int pageSize) {
+        return measuringVehicleMapper.getSPMSByPage(pageNum, pageSize);
+    }
+
+
 
     public boolean insertVocsData(String data) throws IOException {
         int statue = 0;
@@ -59,48 +76,48 @@ public class MeasuringVehicleService {
                 Instant time1 = localDateTime.atZone(ZoneId.of("Asia/Shanghai")).toInstant();
                 measuringVehicle.setDataTime(time1);
             }
-            Matcher m2 = Pattern.compile("(?<=a81002-Rtd=).+?(?=,)").matcher(data);
+            Matcher m2 = Pattern.compile("(?<=a81002-Rtd=).+?(?=&)").matcher(data);
             while (m2.find()) {
                 lon = m2.group().trim();
                 measuringVehicle.setLon(Float.valueOf(lon));
             }
-            Matcher m3 = Pattern.compile("(?<=a81001-Rtd=).+?(?=,)").matcher(data);
+            Matcher m3 = Pattern.compile("(?<=a81001-Rtd=).+?(?=;)").matcher(data);
             while (m3.find()) {
                 lat = m3.group().trim();
                 measuringVehicle.setLat(Float.valueOf(lat));
             }
 
-            Matcher m4 = Pattern.compile("(?<=a01002-Rtd=).+?(?=,)").matcher(data);
+            Matcher m4 = Pattern.compile("(?<=a01002-Rtd=).+?(?=;)").matcher(data);
             while (m4.find()) {
                 String AirHumidity = m4.group().trim();
                 measuringVehicle.setAirHumidity(Float.valueOf(AirHumidity));
             }
 
-            Matcher m5 = Pattern.compile("(?<=a01001-Rtd=).+?(?=,)").matcher(data);
+            Matcher m5 = Pattern.compile("(?<=a01001-Rtd=).+?(?=;)").matcher(data);
             while (m5.find()) {
                 String AirTemperature = m5.group().trim();
                 measuringVehicle.setAirTemperature(Float.valueOf(AirTemperature));
             }
 
-            Matcher m6 = Pattern.compile("(?<=a010061-Rtd=).+?(?=,)").matcher(data);
+            Matcher m6 = Pattern.compile("(?<=a010061-Rtd=).+?(?=;)").matcher(data);
             while (m6.find()) {
                 String AirPressure = m6.group().trim();
                 measuringVehicle.setAirPressure(Float.valueOf(AirPressure));
             }
 
-            Matcher m7 = Pattern.compile("(?<=a01007-Rtd=).+?(?=,)").matcher(data);
+            Matcher m7 = Pattern.compile("(?<=a01007-Rtd=).+?(?=;)").matcher(data);
             while (m7.find()) {
                 String WindSpeed = m7.group().trim();
                 measuringVehicle.setWindSpeed(Float.valueOf(WindSpeed));
             }
 
-            Matcher m8 = Pattern.compile("(?<=a01008-Rtd=).+?(?=,)").matcher(data);
+            Matcher m8 = Pattern.compile("(?<=a01008-Rtd=).+?(?=;)").matcher(data);
             while (m8.find()) {
                 String WindDirection = m8.group().trim();
                 measuringVehicle.setWindDirection(Float.valueOf(WindDirection));
             }
 
-            Matcher m9 = Pattern.compile("(?<=a80001-Rtd=).+?(?=,)").matcher(data);
+            Matcher m9 = Pattern.compile("(?<=a80001-Rtd=).+?(?=;)").matcher(data);
             while (m9.find()) {
                 String TVOCs = m9.group().trim();
                 measuringVehicle.setTVOCs(Float.valueOf(TVOCs));
@@ -452,28 +469,40 @@ public class MeasuringVehicleService {
 
 
 
-//
-//    @Scheduled(cron = "0 35 0/1 * * ?")
+
+//    @Scheduled(cron = "0 */1 * * * ?")
 //    public void insertDataByHour() {
 //        LocalDateTime dateTime = LocalDateTime.now();
 //        new Thread(new Runnable() {
 //            @Override
 //            public void run() {
-//                LocalDateTime time = dateTime;
 //                try {
 //                        String filePath_HLD = MeasuringVehicleUtil.HLD;
 //                        String filePath_VLD = MeasuringVehicleUtil.VLD;
-//                        String file_name_HLD = "";
 //                        String file_name_VLD = "";
-//                        Boolean flag1 = downLoadRadioData(filePath_HLD,file_name_HLD,HLDRadioDownLoadPath,dateTime.toInstant(ZoneOffset.UTC),"HLD");
-//                        Boolean flag2 = downLoadRadioData(filePath_VLD,file_name_VLD,VLDRadioDownLoadPath,dateTime.toInstant(ZoneOffset.UTC),"VLD");
+//                        Boolean flag1 = false;
+//
+//                        SimpleDateFormat sd = new SimpleDateFormat();// 格式化时间
+//                        sd.applyPattern("yyyyMMddHHmmss");
+//                        Date date = new Date();// 获取当前时间
+//                        String time = sd.format(date);
+//
+//                        String file_name= time.substring(0,8);
+//                        filePath_HLD = filePath_HLD+"/"+file_name;
+//
+//                        for(int i =0; i<=59;i++){
+//                            int j = Integer.valueOf(time);
+//                            j=j+1;
+//                            String file_name_HLD ="20211109000011"+".json";
+//                            flag1 = downLoadRadioData(filePath_HLD,file_name_HLD,HLDRadioDownLoadPath,dateTime.toInstant(ZoneOffset.UTC),"HLD");
+//                        }
+////                        Boolean flag2 = downLoadRadioData(filePath_VLD,file_name_VLD,VLDRadioDownLoadPath,dateTime.toInstant(ZoneOffset.UTC),"VLD");
 //                        if (flag1) {
 //                            log.info("激光雷达HLD: " + time + "Status: Success");
 //                        }
-//                        if (flag2) {
-//                            log.info("激光雷达VLD: " + time + "Status: Success");
-//                        }
-//                        Thread.sleep(2 * 60 * 1000);
+////                        if (flag2) {
+////                            log.info("激光雷达VLD: " + time + "Status: Success");
+////                        }
 //                    } catch (Exception e) {
 //                        System.out.println("激光雷达接入时间:  + time + Status: Failed");
 //                        log.error(e.getMessage());

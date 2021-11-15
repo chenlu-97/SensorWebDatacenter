@@ -1,5 +1,6 @@
 package com.sensorweb.datacentermobileservice.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.Instant;
@@ -51,6 +52,7 @@ public class SurveyingVessel {
     private float w01022;
     private float w01016;
     private float w19011;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Instant dataTime;
     private float lon;
     private float lat;

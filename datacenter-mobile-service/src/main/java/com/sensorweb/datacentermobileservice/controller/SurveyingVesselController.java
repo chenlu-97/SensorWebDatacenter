@@ -49,7 +49,7 @@ public class SurveyingVesselController {
 
     @ApiOperation("插入经纬度和时间")
     @GetMapping(path = "insertTimeAndPosition")
-    public boolean insertTimeAndPosition(@Param("lon") float lon, @Param("lat") int lat) {
+    public boolean insertTimeAndPosition(@Param("lon") float lon, @Param("lat") float lat) {
         SurveyingVessel surveyingVessel = new SurveyingVessel();
         surveyingVessel.setLon(lon);
         surveyingVessel.setLat(lat);
