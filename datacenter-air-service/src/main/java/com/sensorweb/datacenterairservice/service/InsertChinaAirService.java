@@ -67,7 +67,7 @@ public class InsertChinaAirService extends Thread implements AirConstant {
                     flag = insertDataByHour(getChinaAQHInfo(str));
                     if (flag) {
                         log.info("全国空气质量监测站接入时间: " + dateTime.toString() + "Status: Success");
-                        DataCenterUtils.sendMessage("CH_AIR"+ time, "全国空气质量","这是一条获取的全国空气质量数据");
+                        DataCenterUtils.sendMessage("CH_AIR"+ time, "站网-全国空气质量","这是一条获取的全国空气质量数据");
                         System.out.println("全国空气质量监测站接入时间: " + dateTime.toString() + "Status: Success");
                     }
                 } catch (Exception e) {

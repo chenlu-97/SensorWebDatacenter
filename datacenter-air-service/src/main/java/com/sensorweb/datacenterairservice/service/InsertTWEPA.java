@@ -76,7 +76,7 @@ public class InsertTWEPA implements AirConstant {
                     flag = insertTwEPAInfoBatch(getEPAInfo(document));
                     if (flag) {
                         log.info("台湾EPA接入时间: " + dateTime.toString() + "Status: Success");
-                        DataCenterUtils.sendMessage("TW_AIR"+ dateTime.toString(), "台湾空气质量","这是一条获取的台湾省空气质量数据");
+                        DataCenterUtils.sendMessage("TW_AIR"+ dateTime.toString(), "站网-台湾空气质量","这是一条获取的台湾省空气质量数据");
                         System.out.println("台湾EPA接入时间: " + dateTime.toString() + "Status: Success");
                     }
                 } catch (Exception e) {
