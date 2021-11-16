@@ -91,7 +91,7 @@ public class InsertHimawariService implements HimawariConstant {
                         flag = !insertData(time);
                         if (!flag) {
                             log.info("Himawari接入时间: " + time + "Status: Success");
-                            DataCenterUtils.sendMessage("Himawari"+dateTime.toString(), "葵花8号卫星","这是一条获取的葵花8号卫星的数据");
+                            DataCenterUtils.sendMessage("Himawari"+dateTime.toString(), "卫星-葵花8号","这是一条获取的葵花8号卫星的数据");
                         }
                         time = time.minusHours(1);
                         count++;

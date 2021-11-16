@@ -62,7 +62,7 @@ public class InsertWeatherInfo {
                     if (flag) {
                         log.info("中国气象局接入时间: " + dateTime.toString() + "Status: Success");
                         System.out.println("中国气象局接入时间: " + dateTime.toString() + "Status: Success");
-                        DataCenterUtils.sendMessage("WH_1+8_Weather_"+dateTime.toString(), "武汉1+8城市圈气象数据","这是一条武汉1+8城市圈气象数据的");
+                        DataCenterUtils.sendMessage("WH_1+8_Weather_"+dateTime.toString(), "武汉城市圈气象","这是一条武汉1+8城市圈气象数据的");
                     }
                     Thread.sleep(2 * 60 * 1000);
                 } catch (Exception e) {

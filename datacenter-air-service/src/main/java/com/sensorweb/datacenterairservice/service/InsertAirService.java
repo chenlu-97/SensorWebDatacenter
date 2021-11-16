@@ -69,7 +69,7 @@ public class InsertAirService extends Thread implements AirConstant {
                         flag = !insertHourDataByHour(time);
                         if (!flag) {
                             log.info("湖北省监测站接入时间: " + dateTime.toString() + "Status: Success");
-                            DataCenterUtils.sendMessage("HB_AIR"+ time, "省站湖北空气质量","这是一条省站推送的湖北省空气质量数据");
+                            DataCenterUtils.sendMessage("HB_AIR"+ time, "湖北省空气质量","这是一条省站推送的湖北省空气质量数据");
                             System.out.println("湖北省监测站接入时间: " + dateTime.toString() + "Status: Success");
                         } else {
                             System.out.println("等待中...");
