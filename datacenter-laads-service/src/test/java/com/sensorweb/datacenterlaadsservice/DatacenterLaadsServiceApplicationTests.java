@@ -1,17 +1,10 @@
 package com.sensorweb.datacenterlaadsservice;
 
 import com.sensorweb.datacenterlaadsservice.dao.EntryMapper;
-import com.sensorweb.datacenterlaadsservice.entity.Entry;
 import com.sensorweb.datacenterlaadsservice.service.InsertLAADSService;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 
 @SpringBootTest
 class DatacenterLaadsServiceApplicationTests {
@@ -22,13 +15,17 @@ class DatacenterLaadsServiceApplicationTests {
     private EntryMapper entryMapper;
     @Test
     void contextLoads() throws Exception {
-        String satellite = "AM1M";
-        String startTime = "2020-11-08 00:00:00";
-        String endTime = "2020-11-09 00:00:00";
-        String bbox = "90.55,24.5,112.417,34.75";
-        String productName = "MOD11A1";
-        boolean test = insertLAADSService.insertData(satellite, startTime, endTime, bbox, productName);
-        System.out.println(test);
+//        String satellite = "AM1M";
+//        String startTime = "2021-11-15 00:00:00";
+//        String endTime = "2021-11-16 00:00:00";
+//        String bbox = "90.55,24.5,112.417,34.75";
+//        String productName = "MOD11A1";
+//        boolean test = insertLAADSService.insertData2(satellite, startTime, endTime, bbox, productName);
+//        System.out.println(test);
+//          boolean test = insertLAADSService.insertData3("null");
+//          System.out.println(test);
+        String time = entryMapper.selectNew().getStart().plusSeconds(24*60*60).toString();
+        System.out.println("time = " + time.substring(0, time.indexOf("T")).replace("-",""));
 //        List<Entry> entryList = new ArrayList<>();
 //        Entry entry = new Entry();
 //        entry.setSatellite("1");

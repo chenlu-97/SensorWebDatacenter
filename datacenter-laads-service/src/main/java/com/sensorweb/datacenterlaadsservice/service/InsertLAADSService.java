@@ -7,14 +7,7 @@ import com.sensorweb.datacenterlaadsservice.feign.SensorFeignClient;
 import com.sensorweb.datacenterlaadsservice.util.LAADSConstant;
 import com.sensorweb.datacenterutil.utils.DataCenterUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -29,9 +22,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.net.*;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -56,7 +47,7 @@ public class InsertLAADSService implements LAADSConstant {
     @Value("${datacenter.path.laads}")
     private String filePath;
 
-    @Scheduled(cron = "0 30 0 * * ?")//每天的0:30分执行一次
+    @Scheduled(cron = "00 30 00 * * ?")//每天的00：30分执行一次
     public void insertDataByDay() {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
         Calendar calendar = Calendar.getInstance();
@@ -68,28 +59,57 @@ public class InsertLAADSService implements LAADSConstant {
             @Override
             public void run() {
                 try {
-                    List<SatelliteInstrument> satelliteInstruments = getSatelliteInstruments();
-                    if (satelliteInstruments!=null && satelliteInstruments.size()>0) {
-                        for (SatelliteInstrument satelliteInstrument:satelliteInstruments) {
+//                    List<SatelliteInstrument> satelliteInstruments = getSatelliteInstruments();
+//                    if (satelliteInstruments!=null && satelliteInstruments.size()>0) {
+//                        for (SatelliteInstrument satelliteInstrument:satelliteInstruments) {
                             //通过接口内容可知AM1M卫星生产Terra MODIS, PM1M卫星生产Aqua MODIS, AMPM卫星生产Combined Aqua和Terra MODIS
                             //对于AMPM卫星,由于目前无法确定那些产品事Terra MODIS,所以暂时只接入AM1M和PM1M卫星的数据
-                            if (satelliteInstrument.getName().equals("AM1M") || satelliteInstrument.getName().equals("PM1M")) {
-                                String[] products = new String[] {"MOD11A1","MOD11A2","MYD11A1","MOD13A2"};
-                                for (String product:products) {
-                                    boolean flag = insertData(satelliteInstrument.getName(), start, stop, bbox, product);
-                                    if (flag) {
-                                        log.info("LAADS接入时间: " + calendar.getTime().toString() + "Status: Success");
-                                        System.out.println("LAADS接入时间: " + calendar.getTime().toString() + "Status: Success");
-                                    }
-                                }
+//                            if (satelliteInstrument.getName().equals("AM1M") || satelliteInstrument.getName().equals("PM1M")) {
+                        String[] products = new String[] {"MOD11A1","MOD11A2","MYD11A1","MOD13A2","MCD12Q1","MCD19A2"};
+                        for (String product:products) {
+                            boolean flag = insertData2("MODIS", start, stop, bbox, product);
+                            if (flag) {
+                                log.info("LAADS接入时间: " + calendar.getTime().toString() + "Status: Success");
+                                System.out.println("LAADS接入时间: " + calendar.getTime().toString() + "Status: Success");
+//                                    }
+//                                }
 
-                            }
+//                            }
                         }
                     }
                 } catch (Exception e) {
                     log.error(e.getMessage());
                     log.error("LAADS接入时间: " + calendar.getTime().toString() + "Status: Fail");
                     System.out.println("LAADS接入时间: " + calendar.getTime().toString() + "Status: Fail");
+                }
+            }
+        }).start();
+    }
+
+
+    @Scheduled(cron = "00 10 00 * * ?")//每天的00：10分执行一次
+    public void insertData() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+        Calendar calendar = Calendar.getInstance();
+//        String time = format.format(calendar.getTime());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                        String time = null;
+                        if(entryMapper.selectNew()!=null){
+                            time = entryMapper.selectNew().getStart().plusSeconds(24*60*60).toString();
+                        }
+//                        boolean flag = insertData3(time.substring(0, time.indexOf("T")).replace("-",""));
+                        boolean flag = insertData3("20210901");
+                        if (flag) {
+                            log.info("MERRA2接入时间: " + calendar.getTime().toString() + "Status: Success");
+                            System.out.println("MERRA2接入时间: " + calendar.getTime().toString() + "Status: Success");
+                        }
+                } catch (Exception e) {
+                    log.error(e.getMessage());
+                    log.error("MERRA2接入时间: " + calendar.getTime().toString() + "Status: Fail");
+                    System.out.println("MERRA2接入时间: " + calendar.getTime().toString() + "Status: Fail");
                 }
             }
         }).start();
@@ -223,13 +243,55 @@ public class InsertLAADSService implements LAADSConstant {
     public String downloadFromUrl(String url, String fileName, String savePath) {
         String res = "";
         try {
-
 //          HttpsUrlValidator.retrieveResponseFromServer(url);
             URL httpUrl = new URL(url);
-//          SSLUtil.ignoreSsl();
+//            SSLUtil.ignoreSsl();
             HttpURLConnection connection = (HttpURLConnection)httpUrl.openConnection();
             connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36");
             connection.setRequestProperty("Authorization", LAADSConstant.LAADS_DOWNLOAD_TOKEN);
+
+            //设置https协议访问
+            System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2,SSLv3");
+            InputStream inputStream = connection.getInputStream();
+            byte[] getData = readInputStream(inputStream);
+            // 文件保存位置
+            File saveDir = new File(savePath);
+            if (!saveDir.exists()) {
+                boolean flag = saveDir.mkdir();
+            }
+            File file = new File(saveDir + File.separator + fileName);
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(getData);
+            fos.close();
+            inputStream.close();
+            res = filePath + fileName;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    /**
+     * 通过url下载LAADS文件，需要Token授权的情况下
+     * @param url
+     * @param fileName
+     * @param savePath
+     */
+    public String downloadFromUrlWithProxy(String url, String fileName, String savePath) {
+        String res = "";
+        try {
+//          HttpsUrlValidator.retrieveResponseFromServer(url);
+            URL httpUrl = new URL(url);
+//            SSLUtil.ignoreSsl();
+            //创建代理服务器
+            InetSocketAddress addr = new InetSocketAddress("127.0.0.1", 5210);
+            //Proxy proxy = new Proxy(Proxy.Type.SOCKS, addr); //SOCKS代理
+            Proxy proxy = new Proxy(Proxy.Type.HTTP, addr); //HTTP代理
+            //其他方式可以见Proxy.Type属性
+            HttpURLConnection connection = (HttpURLConnection)httpUrl.openConnection(proxy);
+            connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36");
+            connection.setRequestProperty("Authorization", LAADSConstant.LAADS_DOWNLOAD_TOKEN);
+
             //设置https协议访问
             System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2,SSLv3");
             InputStream inputStream = connection.getInputStream();
@@ -503,25 +565,95 @@ public class InsertLAADSService implements LAADSConstant {
     }
 
 
+    /**
+     * 数据接入，将数据存储到本地数据库，并将数据文件存储到本地，（由于有些卫星和产品的页面访问会卡住，这边直接从产品的数据集页面下载数据）
+     * @param startTime "2020-11-08 00:00:00"
+     * @param bbox "90.55,24.5,112.417,34.75"-->长江经济带
+     */
+    @Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public boolean insertData2(String satellite, String startTime, String endTime, String bbox, String productName) throws Exception {
+        List<Entry> entryList = new ArrayList<>();
+        List<LAADSCollection> collections = getCollectionsByProduct(productName);
+        if (collections!=null && collections.size()>0) {
+            for (LAADSCollection collection:collections) {
+                String response = getInfoByOpenSearch(productName, Integer.parseInt(collection.getName()), startTime, endTime, bbox);
+                List<Entry> entries = getEntryInfo(response);
+                if (entries.size()>0) {
+                    for (Entry entry:entries) {
+                        if (!StringUtils.isBlank(entry.getLink())) {
+                            String fileName = entry.getLink().substring(entry.getLink().lastIndexOf("/") + 1);
+                            File file = new File(filePath);
+                            if (!file.exists()) {
+                                boolean flag = file.mkdirs();
+                            }
+                            String localPath = downloadFromUrl(entry.getLink(), fileName, filePath);
+                            entry.setFilePath(localPath);
+                            entry.setSatellite(satellite);
+                            entry.setProductType(productName);
+                        }
+                        entryMapper.insertData(entry);
+                    }
+                }
+            }
+        }
+        return true;
+    }
 
 
-//    public static String doGet(String url, String param) throws Exception {
-//        //打开postman
-//        //这一步相当于运行main方法。
-//        //创建request连接 3、填写url和请求方式
-////        Protocol myhttps = new Protocol("https", new MySSLSocketFactory(), 443);
-////        Protocol.registerProtocol("https", myhttps);
-//        HttpsUrlValidator.retrieveResponseFromServer(url + "?" + param);
-//        HttpGet get = new HttpGet(url + "?" + param);
-//        SSLUtil.ignoreSsl();
-//        CloseableHttpClient client = HttpClients.createDefault();
-//        //点击发送按钮，发送请求、获取响应报文
-//        SSLUtil.ignoreSsl();
-//        //如果有参数添加参数 get请求不需要参数，省略
-//        CloseableHttpResponse response = client.execute(get);
-//        //格式化响应报文
-//        HttpEntity entity = response.getEntity();
-//
-//        return EntityUtils.toString(entity);
+    /**
+     * 数据接入，将数据存储到本地数据库，并将数据文件存储到本地，MERRA2产品下载，由于和modis下载源头略微不同，但是可以相对的复用，测试用
+     */
+    @Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public boolean insertData3( String time) throws Exception {
+        List<Entry> entryList = new ArrayList<>();
+        String fileName ="MERRA2_400.tavg1_2d_aer_Nx."+time+".nc4";
+        String mounth = time.substring(4,6);
+//        String downloadPath = LAADSConstant.MERRA2_Web_Service+"2021"+"/"+fileName;
+        String downloadPath ="https://goldsmr4.gesdisc.eosdis.nasa.gov/data/MERRA2/M2T1NXAER.5.12.4/2021/"+ "/"+mounth+"/" + fileName;
+        File file = new File(filePath);
+        if (!file.exists()) {
+            boolean flag = file.mkdirs();
+        }
+
+            Entry entry = new Entry();
+            String localPath = downloadFromUrl(downloadPath, fileName, filePath);
+        if(localPath != null) {
+            entry.setFilePath(localPath);
+            entry.setSatellite("MERRA2");
+            entry.setProductType("MERRA2");
+            entry.setEntryId(fileName);
+            entry.setBbox("-180.0,-90.0,180.0,90.0");
+            entry.setLink(downloadPath);
+            entry.setStart(DataCenterUtils.string2Instant(time));
+            entryList.add(entry);
+            int i = entryMapper.insertDataBatch(entryList);
+            return i > 0;
+        }else{
+            return false;
+        }
+    }
+
+//    /**
+//     * 数据接入，将数据存储到本地数据库，并将数据文件存储到本地，MERRA2产品下载，由于和modis下载源头略微不同，但是可以相对的复用，测试用
+//     */
+//    @Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+//    public boolean insertData4( String time) throws Exception {
+//        List<Entry> entryList = new ArrayList<>();
+//        String fileName ="MERRA2_400.tavg1_2d_aer_Nx.20210922.nc4";
+////        String downloadPath = LAADSConstant.MERRA2_Web_Service+"2021"+"/"+fileName;
+//        String downloadPath ="https://goldsmr4.gesdisc.eosdis.nasa.gov/data/MERRA2/M2T1NXAER.5.12.4/2021/09/MERRA2_400.tavg1_2d_aer_Nx.20210922.nc4";
+//        File file = new File(filePath);
+//        if (!file.exists()) {
+//            boolean flag = file.mkdirs();
+//        }
+//        Entry entry = new Entry();
+//        String localPath = downloadFromUrlWithProxy(downloadPath, fileName, filePath);
+//        entry.setFilePath(localPath);
+//        entry.setSatellite("MERRA2");
+//        entry.setProductType("MERRA2");
+//        entryList.add(entry);
+//        int i = entryMapper.insertDataBatch(entryList);
+//        return i>0;
 //    }
+
 }

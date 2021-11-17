@@ -54,7 +54,7 @@ public class InsertAirService extends Thread implements AirConstant {
     /**
      * 每小时接入一次数据
      */
-    @Scheduled(cron = "0 25 0/1 * * ?") //每个小时的20分开始接入
+    @Scheduled(cron = "0 25 0/1 * * ?") //每个小时的25分开始接入
     public void insertDataByHour() {
         LocalDateTime dateTime = LocalDateTime.now(ZoneId.of("Asia/Shanghai"));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:00:00").withZone(ZoneId.of("Asia/Shanghai"));

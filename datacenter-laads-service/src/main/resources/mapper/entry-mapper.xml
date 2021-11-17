@@ -30,6 +30,13 @@
         WHERE id = #{id}
     </select>
 
+    <select id="selectNew" resultMap="entry">
+        SELECT <include refid="selectFields"></include>
+        FROM entry
+        WHERE product_type = 'MERRA2' AND start_time = (select max(start_time) from entry where entry.product_type = 'MERRA2')
+    </select>
+
+
     <resultMap id="entry" type="Entry">
         <id column="id" property="id"/>
         <result column="entry_id" property="entryId"/>

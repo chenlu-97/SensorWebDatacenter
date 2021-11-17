@@ -3,7 +3,6 @@ package com.sensorweb.datacenterlaadsservice.controller;
 import com.sensorweb.datacenterlaadsservice.dao.EntryMapper;
 import com.sensorweb.datacenterlaadsservice.entity.Entry;
 import com.sensorweb.datacenterlaadsservice.service.InsertLAADSService;
-import com.sensorweb.datacenterutil.utils.DataCenterUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +10,6 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -107,6 +105,44 @@ public class LAADSController {
         res.put("Info", info);
         return res;
     }
+
+
+
+    @GetMapping(value = "getLaadsDataTest")
+    public Map<String, String> getLaadsDataTest(String satellite, String product, String startTime, String endTime, String bbox) {
+
+        Map<String, String> res = new HashMap<>();
+        try {
+            boolean flag = insertLaadsService.insertData2(satellite, startTime, endTime, bbox, product);
+            if (flag) {
+                res.put("status", "success");
+            } else {
+                res.put("status", "failed");
+            }
+        } catch (Exception e) {
+            res.put("status", "failed");
+        }
+        return res;
+    }
+
+    @GetMapping(value = "getMerra2DataTest")
+    public Map<String, String> getMerra2DataTest(String time) {
+
+        Map<String, String> res = new HashMap<>();
+        try {
+            boolean flag = insertLaadsService.insertData3(time);
+            if (flag) {
+                res.put("status", "success");
+            } else {
+                res.put("status", "failed");
+            }
+        } catch (Exception e) {
+            res.put("status", "failed");
+        }
+        return res;
+    }
+
+
 
 
 }

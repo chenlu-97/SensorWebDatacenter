@@ -2,7 +2,6 @@ package com.sensorweb.datacenterhimawariservice.service;
 
 import com.sensorweb.datacenterhimawariservice.dao.HimawariMapper;
 import com.sensorweb.datacenterhimawariservice.entity.Himawari;
-import com.sensorweb.datacenterhimawariservice.entity.Observation;
 import com.sensorweb.datacenterhimawariservice.feign.ObsFeignClient;
 import com.sensorweb.datacenterhimawariservice.feign.SensorFeignClient;
 import com.sensorweb.datacenterhimawariservice.util.HimawariConstant;
@@ -91,7 +90,7 @@ public class InsertHimawariService implements HimawariConstant {
                         flag = !insertData(time);
                         if (!flag) {
                             log.info("Himawari接入时间: " + time + "Status: Success");
-                            DataCenterUtils.sendMessage("Himawari"+dateTime.toString(), "卫星-葵花8号","这是一条获取的葵花8号卫星的数据");
+                            DataCenterUtils.sendMessage("Himawari-8"+dateTime.toString(), "卫星-葵花8号","这是一条获取的葵花8号卫星的数据");
                         }
                         time = time.minusHours(1);
                         count++;

@@ -20,4 +20,6 @@ public interface EntryMapper {
     List<Entry> selectByPage(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
 
     List<Entry> selectByIds(@Param("satellite") List<String> satellite,@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
+
+    Entry selectNew();
 }

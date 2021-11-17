@@ -1,8 +1,6 @@
 package datacentermobileservice;
 
-import com.sensorweb.datacentermobileservice.service.MeasuringVehicleService;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
@@ -11,8 +9,9 @@ import java.text.ParseException;
 @SpringBootTest
 class DatacenterMobileServiceApplicationTests {
 
-    @Autowired
-    private MeasuringVehicleService measuringVehicleService;
+
+//    @Autowired
+//    private MeasuringVehicleService measuringVehicleService;
 
     @Test
     void contextLoads() throws IOException, ParseException {
