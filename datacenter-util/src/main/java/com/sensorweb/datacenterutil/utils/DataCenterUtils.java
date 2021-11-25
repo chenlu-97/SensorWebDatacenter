@@ -58,6 +58,15 @@ public class DataCenterUtils {
 //        this.okHttpUtil = okHttpUtil1;
 //    }
 
+    public Instant str2Instant(String time) {
+//        String time = "2021-09-21 00:00:00";
+        String pattern = "yyyy-MM-dd HH:mm:ss";
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(pattern);
+        dateTimeFormatter.withZone(ZoneId.of("Asia/Shanghai"));
+        LocalDateTime localDateTime = LocalDateTime.parse(time, dateTimeFormatter);
+        return localDateTime.atZone(ZoneId.of("Asia/Shanghai")).toInstant();
+    }
+
     /**
      * 通过Http下载文件，适用于不需要授权的情况下
      * @param url

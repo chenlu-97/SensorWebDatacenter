@@ -3,6 +3,7 @@ package com.sensorweb.datacenterlaadsservice.controller;
 import com.sensorweb.datacenterlaadsservice.dao.EntryMapper;
 import com.sensorweb.datacenterlaadsservice.entity.Entry;
 import com.sensorweb.datacenterlaadsservice.service.InsertLAADSService;
+import com.sensorweb.datacenterutil.utils.DataCenterUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,8 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -108,24 +111,52 @@ public class LAADSController {
 
 
 
-    @GetMapping(value = "getLaadsDataTest")
-    public Map<String, String> getLaadsDataTest(String satellite, String product, String startTime, String endTime, String bbox) {
+    @GetMapping(value = "getModisData")
+    @ResponseBody
+    public Map<String, Object> getModisData(@Param("product")String product,@Param("startTime")String startTime, @Param("endTime")String endTime, @Param("bbox")String bbox) {
 
-        Map<String, String> res = new HashMap<>();
+        Map<String, Object> res = new HashMap<>();
+        Map<String, String> path = new HashMap<>();
         try {
-            boolean flag = insertLaadsService.insertData2(satellite, startTime, endTime, bbox, product);
-            if (flag) {
+            Instant start = DataCenterUtils.string2Instant(startTime);
+            Instant end = DataCenterUtils.string2Instant(endTime);
+            List<Entry> entrys = entryMapper.getFilePath(product,start,end);
+            System.out.println("entrys.size() = " + entrys.size());
+            if(entrys.size()>0){
+                for(int i=0;i<entrys.size();i++) {
+                    String filepath = entrys.get(i).getFilePath();
+                    String time = entrys.get(i).getStart().toString().replace("T"," ").replace("Z","");
+                    path.put(time+"."+i,filepath);
+                }
                 res.put("status", "success");
-            } else {
-                res.put("status", "failed");
+                res.put("filePath",path);
+            }else{
+                String flag = insertLaadsService.insertData2(startTime, endTime, bbox, product);
+                if (flag.equals("下载成功")) {
+                    entrys = entryMapper.getFilePath(product,start,end);
+                    System.out.println("entrys.size() = " + entrys.size());
+                    if(entrys.size()>0) {
+                        for (int i = 0; i < entrys.size(); i++) {
+                            String filepath = entrys.get(i).getFilePath();
+                            String time = entrys.get(i).getStart().toString().replace("T"," ").replace("Z","");
+                            path.put(time+"."+i, filepath);
+                        }
+                    }
+                    res.put("status", "success");
+                    res.put("filePath",path);
+                } else {
+                    res.put("status：failed", flag);
+                }
             }
         } catch (Exception e) {
+            e.printStackTrace();
             res.put("status", "failed");
         }
         return res;
     }
 
     @GetMapping(value = "getMerra2DataTest")
+    @ResponseBody
     public Map<String, String> getMerra2DataTest(String time) {
 
         Map<String, String> res = new HashMap<>();
@@ -137,12 +168,20 @@ public class LAADSController {
                 res.put("status", "failed");
             }
         } catch (Exception e) {
+            e.printStackTrace();
             res.put("status", "failed");
         }
         return res;
     }
 
 
-
+    @GetMapping(value = "test")
+    public void test() throws IOException {
+        try {
+            insertLaadsService.testdownload();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

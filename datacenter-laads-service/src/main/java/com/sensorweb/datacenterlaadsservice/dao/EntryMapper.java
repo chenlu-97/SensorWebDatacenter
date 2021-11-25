@@ -5,11 +5,15 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.util.List;
 
 @Repository
 @Mapper
 public interface EntryMapper {
+
+    List<Entry> getFilePath(@Param("product") String product,@Param("startTime") Instant startTime, @Param("endTime") Instant endTime);
+
     int insertData(Entry entry);
     int insertDataBatch(List<Entry> entries);
 

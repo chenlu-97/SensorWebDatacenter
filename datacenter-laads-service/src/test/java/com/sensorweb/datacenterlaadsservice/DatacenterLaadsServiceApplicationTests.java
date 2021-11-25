@@ -15,17 +15,23 @@ class DatacenterLaadsServiceApplicationTests {
     private EntryMapper entryMapper;
     @Test
     void contextLoads() throws Exception {
-//        String satellite = "AM1M";
-//        String startTime = "2021-11-15 00:00:00";
-//        String endTime = "2021-11-16 00:00:00";
-//        String bbox = "90.55,24.5,112.417,34.75";
-//        String productName = "MOD11A1";
-//        boolean test = insertLAADSService.insertData2(satellite, startTime, endTime, bbox, productName);
-//        System.out.println(test);
-//          boolean test = insertLAADSService.insertData3("null");
+        //测试
+        String startTime = "2021-11-15 00:00:00";
+        String endTime = "2021-11-18 00:00:00";
+        String bbox = "90.55,24.5,112.417,34.75";
+        String productName = "MOD11A1";
+        String test = insertLAADSService.insertData2(startTime, endTime, bbox, productName);
+        System.out.println(test);
+        //测试
+//          boolean test = insertLAADSService.insertData3("2021-09-01T00:00:00Z");
 //          System.out.println(test);
-        String time = entryMapper.selectNew().getStart().plusSeconds(24*60*60).toString();
-        System.out.println("time = " + time.substring(0, time.indexOf("T")).replace("-",""));
+
+        //测试
+//        String time = entryMapper.selectNew().getStart().plusSeconds(24*60*60).toString();
+//        System.out.println("time = " + time.substring(0, time.indexOf("T")).replace("-",""));
+
+
+        //测试
 //        List<Entry> entryList = new ArrayList<>();
 //        Entry entry = new Entry();
 //        entry.setSatellite("1");
@@ -36,5 +42,24 @@ class DatacenterLaadsServiceApplicationTests {
 //        entryList.add(entry);
 //        entryList.add(entry);
 //        entryMapper.insertDataBatch(entryList);
+
+//            String time = "2021-09-21T00:00:00Z";
+//            String time1 = time.replace("T"," ").replace("Z","");
+//            String pattern = "yyyy-MM-dd HH:mm:ss";
+//            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(pattern);
+//            dateTimeFormatter.withZone(ZoneId.of("Asia/Shanghai"));
+//            LocalDateTime localDateTime = LocalDateTime.parse(time1, dateTimeFormatter);
+//            System.out.println(localDateTime.atZone(ZoneId.of("Asia/Shanghai")).toInstant());
+//
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.add(Calendar.DATE, -1);
+//        String stop = format.format(calendar.getTime());
+//        calendar.add(Calendar.DATE, -1);
+//        String start = format.format(calendar.getTime()).replace("00:00:00", "23:59:59");
+//        System.out.println("stop = " + stop);
+//        System.out.println("start = " + start);
+
+
     }
 }
