@@ -11,9 +11,10 @@ import java.text.ParseException;
 
 @SpringBootTest
 class DatacenterWeatherServiceApplicationTests {
+    @Autowired
+    private HBWeatherStationService hbWeatherStationService;
     @Test
-    void tsetHBWeatherStation() throws IOException,ParseException{
-        HBWeatherStationService hbWeatherStationService = new HBWeatherStationService();
+    void testHBWeatherStation() throws IOException,ParseException{
         String document = hbWeatherStationService.getApiDocument();
         boolean i = hbWeatherStationService.getIOTInfo(document);
         System.out.println(i);
