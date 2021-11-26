@@ -1,6 +1,7 @@
 package com.sensorweb.datacenterweatherservice;
 
 //import com.sensorweb.datacenterweatherservice.service.MeasuringVehicleService;
+import com.sensorweb.datacenterweatherservice.service.HBWeatherStationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,7 +11,13 @@ import java.text.ParseException;
 
 @SpringBootTest
 class DatacenterWeatherServiceApplicationTests {
-
+    @Test
+    void tsetHBWeatherStation() throws IOException,ParseException{
+        HBWeatherStationService hbWeatherStationService = new HBWeatherStationService();
+        String document = hbWeatherStationService.getApiDocument();
+        boolean i = hbWeatherStationService.getIOTInfo(document);
+        System.out.println(i);
+    }
 //    @Autowired
 //    private InsertWeatherInfo insertWeatherInfo;
 
