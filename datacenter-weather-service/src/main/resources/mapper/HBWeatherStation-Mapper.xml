@@ -7,12 +7,12 @@
         station_name,lat,lon,prs,tem,rhu,pre_1h,gst
     </sql>
 
-    <insert id="insertData" parameterType="HBWeatherStaion" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertData" parameterType="HBWeatherStation" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO station (<include refid="insertFields"></include>)
         VALUES (#{stationId},#{lat}, #{lon},#{prs},#{tem},#{rhu},#{pre_1h},#{gst})
     </insert>
 
-    <resultMap id="weatherStationModel" type="WeatherStationModel">
+    <resultMap id="hbWeatherStation" type="HBWeatherStation">
         <result column="station_name" property="stationId"/>
         <result column="lat" property="lat"/>
         <result column="lon" property="lon"/>
@@ -21,6 +21,5 @@
         <result column="rhu" property="rhu"/>
         <result column="pre_1h" property="pre_1h"/>
         <result column="gst" property="gst"/>
-
     </resultMap>
 </mapper>
