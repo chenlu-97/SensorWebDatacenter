@@ -4,22 +4,23 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sensorweb.datacenterweatherservice.dao.HBWeatherStationMapper">
     <sql id="insertFields">
-        station_name,lat,lon,prs,tem,rhu,pre_1h,gst
+        station_name,lat,lon,pressure,temperature,relative_humidity,pre_1h,ground_temperature,response_time
     </sql>
 
     <insert id="insertData" parameterType="HBWeatherStation" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO station (<include refid="insertFields"></include>)
-        VALUES (#{stationId},#{lat}, #{lon},#{prs},#{tem},#{rhu},#{pre_1h},#{gst})
+        INSERT INTO hb_weather_station_hourly (<include refid="insertFields"></include>)
+        VALUES (#{stationId},#{lat}, #{lon},#{prs},#{tem},#{rhu},#{pre_1h},#{gst},#{queryTime})
     </insert>
 
     <resultMap id="hbWeatherStation" type="HBWeatherStation">
         <result column="station_name" property="stationId"/>
         <result column="lat" property="lat"/>
         <result column="lon" property="lon"/>
-        <result column="prs" property="prs"/>
-        <result column="tem" property="tem"/>
-        <result column="rhu" property="rhu"/>
+        <result column="pressure" property="prs"/>
+        <result column="temperature" property="tem"/>
+        <result column="relative_humidity" property="rhu"/>
         <result column="pre_1h" property="pre_1h"/>
-        <result column="gst" property="gst"/>
+        <result column="ground_temperature" property="gst"/>
+        <result column="response_time" property="queryTime"/>
     </resultMap>
 </mapper>

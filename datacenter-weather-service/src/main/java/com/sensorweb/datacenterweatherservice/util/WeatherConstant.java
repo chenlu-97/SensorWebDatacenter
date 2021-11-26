@@ -34,7 +34,7 @@ public interface WeatherConstant {
     /**
      * 湖北气象站点 times
      */
-    String HBWEATHER_STATION_TIMES = "20211109000000";
+    String HBWEATHER_STATION_TIMES = "20211125000000";
 
     /**
      * 湖北气象站点 dataCode

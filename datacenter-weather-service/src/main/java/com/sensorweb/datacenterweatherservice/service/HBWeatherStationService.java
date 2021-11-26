@@ -29,6 +29,8 @@ public class HBWeatherStationService {
 
     public String getApiDocument() throws IOException {
         String param = "userId=" + WeatherConstant.HBWEATHER_STATION_ID +"&pwd=" + WeatherConstant.HBWEATHER_STATION_PASSWORD + "&interfaceId=" + WeatherConstant.HBWEATHER_STATION_INTERFACEID + "&times=" + WeatherConstant.HBWEATHER_STATION_TIMES + "&dataCode=" + WeatherConstant.HBWEATHER_STATION_DATACODE + "&dataFormat=" + WeatherConstant.HBWEATHER_STATION_DATAFORMAT;
+        String s = WeatherConstant.GET_HBWEATHER_STATION_URL+param;
+        System.out.println(s);
         String document = DataCenterUtils.doGet(WeatherConstant.GET_HBWEATHER_STATION_URL, param);
 //        if (document != null) {
 //            JSONObject rootObject = new JSONObject(Boolean.parseBoolean(document));
@@ -63,6 +65,7 @@ public class HBWeatherStationService {
         HBWeatherStation hbWeatherStation = new HBWeatherStation();
         JSONObject jsonObject = JSON.parseObject(document);
         JSONArray message = jsonObject.getJSONArray("DS");
+        Instant queryTime = DataCenterUtils.string2Instant(jsonObject.getString("responseTime"));
         for (int i = 0; i < message.size(); i++) {
             JSONObject object = message.getJSONObject(i);
             hbWeatherStation.setStationId(object.getString("Station_Name"));
@@ -73,6 +76,7 @@ public class HBWeatherStationService {
             hbWeatherStation.setRhu(Float.parseFloat(object.getString("RHU")));
             hbWeatherStation.setPre_1h(Float.parseFloat(object.getString("PRE_1h")));
             hbWeatherStation.setGst(Float.parseFloat(object.getString("GST")));
+            hbWeatherStation.setQueryTime(queryTime);
             statue = hbWeatherStationMapper.insertData(hbWeatherStation);
         }
         return statue>0;
