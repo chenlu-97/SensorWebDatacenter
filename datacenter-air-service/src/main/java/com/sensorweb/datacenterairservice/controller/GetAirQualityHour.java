@@ -1,43 +1,24 @@
 package com.sensorweb.datacenterairservice.controller;
-
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.annotation.JSONField;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sensorweb.datacenterairservice.dao.AirQualityHourMapper;
 import com.sensorweb.datacenterairservice.dao.ChinaAirQualityHourMapper;
 import com.sensorweb.datacenterairservice.dao.TWEPAMapper;
 import com.sensorweb.datacenterairservice.entity.AirQualityHour;
-import com.sensorweb.datacenterairservice.entity.AirStationModel;
 import com.sensorweb.datacenterairservice.entity.ChinaAirQualityHour;
 import com.sensorweb.datacenterairservice.entity.TWEPA;
 import com.sensorweb.datacenterairservice.service.GetAirService;
 import com.sensorweb.datacenterairservice.service.InsertTWEPA;
-import com.sensorweb.datacenterutil.utils.DataCenterUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.*;
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.io.File;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.zip.GZIPInputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController

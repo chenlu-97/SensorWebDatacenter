@@ -3,8 +3,6 @@ package com.sensorweb.datacenterutil.utils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -12,13 +10,11 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Element;
 
-import javax.annotation.PostConstruct;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -41,22 +37,6 @@ public class DataCenterUtils {
 
 
 
-
-//    private static OkHttpUtil okHttpUtil;
-//    @Autowired
-//    public void DataCenterUtils(OkHttpUtil okHttpUtil) {
-//        DataCenterUtils.okHttpUtil = okHttpUtil;
-//    }
-
-
-//    private static OkHttpUtil okHttpUtil;
-//    @Autowired
-//    private  OkHttpUtil okHttpUtil1;
-//
-//    @PostConstruct
-//    private void beforeInit() {
-//        this.okHttpUtil = okHttpUtil1;
-//    }
 
     public Instant str2Instant(String time) {
 //        String time = "2021-09-21 00:00:00";

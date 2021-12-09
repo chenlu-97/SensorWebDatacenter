@@ -15,9 +15,10 @@ class DatacenterWeatherServiceApplicationTests {
     private HBWeatherStationService hbWeatherStationService;
     @Test
     void testHBWeatherStation() throws IOException,ParseException{
-        String document = hbWeatherStationService.getApiDocument();
-        boolean i = hbWeatherStationService.getIOTInfo(document);
-        System.out.println(i);
+//        String document = hbWeatherStationService.getApiDocument("20211209100000");
+//        boolean i = hbWeatherStationService.getIOTInfo(document);
+//        System.out.println(i);
+        System.out.println("hbWeatherStationService.str2Instant(\"20211209110000\") = " + hbWeatherStationService.str2Instant("20211209110000"));
     }
 //    @Autowired
 //    private InsertWeatherInfo insertWeatherInfo;

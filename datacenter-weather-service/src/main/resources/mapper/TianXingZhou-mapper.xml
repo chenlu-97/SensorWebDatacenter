@@ -45,6 +45,12 @@
         LIMIT #{pageSize} OFFSET (#{pageNum}-1)*(#{pageSize})
     </select>
 
+    <select id="selectByTime" resultMap="tianXingZhouStation">
+        SELECT <include refid="selectFields"></include>
+        FROM tianxingzhou_station
+        WHERE querytime = #{time}
+    </select>
+
 
     <select id="selectNum" resultType="java.lang.Integer">
         SELECT count(*)
